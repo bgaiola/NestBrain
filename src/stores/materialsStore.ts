@@ -28,6 +28,9 @@ function createDefaultMaterial(overrides?: Partial<Material>): Material {
     minScrapWidth: 300,
     minScrapHeight: 300,
     grainDirection: 'none',
+    pricePerM2: 0,
+    wasteCostPerM2: 0,
+    cutCostPerLinearM: 0,
     ...overrides,
   };
 }

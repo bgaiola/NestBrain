@@ -38,7 +38,20 @@ export interface Material {
   trimRight: number;
   minScrapWidth: number; // mm — min dimensions for usable scrap
   minScrapHeight: number;
+  // ─── Cost fields ───
+  pricePerM2: number; // price per m² of material
+  wasteCostPerM2: number; // cost per m² for waste disposal
+  cutCostPerLinearM: number; // cost per linear meter of cut
 }
+
+export type Currency = 'USD' | 'EUR' | 'BRL' | 'GBP';
+
+export const CURRENCY_SYMBOLS: Record<Currency, string> = {
+  USD: '$',
+  EUR: '€',
+  BRL: 'R$',
+  GBP: '£',
+};
 
 export interface EdgeBand {
   id: string;
@@ -112,6 +125,11 @@ export interface CuttingPlan {
   wasteArea: number;
   utilizationPercent: number;
   totalCuts: number;
+  // ─── Cost per plan (populated when costEnabled) ───
+  materialCost?: number;
+  wasteCost?: number;
+  cuttingCost?: number;
+  totalPlanCost?: number;
 }
 
 export interface OptimizationResult {
@@ -126,6 +144,11 @@ export interface OptimizationResult {
   totalWasteArea: number;
   computeTimeMs: number;
   timestamp: string;
+  // ─── Aggregated costs (populated when costEnabled) ───
+  totalMaterialCost?: number;
+  totalWasteCost?: number;
+  totalCuttingCost?: number;
+  grandTotalCost?: number;
 }
 
 // ─── Label Types ───────────────────────────────────────────

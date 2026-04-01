@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { OptimizationConfig, OptimizationResult, TabId, AppNotification, Locale } from '@/types';
+import { OptimizationConfig, OptimizationResult, TabId, AppNotification, Locale, Currency } from '@/types';
 import { generateId } from '@/utils/helpers';
 
 interface AppState {
@@ -10,6 +10,12 @@ interface AppState {
   // Locale / i18n
   locale: Locale;
   setLocale: (locale: Locale) => void;
+
+  // Cost Management
+  costEnabled: boolean;
+  setCostEnabled: (val: boolean) => void;
+  currency: Currency;
+  setCurrency: (c: Currency) => void;
 
   // Optimization Config
   config: OptimizationConfig;
@@ -39,6 +45,11 @@ export const useAppStore = create<AppState>()((set) => ({
 
   locale: 'es',
   setLocale: (locale) => set({ locale }),
+
+  costEnabled: false,
+  setCostEnabled: (val) => set({ costEnabled: val }),
+  currency: 'EUR',
+  setCurrency: (c) => set({ currency: c }),
 
   config: {
     bladeThickness: 4,

@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { useMaterialsStore } from '@/stores/materialsStore';
+import { useAppStore } from '@/stores/appStore';
 import { GrainDirection, Material } from '@/types';
 import { csvToArray, parseNumberSafe } from '@/utils/helpers';
 import { useTranslation } from '@/i18n';
@@ -12,10 +13,11 @@ export function MaterialsTab() {
   const importMaterials = useMaterialsStore((s) => s.importMaterials);
   const updateMaterial = useMaterialsStore((s) => s.updateMaterial);
   const removeMaterials = useMaterialsStore((s) => s.removeMaterials);
+  const costEnabled = useAppStore((s) => s.costEnabled);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const columns: { key: keyof Material; label: string; type: 'text' | 'number' | 'grainSelect'; width: string }[] = [
+  const baseColumns: { key: keyof Material; label: string; type: 'text' | 'number' | 'grainSelect'; width: string }[] = [
     { key: 'code', label: t.materialsTab.colCode, type: 'text', width: 'w-28' },
     { key: 'description', label: t.materialsTab.colDescription, type: 'text', width: 'w-48' },
     { key: 'thickness', label: t.materialsTab.colThickness, type: 'number', width: 'w-28' },
@@ -30,10 +32,19 @@ export function MaterialsTab() {
     { key: 'minScrapHeight', label: t.materialsTab.colMinScrapHeight, type: 'number', width: 'w-28' },
   ];
 
+  const costColumns: { key: keyof Material; label: string; type: 'number'; width: string }[] = [
+    { key: 'pricePerM2', label: t.materialsTab.colPricePerM2, type: 'number', width: 'w-28' },
+    { key: 'wasteCostPerM2', label: t.materialsTab.colWasteCostPerM2, type: 'number', width: 'w-28' },
+    { key: 'cutCostPerLinearM', label: t.materialsTab.colCutCostPerLinearM, type: 'number', width: 'w-28' },
+  ];
+
+  const columns = costEnabled ? [...baseColumns, ...costColumns] : baseColumns;
+
   const handleChange = (id: string, key: keyof Material, value: string) => {
     const numKeys: (keyof Material)[] = [
       'thickness', 'sheetWidth', 'sheetHeight', 'trimTop', 'trimBottom',
       'trimLeft', 'trimRight', 'minScrapWidth', 'minScrapHeight',
+      'pricePerM2', 'wasteCostPerM2', 'cutCostPerLinearM',
     ];
     if (numKeys.includes(key)) {
       updateMaterial(id, { [key]: parseNumberSafe(value, 0) } as Partial<Material>);
@@ -82,6 +93,9 @@ export function MaterialsTab() {
           trimRight: parseNumberSafe(g('trimright') || g('recorte der') || g('recorte dir') || g('trim right'), 0),
           minScrapWidth: parseNumberSafe(g('minscrapwidth') || g('sobra ancho mín') || g('sobra largura mín') || g('min scrap width'), 300),
           minScrapHeight: parseNumberSafe(g('minscrapheight') || g('sobra alto mín') || g('sobra altura mín') || g('min scrap height'), 300),
+          pricePerM2: parseNumberSafe(g('priceperm2') || g('precio m2') || g('preço m2') || g('price per m2'), 0),
+          wasteCostPerM2: parseNumberSafe(g('wastecostperm2') || g('coste desperdicio m2') || g('custo desperdicio m2') || g('waste cost per m2'), 0),
+          cutCostPerLinearM: parseNumberSafe(g('cutcostperlinearm') || g('coste corte ml') || g('custo corte ml') || g('cut cost per linear m'), 0),
         };
       });
       importMaterials(mapped);
@@ -91,11 +105,11 @@ export function MaterialsTab() {
   };
 
   const handleExportCSV = () => {
-    const headers = ['code', 'description', 'thickness', 'sheetWidth', 'sheetHeight', 'grain', 'trimTop', 'trimBottom', 'trimLeft', 'trimRight', 'minScrapWidth', 'minScrapHeight'];
+    const headers = ['code', 'description', 'thickness', 'sheetWidth', 'sheetHeight', 'grain', 'trimTop', 'trimBottom', 'trimLeft', 'trimRight', 'minScrapWidth', 'minScrapHeight', 'pricePerM2', 'wasteCostPerM2', 'cutCostPerLinearM'];
     const rows = materials.map((m) => [
       m.code, m.description, m.thickness, m.sheetWidth, m.sheetHeight,
       m.grainDirection, m.trimTop, m.trimBottom, m.trimLeft, m.trimRight,
-      m.minScrapWidth, m.minScrapHeight,
+      m.minScrapWidth, m.minScrapHeight, m.pricePerM2, m.wasteCostPerM2, m.cutCostPerLinearM,
     ].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(','));
     const csv = [headers.join(','), ...rows].join('\n');
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });

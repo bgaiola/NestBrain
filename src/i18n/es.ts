@@ -44,6 +44,8 @@ const es = {
     settings: 'Configuración avanzada',
     maySlow: '⚠ Puede ser lento',
     language: 'Idioma',
+    costToggle: 'Costos',
+    costTooltip: 'Activar cálculo de costos',
   },
 
   // ─── Tabs ────────────────────────────
@@ -106,6 +108,9 @@ const es = {
     colTrimRight: 'Recorte Der',
     colMinScrapWidth: 'Sobra Ancho Mín',
     colMinScrapHeight: 'Sobra Alto Mín',
+    colPricePerM2: 'Precio/m²',
+    colWasteCostPerM2: 'Costo Desp./m²',
+    colCutCostPerLinearM: 'Costo Corte/ml',
   },
 
   // ─── Edge Bands Tab ──────────────────
@@ -128,7 +133,7 @@ const es = {
     plans: 'Planos',
     plan: 'Plano',
     piecesCount: '{count} piezas',
-    stackedSheets: '{count} chapas apiladas',
+    stackedSheets: '{count} tablreros apilados',
     utilization: 'Aprovechamiento:',
     piecesLabel: 'Piezas:',
     cuts: 'Cortes:',
@@ -149,17 +154,23 @@ const es = {
     chartMaterialConsumption: 'Consumo por Material',
     chartUtilization: 'Aprovechamiento',
     chartWaste: 'Distribución de Desperdicio',
-    chartSheetsUsed: 'Chapas Utilizadas',
+    chartSheetsUsed: 'Tableros Utilizados',
     chartUsed: 'Utilizado',
     chartWasteLabel: 'Desperdicio',
     chartUsableScrap: 'Sobras Aprovech.',
-    chartSheets: 'chapas',
+    chartSheets: 'tableros',
     chartAreaM2: 'Área (m²)',
     chartPiecesByMaterial: 'Piezas por Material',
     summaryTotalSheets: 'Total Chapas',
     summaryTotalPieces: 'Total Piezas',
     summaryGlobalUtil: 'Aprovechamiento',
     summaryUsableScrap: 'Sobras Útiles',
+    // Cost
+    costMaterial: 'Costo Material',
+    costWaste: 'Costo Desperdicio',
+    costCutting: 'Costo de Corte',
+    costTotal: 'Costo Total',
+    costBreakdown: 'Desglose de Costos',
   },
 
   // ─── Labels Tab ──────────────────────
@@ -171,8 +182,8 @@ const es = {
     pieceId: '[ID de Pieza]',
     materialLabel: '[Material]',
     barcode: '[Código de barras]',
-    planSheet: 'Plano {plan} / Chapa {sheet}',
-    editorWIP: '✏️ Editor drag-and-drop en desarrollo. Campos dinámicos disponibles: ID, Descripción, Material, Dimensiones, Cantos, Plano, Chapa, Secuencia, Fecha.',
+    planSheet: 'Plano {plan} / Tablero {sheet}',
+    editorWIP: '✏️ Editor drag-and-drop en desarrollo. Campos dinámicos disponibles: ID, Descripción, Material, Dimensiones, Cantos, Plano, Tablero, Secuencia, Fecha.',
     pieces: 'Piezas',
     optimizeFirst: 'Optimice primero para generar etiquetas',
     // Label size
@@ -196,7 +207,7 @@ const es = {
     fieldEdgeBandLeft: 'Canto Izquierdo',
     fieldEdgeBandRight: 'Canto Derecho',
     fieldPlanNumber: 'N° de Plano',
-    fieldSheetNumber: 'N° de Chapa',
+    fieldSheetNumber: 'N° de Tablero',
     fieldQuantity: 'Cantidad',
     fieldSequence: 'Secuencia',
     fieldDate: 'Fecha',
@@ -235,17 +246,17 @@ const es = {
     // Executive Summary
     executiveSummary: '📊 Resumen Ejecutivo',
     totalPieces: 'Total de Piezas',
-    sheetsConsumed: 'Chapas Consumidas',
-    stackedSheets: 'Chapas Apiladas',
+    sheetsConsumed: 'Tableros Consumidos',
+    stackedSheets: 'Tableros Apilados',
     globalUtilization: 'Aprovechamiento Global',
     usableScraps: 'Sobras Aprovechables',
     totalWaste: 'Descarte Total',
     computeTime: 'Tiempo de Optimización',
-    utilizationDescription: 'Porcentaje del área útil de las chapas efectivamente ocupado por piezas.',
+    utilizationDescription: 'Porcentaje del área útil de los tableros efectivamente ocupado por piezas.',
     // Material Consumption
     materialConsumption: '📦 Consumo de Material',
     colMaterial: 'Material',
-    colSheets: 'Chapas',
+    colSheets: 'Tableros',
     colUsedArea: 'Área Usada (m²)',
     colWaste: 'Desperdicio (m²)',
     colUtilization: 'Aprovechamiento',
@@ -271,6 +282,12 @@ const es = {
     chartUsed: 'Utilizado',
     chartWaste: 'Desperdicio',
     chartScrap: 'Sobras',
+    // Cost
+    costReport: '💰 Informe de Costos',
+    costMaterial: 'Costo Material',
+    costWaste: 'Costo Desperdicio',
+    costCutting: 'Costo de Corte',
+    costTotal: 'Costo Total',
   },
 
   // ─── Notifications ───────────────────

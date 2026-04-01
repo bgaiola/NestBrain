@@ -43,6 +43,8 @@ const it: Translations = {
     settings: 'Impostazioni avanzate',
     maySlow: '⚠ Potrebbe essere lento',
     language: 'Lingua',
+    costToggle: 'Costi',
+    costTooltip: 'Attivare il calcolo dei costi',
   },
 
   tabs: {
@@ -101,6 +103,9 @@ const it: Translations = {
     colTrimRight: 'Rifilo Des',
     colMinScrapWidth: 'Sfrido Larg Mín',
     colMinScrapHeight: 'Sfrido Alt Mín',
+    colPricePerM2: 'Prezzo/m²',
+    colWasteCostPerM2: 'Costo Scarto/m²',
+    colCutCostPerLinearM: 'Costo Taglio/ml',
   },
 
   edgeBandsTab: {
@@ -152,6 +157,11 @@ const it: Translations = {
     summaryTotalPieces: 'Totale Pezzi',
     summaryGlobalUtil: 'Resa',
     summaryUsableScrap: 'Sfridi Utili',
+    costMaterial: 'Costo Materiale',
+    costWaste: 'Costo Scarto',
+    costCutting: 'Costo di Taglio',
+    costTotal: 'Costo Totale',
+    costBreakdown: 'Ripartizione Costi',
   },
 
   labelsTab: {
@@ -251,6 +261,11 @@ const it: Translations = {
     chartUsed: 'Utilizzato',
     chartWaste: 'Scarto',
     chartScrap: 'Ritagli',
+    costReport: '💰 Report dei Costi',
+    costMaterial: 'Costo Materiale',
+    costWaste: 'Costo Scarto',
+    costCutting: 'Costo di Taglio',
+    costTotal: 'Costo Totale',
   },
 
   notifications: {

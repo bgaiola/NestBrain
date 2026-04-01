@@ -3,8 +3,9 @@ import { usePiecesStore } from '@/stores/piecesStore';
 import { useMaterialsStore } from '@/stores/materialsStore';
 import { useEdgeBandsStore } from '@/stores/edgeBandsStore';
 import { runOptimization } from '@/engine/optimizer';
+import { enrichResultWithCosts } from '@/utils/costCalculator';
 import { useTranslation, localeLabels } from '@/i18n';
-import { Locale } from '@/types';
+import { Locale, Currency, CURRENCY_SYMBOLS } from '@/types';
 import {
   Scissors,
   RotateCcw,
@@ -12,6 +13,7 @@ import {
   Play,
   Loader2,
   Globe,
+  DollarSign,
 } from 'lucide-react';
 
 export function Toolbar() {
@@ -28,6 +30,10 @@ export function Toolbar() {
   const setProjectName = useAppStore((s) => s.setProjectName);
   const locale = useAppStore((s) => s.locale);
   const setLocale = useAppStore((s) => s.setLocale);
+  const costEnabled = useAppStore((s) => s.costEnabled);
+  const setCostEnabled = useAppStore((s) => s.setCostEnabled);
+  const currency = useAppStore((s) => s.currency);
+  const setCurrency = useAppStore((s) => s.setCurrency);
 
   const pieces = usePiecesStore((s) => s.pieces);
   const materials = useMaterialsStore((s) => s.materials);
@@ -55,7 +61,10 @@ export function Toolbar() {
 
     setOptimizing(true);
     try {
-      const result = await runOptimization(pieces, materials, edgeBands, config, setProgress);
+      let result = await runOptimization(pieces, materials, edgeBands, config, setProgress);
+      if (costEnabled) {
+        result = enrichResultWithCosts(result, materials);
+      }
       setResult(result);
       addNotification({
         type: 'success',
@@ -162,6 +171,38 @@ export function Toolbar() {
         <RotateCcw className="w-3.5 h-3.5" />
         <span className="text-xs font-medium">{t.toolbar.rotation}</span>
       </button>
+
+      {/* Divider */}
+      <div className="h-6 w-px bg-surface-200" />
+
+      {/* Cost management toggle */}
+      <button
+        className={`btn-sm flex items-center gap-1 rounded-md px-2 py-1 transition-colors ${
+          costEnabled
+            ? 'bg-emerald-100 text-emerald-700 border border-emerald-300'
+            : 'bg-surface-100 text-surface-500 border border-surface-300'
+        }`}
+        onClick={() => setCostEnabled(!costEnabled)}
+        title={t.toolbar.costTooltip}
+      >
+        <DollarSign className="w-3.5 h-3.5" />
+        <span className="text-xs font-medium">{t.toolbar.costToggle}</span>
+      </button>
+
+      {/* Currency selector (only visible when cost is enabled) */}
+      {costEnabled && (
+        <div className="flex items-center gap-1.5">
+          <select
+            className="input py-1 text-xs w-24"
+            value={currency}
+            onChange={(e) => setCurrency(e.target.value as Currency)}
+          >
+            {(Object.entries(CURRENCY_SYMBOLS) as [Currency, string][]).map(([code, symbol]) => (
+              <option key={code} value={code}>{symbol} {code}</option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* Spacer */}
       <div className="flex-1" />

@@ -43,6 +43,8 @@ const fr: Translations = {
     settings: 'Paramètres avancés',
     maySlow: '⚠ Peut être lent',
     language: 'Langue',
+    costToggle: 'Coûts',
+    costTooltip: 'Activer le calcul des coûts',
   },
 
   tabs: {
@@ -101,6 +103,9 @@ const fr: Translations = {
     colTrimRight: 'Ébout. Droit',
     colMinScrapWidth: 'Chute Larg Mín',
     colMinScrapHeight: 'Chute Haut Mín',
+    colPricePerM2: 'Prix/m²',
+    colWasteCostPerM2: 'Coût Déchet/m²',
+    colCutCostPerLinearM: 'Coût Coupe/ml',
   },
 
   edgeBandsTab: {
@@ -152,6 +157,11 @@ const fr: Translations = {
     summaryTotalPieces: 'Total Pièces',
     summaryGlobalUtil: 'Rendement',
     summaryUsableScrap: 'Chutes Utiles',
+    costMaterial: 'Coût Matériau',
+    costWaste: 'Coût Déchet',
+    costCutting: 'Coût de Coupe',
+    costTotal: 'Coût Total',
+    costBreakdown: 'Répartition des Coûts',
   },
 
   labelsTab: {
@@ -251,6 +261,11 @@ const fr: Translations = {
     chartUsed: 'Utilisé',
     chartWaste: 'Déchet',
     chartScrap: 'Chutes',
+    costReport: '💰 Rapport des Coûts',
+    costMaterial: 'Coût Matériau',
+    costWaste: 'Coût Déchet',
+    costCutting: 'Coût de Coupe',
+    costTotal: 'Coût Total',
   },
 
   notifications: {

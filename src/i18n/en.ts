@@ -43,6 +43,8 @@ const en: Translations = {
     settings: 'Advanced settings',
     maySlow: '⚠ May be slow',
     language: 'Language',
+    costToggle: 'Costs',
+    costTooltip: 'Enable cost calculation',
   },
 
   tabs: {
@@ -101,6 +103,9 @@ const en: Translations = {
     colTrimRight: 'Trim Right',
     colMinScrapWidth: 'Min Scrap W',
     colMinScrapHeight: 'Min Scrap H',
+    colPricePerM2: 'Price/m²',
+    colWasteCostPerM2: 'Waste Cost/m²',
+    colCutCostPerLinearM: 'Cut Cost/lm',
   },
 
   edgeBandsTab: {
@@ -152,6 +157,11 @@ const en: Translations = {
     summaryTotalPieces: 'Total Pieces',
     summaryGlobalUtil: 'Utilization',
     summaryUsableScrap: 'Usable Scrap',
+    costMaterial: 'Material Cost',
+    costWaste: 'Waste Cost',
+    costCutting: 'Cutting Cost',
+    costTotal: 'Total Cost',
+    costBreakdown: 'Cost Breakdown',
   },
 
   labelsTab: {
@@ -251,6 +261,11 @@ const en: Translations = {
     chartUsed: 'Used',
     chartWaste: 'Waste',
     chartScrap: 'Scrap',
+    costReport: '💰 Cost Report',
+    costMaterial: 'Material Cost',
+    costWaste: 'Waste Cost',
+    costCutting: 'Cutting Cost',
+    costTotal: 'Total Cost',
   },
 
   notifications: {

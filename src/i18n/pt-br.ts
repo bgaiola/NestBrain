@@ -43,6 +43,8 @@ const ptBR: Translations = {
     settings: 'Configurações avançadas',
     maySlow: '⚠ Pode ser lento',
     language: 'Idioma',
+    costToggle: 'Custos',
+    costTooltip: 'Ativar cálculo de custos',
   },
 
   tabs: {
@@ -101,6 +103,9 @@ const ptBR: Translations = {
     colTrimRight: 'Refilo Dir',
     colMinScrapWidth: 'Sobra Larg Mín',
     colMinScrapHeight: 'Sobra Alt Mín',
+    colPricePerM2: 'Preço/m²',
+    colWasteCostPerM2: 'Custo Desp./m²',
+    colCutCostPerLinearM: 'Custo Corte/ml',
   },
 
   edgeBandsTab: {
@@ -152,6 +157,11 @@ const ptBR: Translations = {
     summaryTotalPieces: 'Total Peças',
     summaryGlobalUtil: 'Aproveitamento',
     summaryUsableScrap: 'Sobras Úteis',
+    costMaterial: 'Custo Material',
+    costWaste: 'Custo Desperdício',
+    costCutting: 'Custo de Corte',
+    costTotal: 'Custo Total',
+    costBreakdown: 'Detalhamento de Custos',
   },
 
   labelsTab: {
@@ -251,6 +261,11 @@ const ptBR: Translations = {
     chartUsed: 'Utilizado',
     chartWaste: 'Desperdício',
     chartScrap: 'Sobras',
+    costReport: '💰 Relatório de Custos',
+    costMaterial: 'Custo Material',
+    costWaste: 'Custo Desperdício',
+    costCutting: 'Custo de Corte',
+    costTotal: 'Custo Total',
   },
 
   notifications: {

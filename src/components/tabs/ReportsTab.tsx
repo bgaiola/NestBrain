@@ -1,7 +1,9 @@
 import { useAppStore } from '@/stores/appStore';
+import { useMaterialsStore } from '@/stores/materialsStore';
 import { useTranslation } from '@/i18n';
 import { FileText, Download } from 'lucide-react';
 import { areaM2 } from '@/utils/helpers';
+import { CURRENCY_SYMBOLS } from '@/types';
 
 const CHART_COLORS = [
   '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
@@ -12,6 +14,9 @@ export function ReportsTab() {
   const { t } = useTranslation();
   const result = useAppStore((s) => s.result);
   const projectName = useAppStore((s) => s.projectName);
+  const costEnabled = useAppStore((s) => s.costEnabled);
+  const currency = useAppStore((s) => s.currency);
+  const materials = useMaterialsStore((s) => s.materials);
 
   if (!result) {
     return (
@@ -286,6 +291,98 @@ export function ReportsTab() {
             </table>
           )}
         </div>
+
+        {/* 7. Cost Report (visible only when costEnabled and costs exist) */}
+        {costEnabled && (result.grandTotalCost ?? 0) > 0 && (() => {
+          const sym = CURRENCY_SYMBOLS[currency];
+          const fmt = (v: number) => `${sym} ${v.toFixed(2)}`;
+          const materialMap2 = new Map(materials.map((m) => [m.code, m]));
+
+          // Per-material cost breakdown
+          const matCosts = new Map<string, { materialCost: number; wasteCost: number; cuttingCost: number; totalCost: number }>();
+          for (const plan of result.plans) {
+            const existing = matCosts.get(plan.materialCode) || { materialCost: 0, wasteCost: 0, cuttingCost: 0, totalCost: 0 };
+            existing.materialCost += plan.materialCost ?? 0;
+            existing.wasteCost += plan.wasteCost ?? 0;
+            existing.cuttingCost += plan.cuttingCost ?? 0;
+            existing.totalCost += plan.totalPlanCost ?? 0;
+            matCosts.set(plan.materialCode, existing);
+          }
+
+          const grandTotal = result.grandTotalCost ?? 0;
+          const segments = [
+            { label: t.reportsTab.costMaterial, value: result.totalMaterialCost ?? 0, color: '#3b82f6' },
+            { label: t.reportsTab.costWaste, value: result.totalWasteCost ?? 0, color: '#ef4444' },
+            { label: t.reportsTab.costCutting, value: result.totalCuttingCost ?? 0, color: '#f59e0b' },
+          ].filter((s) => s.value > 0);
+
+          return (
+            <div className="card p-5">
+              <h3 className="text-sm font-bold text-surface-700 uppercase tracking-wider mb-4">
+                {t.reportsTab.costReport}
+              </h3>
+              {/* Cost totals */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <StatCard label={t.reportsTab.costMaterial} value={fmt(result.totalMaterialCost ?? 0)} color="text-blue-600" />
+                <StatCard label={t.reportsTab.costWaste} value={fmt(result.totalWasteCost ?? 0)} color="text-red-500" />
+                <StatCard label={t.reportsTab.costCutting} value={fmt(result.totalCuttingCost ?? 0)} color="text-amber-600" />
+                <StatCard label={t.reportsTab.costTotal} value={fmt(grandTotal)} color="text-emerald-700" />
+              </div>
+              {/* Cost distribution bar */}
+              <div className="h-8 rounded-full overflow-hidden flex mb-3">
+                {segments.map((s, i) => {
+                  const pct = grandTotal > 0 ? (s.value / grandTotal * 100) : 0;
+                  return (
+                    <div key={i} className="h-full flex items-center justify-center text-white text-2xs font-bold"
+                      style={{ width: `${Math.max(pct, 1)}%`, backgroundColor: s.color }}>
+                      {pct >= 8 ? `${pct.toFixed(0)}%` : ''}
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="flex gap-6 justify-center mb-6">
+                {segments.map((s, i) => (
+                  <div key={i} className="flex items-center gap-2 text-xs">
+                    <span className="w-3 h-3 rounded-sm inline-block" style={{ backgroundColor: s.color }} />
+                    <span className="text-surface-600">{s.label}</span>
+                    <span className="font-bold text-surface-800">{fmt(s.value)}</span>
+                    <span className="text-surface-400">({grandTotal > 0 ? ((s.value / grandTotal) * 100).toFixed(1) : 0}%)</span>
+                  </div>
+                ))}
+              </div>
+              {/* Per-material cost table */}
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-surface-200">
+                    <th className="text-left py-2 text-xs font-semibold text-surface-500">{t.reportsTab.colMaterial}</th>
+                    <th className="text-right py-2 text-xs font-semibold text-surface-500">{t.reportsTab.costMaterial}</th>
+                    <th className="text-right py-2 text-xs font-semibold text-surface-500">{t.reportsTab.costWaste}</th>
+                    <th className="text-right py-2 text-xs font-semibold text-surface-500">{t.reportsTab.costCutting}</th>
+                    <th className="text-right py-2 text-xs font-semibold text-surface-500">{t.reportsTab.costTotal}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.from(matCosts).map(([code, costs]) => (
+                    <tr key={code} className="border-b border-surface-100">
+                      <td className="py-2 font-medium">{code}</td>
+                      <td className="text-right py-2">{fmt(costs.materialCost)}</td>
+                      <td className="text-right py-2">{fmt(costs.wasteCost)}</td>
+                      <td className="text-right py-2">{fmt(costs.cuttingCost)}</td>
+                      <td className="text-right py-2 font-bold text-emerald-700">{fmt(costs.totalCost)}</td>
+                    </tr>
+                  ))}
+                  <tr className="border-t-2 border-surface-300 font-bold">
+                    <td className="py-2">{t.reportsTab.costTotal}</td>
+                    <td className="text-right py-2">{fmt(result.totalMaterialCost ?? 0)}</td>
+                    <td className="text-right py-2">{fmt(result.totalWasteCost ?? 0)}</td>
+                    <td className="text-right py-2">{fmt(result.totalCuttingCost ?? 0)}</td>
+                    <td className="text-right py-2 text-emerald-700">{fmt(grandTotal)}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          );
+        })()}
       </div>
     </div>
   );
