@@ -1,13 +1,13 @@
-code,description,thickness,sheetWidth,sheetHeight,grain,trimTop,trimBottom,trimLeft,trimRight,minScrapWidth,minScrapHeight
-MDF-15-BL,MDF Blanco 15mm,15,2750,1830,none,10,10,10,10,200,200
-MDF-18-BL,MDF Blanco 18mm,18,2750,1830,none,10,10,10,10,200,200
-MDF-15-NG,MDF Negro 15mm,15,2750,1830,none,10,10,10,10,200,200
-MEL-18-ROB,Melamina Roble 18mm,18,2750,1830,horizontal,10,10,10,10,250,250
-MEL-18-NOG,Melamina Nogal 18mm,18,2750,1830,horizontal,10,10,10,10,250,250
-MEL-18-CER,Melamina Cerezo 18mm,18,2750,1830,vertical,10,10,10,10,250,250
-MEL-15-ROB,Melamina Roble 15mm,15,2750,1830,horizontal,8,8,8,8,200,200
-MEL-18-GRS,Melamina Gris 18mm,18,2750,1830,none,10,10,10,10,200,200
-AGL-16-BL,Aglomerado Blanco 16mm,16,2440,1220,none,5,5,5,5,150,150
-AGL-16-CR,Aglomerado Crudo 16mm,16,2440,1220,none,5,5,5,5,150,150
-MDF-22-BL,MDF Blanco 22mm,22,2750,1830,none,12,12,12,12,200,200
-MEL-25-ROB,Melamina Roble 25mm,25,2750,1830,horizontal,12,12,12,12,250,250
+code,description,thickness,sheetWidth,sheetHeight,grain,trimTop,trimBottom,trimLeft,trimRight,minScrapWidth,minScrapHeight,pricePerM2,wasteCostPerM2,cutCostPerLinearM
+MDF-15-BL,MDF Blanco 15mm,15,2750,1830,none,10,10,10,10,200,200,18.50,3.20,1.50
+MDF-18-BL,MDF Blanco 18mm,18,2750,1830,none,10,10,10,10,200,200,22.00,3.80,1.50
+MDF-15-NG,MDF Negro 15mm,15,2750,1830,none,10,10,10,10,200,200,24.00,4.00,1.50
+MEL-18-ROB,Melamina Roble 18mm,18,2750,1830,horizontal,10,10,10,10,250,250,35.00,5.50,2.00
+MEL-18-NOG,Melamina Nogal 18mm,18,2750,1830,horizontal,10,10,10,10,250,250,38.00,6.00,2.00
+MEL-18-CER,Melamina Cerezo 18mm,18,2750,1830,horizontal,10,10,10,10,250,250,40.00,6.50,2.00
+MEL-15-ROB,Melamina Roble 15mm,15,2750,1830,horizontal,8,8,8,8,200,200,30.00,4.80,1.80
+MEL-18-GRS,Melamina Gris 18mm,18,2750,1830,none,10,10,10,10,200,200,28.00,4.50,1.80
+AGL-16-BL,Aglomerado Blanco 16mm,16,2440,1220,none,5,5,5,5,150,150,12.00,2.00,1.20
+AGL-16-CR,Aglomerado Crudo 16mm,16,2440,1220,none,5,5,5,5,150,150,8.50,1.50,1.00
+MDF-22-BL,MDF Blanco 22mm,22,2750,1830,none,12,12,12,12,200,200,32.00,5.00,1.80
+MEL-25-ROB,Melamina Roble 25mm,25,2750,1830,horizontal,12,12,12,12,250,250,45.00,7.00,2.50

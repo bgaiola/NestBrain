@@ -56,6 +56,7 @@ const es = {
     results: 'Resultados',
     labels: 'Etiquetas',
     reports: 'Informes',
+    costs: 'Costos',
   },
 
   // ─── Pieces Tab ──────────────────────
@@ -288,6 +289,34 @@ const es = {
     costWaste: 'Costo Desperdicio',
     costCutting: 'Costo de Corte',
     costTotal: 'Costo Total',
+  },
+
+  // ─── Costs Tab ────────────────────────
+  costsTab: {
+    optimizeFirst: 'Optimice primero para ver los costos',
+    costDisabled: 'El cálculo de costos está desactivado',
+    costDisabledHint: 'Active los costos desde la barra de herramientas para ver este informe',
+    noCosts: 'Sin costos calculados',
+    noCostsHint: 'Defina precios en los materiales para generar el análisis de costos',
+    title: 'Análisis de Costos',
+    subtitle: 'Moneda: {currency}',
+    exportPrint: 'Exportar / Imprimir',
+    summary: '💰 Resumen de Costos',
+    costMaterial: 'Costo Material',
+    costWaste: 'Costo Desperdicio',
+    costCutting: 'Costo de Corte',
+    costTotal: 'Costo Total',
+    costPerPiece: 'Costo por Pieza',
+    costPerM2: 'Costo por m²',
+    costBreakdown: 'Distribución de Costos',
+    costByMaterial: '📊 Costo por Material',
+    detailedTable: '📋 Tabla Detallada de Costos',
+    costPerPlan: '📑 Costo por Plano',
+    colMaterial: 'Material',
+    colSheets: 'Tableros',
+    colSheetArea: 'Área Tablero',
+    colWasteArea: 'Área Desperdicio',
+    colPlan: 'Plano',
   },
 
   // ─── Notifications ───────────────────

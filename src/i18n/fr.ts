@@ -54,6 +54,7 @@ const fr: Translations = {
     results: 'Résultats',
     labels: 'Étiquettes',
     reports: 'Rapports',
+    costs: 'Coûts',
   },
 
   piecesTab: {
@@ -266,6 +267,33 @@ const fr: Translations = {
     costWaste: 'Coût Déchet',
     costCutting: 'Coût de Coupe',
     costTotal: 'Coût Total',
+  },
+
+  costsTab: {
+    optimizeFirst: "Optimisez d'abord pour voir les coûts",
+    costDisabled: 'Le calcul des coûts est désactivé',
+    costDisabledHint: 'Activez les coûts depuis la barre d\'outils pour voir ce rapport',
+    noCosts: 'Aucun coût calculé',
+    noCostsHint: 'Définissez des prix sur les matériaux pour générer l\'analyse des coûts',
+    title: 'Analyse des Coûts',
+    subtitle: 'Devise: {currency}',
+    exportPrint: 'Exporter / Imprimer',
+    summary: '💰 Résumé des Coûts',
+    costMaterial: 'Coût Matériau',
+    costWaste: 'Coût Déchet',
+    costCutting: 'Coût de Coupe',
+    costTotal: 'Coût Total',
+    costPerPiece: 'Coût par Pièce',
+    costPerM2: 'Coût par m²',
+    costBreakdown: 'Répartition des Coûts',
+    costByMaterial: '📊 Coût par Matériau',
+    detailedTable: '📋 Tableau Détaillé des Coûts',
+    costPerPlan: '📑 Coût par Plan',
+    colMaterial: 'Matériau',
+    colSheets: 'Panneaux',
+    colSheetArea: 'Surface Panneau',
+    colWasteArea: 'Surface Déchet',
+    colPlan: 'Plan',
   },
 
   notifications: {

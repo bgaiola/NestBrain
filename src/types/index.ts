@@ -206,7 +206,7 @@ export interface LabelTemplate {
 
 export type Locale = 'es' | 'pt-BR' | 'en' | 'fr' | 'it';
 
-export type TabId = 'pieces' | 'materials' | 'edgeBands' | 'results' | 'labels' | 'reports';
+export type TabId = 'pieces' | 'materials' | 'edgeBands' | 'results' | 'labels' | 'reports' | 'costs';
 
 export interface AppNotification {
   id: string;

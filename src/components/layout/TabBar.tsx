@@ -8,6 +8,7 @@ import {
   BarChart3,
   Tag,
   FileText,
+  DollarSign,
 } from 'lucide-react';
 
 const tabDefs: { id: TabId; labelKey: keyof ReturnType<typeof import('@/i18n').useTranslation>['t']['tabs']; icon: React.ComponentType<{ className?: string }> }[] = [
@@ -17,6 +18,7 @@ const tabDefs: { id: TabId; labelKey: keyof ReturnType<typeof import('@/i18n').u
   { id: 'results', labelKey: 'results', icon: BarChart3 },
   { id: 'labels', labelKey: 'labels', icon: Tag },
   { id: 'reports', labelKey: 'reports', icon: FileText },
+  { id: 'costs', labelKey: 'costs', icon: DollarSign },
 ];
 
 export function TabBar() {
@@ -24,13 +26,15 @@ export function TabBar() {
   const activeTab = useAppStore((s) => s.activeTab);
   const setActiveTab = useAppStore((s) => s.setActiveTab);
   const result = useAppStore((s) => s.result);
+  const costEnabled = useAppStore((s) => s.costEnabled);
 
   return (
     <div className="flex items-end px-2 gap-0 border-t border-surface-100 bg-surface-50/50">
       {tabDefs.map((tab) => {
         const isActive = activeTab === tab.id;
         const isResultTab = tab.id === 'results' || tab.id === 'labels' || tab.id === 'reports';
-        const isDisabled = isResultTab && !result;
+        const isCostTab = tab.id === 'costs';
+        const isDisabled = (isResultTab && !result) || (isCostTab && (!result || !costEnabled));
 
         return (
           <button

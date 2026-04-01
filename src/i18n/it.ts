@@ -54,6 +54,7 @@ const it: Translations = {
     results: 'Risultati',
     labels: 'Etichette',
     reports: 'Report',
+    costs: 'Costi',
   },
 
   piecesTab: {
@@ -266,6 +267,33 @@ const it: Translations = {
     costWaste: 'Costo Scarto',
     costCutting: 'Costo di Taglio',
     costTotal: 'Costo Totale',
+  },
+
+  costsTab: {
+    optimizeFirst: 'Ottimizza prima per vedere i costi',
+    costDisabled: 'Il calcolo dei costi è disattivato',
+    costDisabledHint: 'Attiva i costi dalla barra degli strumenti per vedere questo report',
+    noCosts: 'Nessun costo calcolato',
+    noCostsHint: 'Imposta i prezzi sui materiali per generare l\'analisi dei costi',
+    title: 'Analisi dei Costi',
+    subtitle: 'Valuta: {currency}',
+    exportPrint: 'Esporta / Stampa',
+    summary: '💰 Riepilogo Costi',
+    costMaterial: 'Costo Materiale',
+    costWaste: 'Costo Scarto',
+    costCutting: 'Costo di Taglio',
+    costTotal: 'Costo Totale',
+    costPerPiece: 'Costo per Pezzo',
+    costPerM2: 'Costo per m²',
+    costBreakdown: 'Ripartizione Costi',
+    costByMaterial: '📊 Costo per Materiale',
+    detailedTable: '📋 Tabella Dettagliata Costi',
+    costPerPlan: '📑 Costo per Piano',
+    colMaterial: 'Materiale',
+    colSheets: 'Pannelli',
+    colSheetArea: 'Area Pannello',
+    colWasteArea: 'Area Scarto',
+    colPlan: 'Piano',
   },
 
   notifications: {

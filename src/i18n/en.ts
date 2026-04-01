@@ -54,6 +54,7 @@ const en: Translations = {
     results: 'Results',
     labels: 'Labels',
     reports: 'Reports',
+    costs: 'Costs',
   },
 
   piecesTab: {
@@ -266,6 +267,33 @@ const en: Translations = {
     costWaste: 'Waste Cost',
     costCutting: 'Cutting Cost',
     costTotal: 'Total Cost',
+  },
+
+  costsTab: {
+    optimizeFirst: 'Optimize first to see costs',
+    costDisabled: 'Cost calculation is disabled',
+    costDisabledHint: 'Enable costs from the toolbar to see this report',
+    noCosts: 'No costs calculated',
+    noCostsHint: 'Set prices on materials to generate the cost analysis',
+    title: 'Cost Analysis',
+    subtitle: 'Currency: {currency}',
+    exportPrint: 'Export / Print',
+    summary: '💰 Cost Summary',
+    costMaterial: 'Material Cost',
+    costWaste: 'Waste Cost',
+    costCutting: 'Cutting Cost',
+    costTotal: 'Total Cost',
+    costPerPiece: 'Cost per Piece',
+    costPerM2: 'Cost per m²',
+    costBreakdown: 'Cost Distribution',
+    costByMaterial: '📊 Cost by Material',
+    detailedTable: '📋 Detailed Cost Table',
+    costPerPlan: '📑 Cost per Plan',
+    colMaterial: 'Material',
+    colSheets: 'Sheets',
+    colSheetArea: 'Sheet Area',
+    colWasteArea: 'Waste Area',
+    colPlan: 'Plan',
   },
 
   notifications: {

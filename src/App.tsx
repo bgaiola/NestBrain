@@ -7,6 +7,7 @@ import { EdgeBandsTab } from '@/components/tabs/EdgeBandsTab';
 import { ResultsTab } from '@/components/tabs/ResultsTab';
 import { LabelsTab } from '@/components/tabs/LabelsTab';
 import { ReportsTab } from '@/components/tabs/ReportsTab';
+import { CostsTab } from '@/components/tabs/CostsTab';
 import { Notifications } from '@/components/ui/Notifications';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 
@@ -41,6 +42,9 @@ export default function App() {
         </div>
         <div className={activeTab === 'reports' ? 'h-full' : 'hidden'}>
           <ReportsTab />
+        </div>
+        <div className={activeTab === 'costs' ? 'h-full' : 'hidden'}>
+          <CostsTab />
         </div>
       </main>
 
