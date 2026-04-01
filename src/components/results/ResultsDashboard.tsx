@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
-import { OptimizationResult, CURRENCY_SYMBOLS, Currency } from '@/types';
+import { OptimizationResult } from '@/types';
 import { useAppStore } from '@/stores/appStore';
 import { useTranslation } from '@/i18n';
-import { BarChart3, PieChart, Layers, Package, DollarSign } from 'lucide-react';
+import { BarChart3, PieChart, Layers, Package } from 'lucide-react';
 
 interface Props {
   result: OptimizationResult;
@@ -279,106 +279,17 @@ function PiecesByMaterial({ result }: Props) {
   );
 }
 
-// ─── Cost Summary Cards (visible only when costEnabled) ─────
-function CostSummaryCards({ result }: Props) {
-  const { t } = useTranslation();
-  const currency = useAppStore((s) => s.currency);
-  const sym = CURRENCY_SYMBOLS[currency];
-
-  const fmt = (v: number) => `${sym} ${v.toFixed(2)}`;
-
-  const cards = [
-    { label: t.resultsTab.costMaterial, value: fmt(result.totalMaterialCost ?? 0), color: 'bg-blue-50 text-blue-600' },
-    { label: t.resultsTab.costWaste, value: fmt(result.totalWasteCost ?? 0), color: 'bg-red-50 text-red-600' },
-    { label: t.resultsTab.costCutting, value: fmt(result.totalCuttingCost ?? 0), color: 'bg-amber-50 text-amber-600' },
-    { label: t.resultsTab.costTotal, value: fmt(result.grandTotalCost ?? 0), color: 'bg-emerald-50 text-emerald-700' },
-  ];
-
-  return (
-    <div className="grid grid-cols-4 gap-3 mb-4">
-      {cards.map((c, i) => (
-        <div key={i} className="bg-white rounded-lg border border-surface-200 p-3 flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${c.color}`}>
-            <DollarSign className="w-5 h-5" />
-          </div>
-          <div>
-            <div className={`text-lg font-bold ${c.color.split(' ')[1]}`}>{c.value}</div>
-            <div className="text-2xs text-surface-500 uppercase tracking-wide">{c.label}</div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// ─── Cost Breakdown Chart (horizontal stacked bar) ──────────
-function CostBreakdownChart({ result }: Props) {
-  const { t } = useTranslation();
-  const currency = useAppStore((s) => s.currency);
-  const sym = CURRENCY_SYMBOLS[currency];
-
-  const segments = [
-    { label: t.resultsTab.costMaterial, value: result.totalMaterialCost ?? 0, color: '#3b82f6' },
-    { label: t.resultsTab.costWaste, value: result.totalWasteCost ?? 0, color: '#ef4444' },
-    { label: t.resultsTab.costCutting, value: result.totalCuttingCost ?? 0, color: '#f59e0b' },
-  ].filter((s) => s.value > 0);
-
-  const total = segments.reduce((s, seg) => s + seg.value, 0);
-
-  return (
-    <div className="bg-white rounded-lg border border-surface-200 p-4 col-span-2">
-      <h4 className="text-xs font-semibold text-surface-600 mb-3 flex items-center gap-1.5">
-        <DollarSign className="w-3.5 h-3.5" />
-        {t.resultsTab.costBreakdown}
-      </h4>
-      {/* Stacked horizontal bar */}
-      <div className="h-8 rounded-full overflow-hidden flex bg-surface-100 mb-3">
-        {segments.map((seg, i) => {
-          const pct = total > 0 ? (seg.value / total) * 100 : 0;
-          return (
-            <div key={i}
-              className="h-full transition-all duration-500 flex items-center justify-center"
-              style={{ width: `${pct}%`, backgroundColor: seg.color }}>
-              {pct > 12 && (
-                <span className="text-white text-2xs font-bold">{pct.toFixed(0)}%</span>
-              )}
-            </div>
-          );
-        })}
-      </div>
-      <div className="flex flex-wrap gap-3 text-2xs">
-        {segments.map((seg, i) => (
-          <div key={i} className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: seg.color }} />
-            <span className="text-surface-600">{seg.label}</span>
-            <span className="font-medium text-surface-800">{sym} {seg.value.toFixed(2)}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // ─── Main Dashboard Component ───────────────────────────────
 export function ResultsDashboard({ result }: Props) {
-  const costEnabled = useAppStore((s) => s.costEnabled);
-  const hasCosts = costEnabled && (result.grandTotalCost ?? 0) > 0;
-
   return (
     <div className="px-4 py-3 overflow-y-auto">
       <SummaryCards result={result} />
-      {hasCosts && <CostSummaryCards result={result} />}
       <div className="grid grid-cols-4 gap-3">
         <UtilizationDonut result={result} />
         <MaterialBarChart result={result} />
         <WasteBreakdown result={result} />
         <PiecesByMaterial result={result} />
       </div>
-      {hasCosts && (
-        <div className="grid grid-cols-4 gap-3 mt-3">
-          <CostBreakdownChart result={result} />
-        </div>
-      )}
     </div>
   );
 }
