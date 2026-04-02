@@ -120,12 +120,15 @@ const es = {
   edgeBandsTab: {
     newBand: 'Nuevo Canto',
     remove: 'Eliminar',
+    importCSV: 'Importar CSV',
+    exportCSV: 'Exportar CSV',
     count: '{count} canto(s)',
     emptyTitle: 'Ningún canto registrado',
     emptyHint: 'Haga clic en "Nuevo Canto" para comenzar',
     colCode: 'Código',
     colDescription: 'Descripción',
     colIncrease: 'Aumento (mm)',
+    colCostPerLM: 'Costo/ml',
     info: '💡 El "Aumento suplementario" se añade a la dimensión de la pieza en cada lado que recibe canto, antes del cálculo de corte. Ej: pieza 500mm con canto (aumento 2mm) en ambos lados = 504mm de corte.',
   },
 
@@ -307,6 +310,7 @@ const es = {
     costMaterial: 'Costo Material',
     costWaste: 'Costo Desperdicio',
     costCutting: 'Costo de Corte',
+    costEdgeBand: 'Costo Canto',
     costTotal: 'Costo Total',
     costPerPiece: 'Costo por Pieza',
     costPerM2: 'Costo por m²',

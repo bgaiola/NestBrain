@@ -1,5 +1,6 @@
 import { useAppStore } from '@/stores/appStore';
 import { useMaterialsStore } from '@/stores/materialsStore';
+import { useEdgeBandsStore } from '@/stores/edgeBandsStore';
 import { useTranslation } from '@/i18n';
 import { DollarSign, Download, TrendingUp, AlertTriangle } from 'lucide-react';
 import { CURRENCY_SYMBOLS } from '@/types';
@@ -16,6 +17,7 @@ export function CostsTab() {
   const costEnabled = useAppStore((s) => s.costEnabled);
   const currency = useAppStore((s) => s.currency);
   const materials = useMaterialsStore((s) => s.materials);
+  const edgeBands = useEdgeBandsStore((s) => s.edgeBands);
 
   if (!result) {
     return (
@@ -51,17 +53,18 @@ export function CostsTab() {
 
   // Per-material cost breakdown
   const matCosts = new Map<string, {
-    materialCost: number; wasteCost: number; cuttingCost: number; totalCost: number;
+    materialCost: number; wasteCost: number; cuttingCost: number; edgeBandCost: number; totalCost: number;
     sheets: number; sheetAreaM2: number; wasteAreaM2: number;
   }>();
   for (const plan of result.plans) {
     const existing = matCosts.get(plan.materialCode) || {
-      materialCost: 0, wasteCost: 0, cuttingCost: 0, totalCost: 0,
+      materialCost: 0, wasteCost: 0, cuttingCost: 0, edgeBandCost: 0, totalCost: 0,
       sheets: 0, sheetAreaM2: 0, wasteAreaM2: 0,
     };
     existing.materialCost += plan.materialCost ?? 0;
     existing.wasteCost += plan.wasteCost ?? 0;
     existing.cuttingCost += plan.cuttingCost ?? 0;
+    existing.edgeBandCost += plan.edgeBandCost ?? 0;
     existing.totalCost += plan.totalPlanCost ?? 0;
     existing.sheets += plan.stackCount;
     existing.sheetAreaM2 += (plan.sheetWidth * plan.sheetHeight * plan.stackCount) / 1e6;
@@ -73,11 +76,13 @@ export function CostsTab() {
   const totalMaterial = result.totalMaterialCost ?? 0;
   const totalWaste = result.totalWasteCost ?? 0;
   const totalCutting = result.totalCuttingCost ?? 0;
+  const totalEdgeBand = result.totalEdgeBandCost ?? 0;
 
   const segments = [
     { label: t.costsTab.costMaterial, value: totalMaterial, color: '#3b82f6' },
     { label: t.costsTab.costWaste, value: totalWaste, color: '#ef4444' },
     { label: t.costsTab.costCutting, value: totalCutting, color: '#f59e0b' },
+    { label: t.costsTab.costEdgeBand, value: totalEdgeBand, color: '#8b5cf6' },
   ].filter((s) => s.value > 0);
 
   // Cost per piece
@@ -110,14 +115,15 @@ export function CostsTab() {
           <h3 className="text-sm font-bold text-surface-700 uppercase tracking-wider mb-4">
             {t.costsTab.summary}
           </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
             <StatCard label={t.costsTab.costMaterial} value={fmt(totalMaterial)} color="text-blue-600" />
             <StatCard label={t.costsTab.costWaste} value={fmt(totalWaste)} color="text-red-500" />
             <StatCard label={t.costsTab.costCutting} value={fmt(totalCutting)} color="text-amber-600" />
+            <StatCard label={t.costsTab.costEdgeBand} value={fmt(totalEdgeBand)} color="text-violet-600" />
             <StatCard label={t.costsTab.costTotal} value={fmt(grandTotal)} color="text-emerald-700" />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <StatCard label={t.costsTab.costPerPiece} value={fmt(costPerPiece)} color="text-violet-600" />
+            <StatCard label={t.costsTab.costPerPiece} value={fmt(costPerPiece)} color="text-purple-600" />
             <StatCard label={t.costsTab.costPerM2} value={fmt(costPerM2Used)} color="text-cyan-600" />
           </div>
         </div>
@@ -187,11 +193,17 @@ export function CostsTab() {
                           width: `${costs.totalCost > 0 ? (costs.cuttingCost / costs.totalCost * matPct) : 0}%`,
                           backgroundColor: '#f59e0b',
                         }} />
+                        {/* Edge band portion */}
+                        <div className="h-full" style={{
+                          width: `${costs.totalCost > 0 ? (costs.edgeBandCost / costs.totalCost * matPct) : 0}%`,
+                          backgroundColor: '#8b5cf6',
+                        }} />
                       </div>
                       <div className="flex gap-4 mt-0.5 text-2xs text-surface-400">
                         <span>{t.costsTab.costMaterial}: {fmt(costs.materialCost)}</span>
                         <span>{t.costsTab.costWaste}: {fmt(costs.wasteCost)}</span>
                         <span>{t.costsTab.costCutting}: {fmt(costs.cuttingCost)}</span>
+                        {costs.edgeBandCost > 0 && <span>{t.costsTab.costEdgeBand}: {fmt(costs.edgeBandCost)}</span>}
                         <span className="ml-auto">{costs.sheets} {t.common.sheets}</span>
                       </div>
                     </div>
@@ -218,6 +230,7 @@ export function CostsTab() {
                   <th className="text-right py-2 text-xs font-semibold text-surface-500">{t.costsTab.costMaterial}</th>
                   <th className="text-right py-2 text-xs font-semibold text-surface-500">{t.costsTab.costWaste}</th>
                   <th className="text-right py-2 text-xs font-semibold text-surface-500">{t.costsTab.costCutting}</th>
+                  <th className="text-right py-2 text-xs font-semibold text-surface-500">{t.costsTab.costEdgeBand}</th>
                   <th className="text-right py-2 text-xs font-semibold text-surface-500">{t.costsTab.costTotal}</th>
                 </tr>
               </thead>
@@ -231,6 +244,7 @@ export function CostsTab() {
                     <td className="text-right py-2">{fmt(costs.materialCost)}</td>
                     <td className="text-right py-2">{fmt(costs.wasteCost)}</td>
                     <td className="text-right py-2">{fmt(costs.cuttingCost)}</td>
+                    <td className="text-right py-2">{fmt(costs.edgeBandCost)}</td>
                     <td className="text-right py-2 font-bold text-emerald-700">{fmt(costs.totalCost)}</td>
                   </tr>
                 ))}
@@ -246,6 +260,7 @@ export function CostsTab() {
                   <td className="text-right py-2">{fmt(totalMaterial)}</td>
                   <td className="text-right py-2">{fmt(totalWaste)}</td>
                   <td className="text-right py-2">{fmt(totalCutting)}</td>
+                  <td className="text-right py-2">{fmt(totalEdgeBand)}</td>
                   <td className="text-right py-2 text-emerald-700">{fmt(grandTotal)}</td>
                 </tr>
               </tbody>
@@ -268,6 +283,7 @@ export function CostsTab() {
                   <th className="text-right py-2 font-semibold text-surface-500">{t.costsTab.costMaterial}</th>
                   <th className="text-right py-2 font-semibold text-surface-500">{t.costsTab.costWaste}</th>
                   <th className="text-right py-2 font-semibold text-surface-500">{t.costsTab.costCutting}</th>
+                  <th className="text-right py-2 font-semibold text-surface-500">{t.costsTab.costEdgeBand}</th>
                   <th className="text-right py-2 font-semibold text-surface-500">{t.costsTab.costTotal}</th>
                 </tr>
               </thead>
@@ -280,6 +296,7 @@ export function CostsTab() {
                     <td className="text-right py-1.5">{fmt(plan.materialCost ?? 0)}</td>
                     <td className="text-right py-1.5">{fmt(plan.wasteCost ?? 0)}</td>
                     <td className="text-right py-1.5">{fmt(plan.cuttingCost ?? 0)}</td>
+                    <td className="text-right py-1.5">{fmt(plan.edgeBandCost ?? 0)}</td>
                     <td className="text-right py-1.5 font-bold text-emerald-700">{fmt(plan.totalPlanCost ?? 0)}</td>
                   </tr>
                 ))}

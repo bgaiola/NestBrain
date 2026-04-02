@@ -114,12 +114,15 @@ const fr: Translations = {
   edgeBandsTab: {
     newBand: 'Nouveau Chant',
     remove: 'Supprimer',
+    importCSV: 'Importer CSV',
+    exportCSV: 'Exporter CSV',
     count: '{count} chant(s)',
     emptyTitle: 'Aucun chant enregistré',
     emptyHint: 'Cliquez sur "Nouveau Chant" pour commencer',
     colCode: 'Code',
     colDescription: 'Description',
     colIncrease: 'Supplément (mm)',
+    colCostPerLM: 'Coût/ml',
     info: "💡 Le \"Supplément\" est ajouté à la dimension de la pièce sur chaque côté recevant un chant, avant le calcul de coupe. Ex: pièce 500mm avec chant (supplément 2mm) des deux côtés = 504mm de coupe.",
   },
 
@@ -284,6 +287,7 @@ const fr: Translations = {
     costMaterial: 'Coût Matériau',
     costWaste: 'Coût Déchet',
     costCutting: 'Coût de Coupe',
+    costEdgeBand: 'Coût Chant',
     costTotal: 'Coût Total',
     costPerPiece: 'Coût par Pièce',
     costPerM2: 'Coût par m²',

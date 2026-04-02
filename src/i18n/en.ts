@@ -114,12 +114,15 @@ const en: Translations = {
   edgeBandsTab: {
     newBand: 'New Band',
     remove: 'Remove',
+    importCSV: 'Import CSV',
+    exportCSV: 'Export CSV',
     count: '{count} band(s)',
     emptyTitle: 'No edge bands registered',
     emptyHint: 'Click "New Band" to get started',
     colCode: 'Code',
     colDescription: 'Description',
     colIncrease: 'Increase (mm)',
+    colCostPerLM: 'Cost/lm',
     info: '💡 The "Supplementary increase" is added to the piece dimension on each side receiving edge banding, before the cut calculation. E.g.: piece 500mm with band (2mm increase) on both sides = 504mm cut.',
   },
 
@@ -284,6 +287,7 @@ const en: Translations = {
     costMaterial: 'Material Cost',
     costWaste: 'Waste Cost',
     costCutting: 'Cutting Cost',
+    costEdgeBand: 'Edge Band Cost',
     costTotal: 'Total Cost',
     costPerPiece: 'Cost per Piece',
     costPerM2: 'Cost per m²',

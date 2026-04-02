@@ -58,6 +58,7 @@ export interface EdgeBand {
   code: string;
   description: string;
   supplementaryIncrease: number; // mm added per side
+  costPerLinearM: number; // cost per linear meter of edge band
 }
 
 // ─── Optimization Config ───────────────────────────────────
@@ -130,6 +131,7 @@ export interface CuttingPlan {
   materialCost?: number;
   wasteCost?: number;
   cuttingCost?: number;
+  edgeBandCost?: number;
   totalPlanCost?: number;
 }
 
@@ -149,6 +151,7 @@ export interface OptimizationResult {
   totalMaterialCost?: number;
   totalWasteCost?: number;
   totalCuttingCost?: number;
+  totalEdgeBandCost?: number;
   grandTotalCost?: number;
 }
 

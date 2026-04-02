@@ -114,12 +114,15 @@ const it: Translations = {
   edgeBandsTab: {
     newBand: 'Nuovo Bordo',
     remove: 'Rimuovi',
+    importCSV: 'Importa CSV',
+    exportCSV: 'Esporta CSV',
     count: '{count} bordo/i',
     emptyTitle: 'Nessun bordo registrato',
     emptyHint: 'Clicca "Nuovo Bordo" per iniziare',
     colCode: 'Codice',
     colDescription: 'Descrizione',
     colIncrease: 'Supplemento (mm)',
+    colCostPerLM: 'Costo/ml',
     info: '💡 Il "Supplemento" viene aggiunto alla dimensione del pezzo su ogni lato che riceve il bordo, prima del calcolo di taglio. Es: pezzo 500mm con bordo (supplemento 2mm) su entrambi i lati = 504mm di taglio.',
   },
 
@@ -284,6 +287,7 @@ const it: Translations = {
     costMaterial: 'Costo Materiale',
     costWaste: 'Costo Scarto',
     costCutting: 'Costo di Taglio',
+    costEdgeBand: 'Costo Bordo',
     costTotal: 'Costo Totale',
     costPerPiece: 'Costo per Pezzo',
     costPerM2: 'Costo per m²',

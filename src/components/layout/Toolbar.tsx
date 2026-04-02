@@ -64,7 +64,7 @@ export function Toolbar() {
     try {
       let result = await runOptimization(pieces, materials, edgeBands, config, setProgress);
       if (costEnabled) {
-        result = enrichResultWithCosts(result, materials);
+        result = enrichResultWithCosts(result, materials, edgeBands);
       }
       setResult(result);
       addNotification({

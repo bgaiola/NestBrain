@@ -1,11 +1,10 @@
 import { useState, useMemo } from 'react';
 import { useAppStore } from '@/stores/appStore';
 import { CuttingPlanViewer } from '@/components/results/CuttingPlanViewer';
-import { ResultsDashboard } from '@/components/results/ResultsDashboard';
 import { colorFromIndex } from '@/utils/helpers';
 import { useTranslation } from '@/i18n';
 import {
-  Eye, EyeOff, Download, FileJson, FileImage, BarChart3, X,
+  Eye, EyeOff, Download, FileJson, FileImage,
 } from 'lucide-react';
 
 export function ResultsTab() {
@@ -13,7 +12,6 @@ export function ResultsTab() {
   const result = useAppStore((s) => s.result);
   const [selectedPlanIdx, setSelectedPlanIdx] = useState(0);
   const [hoveredPieceId, setHoveredPieceId] = useState<string | null>(null);
-  const [showDashboard, setShowDashboard] = useState(true);
 
   // Toggle states
   const [showLabels, setShowLabels] = useState(true);
@@ -144,26 +142,7 @@ export function ResultsTab() {
           <button className="btn-secondary btn-sm" onClick={handleExportSVG}>
             <FileImage className="w-3.5 h-3.5" /> SVG
           </button>
-
-          <div className="h-4 w-px bg-surface-200 mx-1" />
-
-          <button
-            className={`btn-sm flex items-center gap-1 text-xs rounded px-2 py-0.5 ${
-              showDashboard ? 'text-brand-600 bg-brand-50' : 'text-surface-400 bg-surface-100'
-            }`}
-            onClick={() => setShowDashboard(!showDashboard)}
-          >
-            {showDashboard ? <X className="w-3 h-3" /> : <BarChart3 className="w-3 h-3" />}
-            {showDashboard ? t.resultsTab.hideDashboard : t.resultsTab.showDashboard}
-          </button>
         </div>
-
-        {/* Dashboard */}
-        {showDashboard && (
-          <div className="border-b border-surface-200 bg-surface-50/50 max-h-[340px] overflow-y-auto">
-            <ResultsDashboard result={result} />
-          </div>
-        )}
 
         {/* Viewer */}
         <div className="flex-1 p-2">

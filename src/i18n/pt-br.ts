@@ -114,12 +114,15 @@ const ptBR: Translations = {
   edgeBandsTab: {
     newBand: 'Nova Fita',
     remove: 'Remover',
+    importCSV: 'Importar CSV',
+    exportCSV: 'Exportar CSV',
     count: '{count} fita(s)',
     emptyTitle: 'Nenhuma fita cadastrada',
     emptyHint: 'Clique em "Nova Fita" para começar',
     colCode: 'Código',
     colDescription: 'Descrição',
     colIncrease: 'Aumento (mm)',
+    colCostPerLM: 'Custo/ml',
     info: '💡 O "Aumento suplementar" é adicionado à dimensão da peça em cada lado que recebe fita de borda, antes do cálculo de corte. Ex: peça 500mm com fita (aumento 2mm) em ambos os lados = 504mm de corte.',
   },
 
@@ -284,6 +287,7 @@ const ptBR: Translations = {
     costMaterial: 'Custo Material',
     costWaste: 'Custo Desperdício',
     costCutting: 'Custo de Corte',
+    costEdgeBand: 'Custo Fita de Borda',
     costTotal: 'Custo Total',
     costPerPiece: 'Custo por Peça',
     costPerM2: 'Custo por m²',

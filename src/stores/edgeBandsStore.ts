@@ -18,6 +18,7 @@ function createDefaultEdgeBand(overrides?: Partial<EdgeBand>): EdgeBand {
     code: '',
     description: '',
     supplementaryIncrease: 2,
+    costPerLinearM: 0,
     ...overrides,
   };
 }
