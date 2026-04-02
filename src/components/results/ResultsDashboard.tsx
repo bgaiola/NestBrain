@@ -25,7 +25,7 @@ function SummaryCards({ result }: Props) {
   const utilColor = result.globalUtilization >= 80 ? 'text-emerald-600' : result.globalUtilization >= 60 ? 'text-amber-600' : 'text-red-500';
 
   const cards = [
-    { label: t.resultsTab.summaryTotalSheets, value: String(result.totalSheets), icon: Layers, color: 'bg-blue-50 text-blue-600' },
+    { label: t.resultsTab.summaryTotalSheets, value: String(result.totalStackedSheets), icon: Layers, color: 'bg-blue-50 text-blue-600' },
     { label: t.resultsTab.summaryTotalPieces, value: String(result.totalPieces), icon: Package, color: 'bg-violet-50 text-violet-600' },
     { label: t.resultsTab.summaryGlobalUtil, value: `${result.globalUtilization.toFixed(1)}%`, icon: PieChart, color: 'bg-emerald-50', textColor: utilColor },
     { label: t.resultsTab.summaryUsableScrap, value: `${(result.totalUsableScrapArea / 1e6).toFixed(2)} m²`, icon: BarChart3, color: 'bg-amber-50 text-amber-600' },
@@ -121,10 +121,10 @@ function MaterialBarChart({ result }: Props) {
         utilization: 0,
         pieces: 0,
       };
-      existing.sheets += 1;
-      existing.usedArea += plan.usedArea;
-      existing.wasteArea += plan.wasteArea;
-      existing.pieces += plan.pieces.length;
+      existing.sheets += plan.stackCount;
+      existing.usedArea += plan.usedArea * plan.stackCount;
+      existing.wasteArea += plan.wasteArea * plan.stackCount;
+      existing.pieces += plan.pieces.length * plan.stackCount;
       map.set(plan.materialCode, existing);
     });
     return Array.from(map.values()).map((s) => ({
@@ -237,10 +237,10 @@ function PiecesByMaterial({ result }: Props) {
     const map = new Map<string, { code: string; sheets: number; pieces: number; util: number; usedA: number; totalA: number }>();
     result.plans.forEach((plan) => {
       const existing = map.get(plan.materialCode) || { code: plan.materialCode, sheets: 0, pieces: 0, util: 0, usedA: 0, totalA: 0 };
-      existing.sheets += 1;
-      existing.pieces += plan.pieces.length;
-      existing.usedA += plan.usedArea;
-      existing.totalA += plan.usableArea;
+      existing.sheets += plan.stackCount;
+      existing.pieces += plan.pieces.length * plan.stackCount;
+      existing.usedA += plan.usedArea * plan.stackCount;
+      existing.totalA += plan.usableArea * plan.stackCount;
       map.set(plan.materialCode, existing);
     });
     return Array.from(map.values()).map((s) => ({

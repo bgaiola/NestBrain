@@ -7,7 +7,7 @@ import { enrichResultWithCosts } from '@/utils/costCalculator';
 import { useTranslation, localeLabels } from '@/i18n';
 import { Locale, Currency, CURRENCY_SYMBOLS } from '@/types';
 import {
-  Scissors,
+  Brain,
   RotateCcw,
   Settings2,
   Play,
@@ -88,7 +88,7 @@ export function Toolbar() {
     <div className="px-4 py-2 flex items-center gap-4 flex-wrap">
       {/* Logo & project name */}
       <div className="flex items-center gap-2 mr-2">
-        <Scissors className="w-5 h-5 text-brand-600" />
+        <Brain className="w-5 h-5 text-brand-600" />
         <span className="font-bold text-brand-800 text-base tracking-tight">NestBrain</span>
         <span className="text-surface-300 mx-1">|</span>
         <input

@@ -73,6 +73,11 @@ export function ResultsTab() {
         <div className="p-2">
           <h3 className="text-xs font-semibold text-surface-500 uppercase tracking-wider mb-2">
             {t.resultsTab.plans} ({result.plans.length})
+            {result.totalStackedSheets > result.plans.length && (
+              <span className="text-brand-500 font-normal ml-1">
+                — {result.totalStackedSheets} {t.common.sheets}
+              </span>
+            )}
           </h3>
           {result.plans.map((p, idx) => (
             <button
@@ -84,14 +89,21 @@ export function ResultsTab() {
               }`}
               onClick={() => setSelectedPlanIdx(idx)}
             >
-              <div className="text-xs font-medium text-surface-700">{t.resultsTab.plan} {idx + 1}</div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-medium text-surface-700">{t.resultsTab.plan} {idx + 1}</span>
+                {p.stackCount > 1 && (
+                  <span className="text-2xs font-bold text-white bg-brand-500 rounded-full px-1.5 py-0.5 leading-none">
+                    ×{p.stackCount}
+                  </span>
+                )}
+              </div>
               <div className="text-2xs text-surface-500">{p.materialCode}</div>
               <div className="text-2xs text-surface-500">
                 {t.resultsTab.piecesCount.replace('{count}', String(p.pieces.length))} — {p.utilizationPercent.toFixed(1)}%
               </div>
-              {p.stackCount > 1 && (
-                <div className="text-2xs text-brand-500">
-                  ×{p.stackCount} {p.machineLoads > 0 ? `(${p.machineLoads} loads)` : ''}
+              {p.stackCount > 1 && p.machineLoads > 0 && (
+                <div className="text-2xs text-brand-600 font-medium">
+                  {t.resultsTab.machineLoads.replace('{count}', String(p.machineLoads))}
                 </div>
               )}
               {/* Mini preview */}
@@ -115,9 +127,17 @@ export function ResultsTab() {
           <span className="text-sm font-medium text-surface-700">{t.resultsTab.plan} {selectedPlanIdx + 1}</span>
           <span className="text-xs text-surface-400">
             {plan.materialCode} — {plan.sheetWidth}×{plan.sheetHeight}mm
-            {plan.stackCount > 1 && ` — ${t.resultsTab.stackedSheets.replace('{count}', String(plan.stackCount))}`}
-            {plan.machineLoads > 0 && ` — ${t.resultsTab.machineLoads.replace('{count}', String(plan.machineLoads))}`}
           </span>
+          {plan.stackCount > 1 && (
+            <span className="text-xs font-semibold text-brand-600 bg-brand-50 border border-brand-200 rounded-md px-2 py-0.5">
+              ×{plan.stackCount} {t.common.sheets}
+            </span>
+          )}
+          {plan.stackCount > 1 && plan.machineLoads > 0 && (
+            <span className="text-xs text-surface-500">
+              — {t.resultsTab.machineLoads.replace('{count}', String(plan.machineLoads))}
+            </span>
+          )}
           <div className="flex-1" />
 
           {/* Toggles */}
@@ -189,18 +209,26 @@ export function ResultsTab() {
             <span className="text-surface-400"> / {t.resultsTab.discards} </span>
             <span className="font-medium text-surface-500">{plan.scraps.filter((s) => !s.usable).length}</span>
           </div>
-          {plan.machineLoads > 0 && (
+          {plan.stackCount > 1 && (
             <div>
               <span className="text-surface-500">{t.resultsTab.stackInfo}: </span>
-              <span className="font-medium text-brand-600">{plan.stackCount}×</span>
-              <span className="text-surface-400"> ({t.resultsTab.machineLoads.replace('{count}', String(plan.machineLoads))})</span>
+              <span className="font-bold text-brand-600">×{plan.stackCount}</span>
+              {plan.machineLoads > 0 && (
+                <span className="text-surface-400"> ({t.resultsTab.machineLoads.replace('{count}', String(plan.machineLoads))})</span>
+              )}
             </div>
           )}
           <div className="flex-1" />
           <div>
             <span className="text-surface-500">{t.resultsTab.global} </span>
             <span className="font-bold text-brand-600">{result.globalUtilization.toFixed(1)}%</span>
-            <span className="text-surface-400 ml-2">{result.totalSheets} {t.common.sheets} — {result.computeTimeMs.toFixed(0)}ms</span>
+            <span className="text-surface-400 ml-2">
+              {result.plans.length} {t.resultsTab.plans.toLowerCase()}
+              {result.totalStackedSheets > result.plans.length && (
+                <> ({result.totalStackedSheets} {t.common.sheets})</>
+              )}
+              {' — '}{result.computeTimeMs.toFixed(0)}ms
+            </span>
             {result.totalMachineLoads > 0 && (
               <span className="text-surface-400 ml-2">— {result.totalMachineLoads} 🏭</span>
             )}

@@ -276,7 +276,7 @@ function planSig(plan: CuttingPlan): string {
 }
 
 function deduplicatePlans(plans: CuttingPlan[], config: OptimizationConfig): CuttingPlan[] {
-  if (config.maxStackThickness <= 0) return plans;
+  // Always deduplicate identical layouts — stacking is always beneficial
   const groups = new Map<string, { plan: CuttingPlan; count: number }>();
   for (const plan of plans) {
     const key = plan.materialCode + '::' + planSig(plan);
@@ -286,7 +286,8 @@ function deduplicatePlans(plans: CuttingPlan[], config: OptimizationConfig): Cut
   const result: CuttingPlan[] = [];
   for (const { plan, count } of groups.values()) {
     const spl = plan.sheetsPerLoad || 1;
-    result.push({ ...plan, stackCount: count, sheetsPerLoad: spl, machineLoads: Math.ceil(count / spl) });
+    const loads = config.maxStackThickness > 0 ? Math.ceil(count / spl) : count;
+    result.push({ ...plan, stackCount: count, sheetsPerLoad: spl, machineLoads: loads });
   }
   return result;
 }

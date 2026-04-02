@@ -139,7 +139,7 @@ const es = {
     plans: 'Planos',
     plan: 'Plano',
     piecesCount: '{count} piezas',
-    stackedSheets: '{count} tablreros apilados',
+    stackedSheets: '{count} tableros apilados',
     utilization: 'Aprovechamiento:',
     piecesLabel: 'Piezas:',
     cuts: 'Cortes:',
