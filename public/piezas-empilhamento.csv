@@ -1,0 +1,41 @@
+material,descripción,cantidad,ancho,alto,veta,canto sup,canto inf,canto izq,canto der,secuencia,descripción 2
+MEL-18-ROB,Lateral Armario Serie A,20,2100,600,horizontal,,,FB-1,FB-1,1,Serie A - Armario Estándar
+MEL-18-ROB,Tapa Armario Serie A,10,1200,600,horizontal,FB-1,,FB-1,FB-1,2,Serie A - Armario Estándar
+MEL-18-ROB,Base Armario Serie A,10,1200,600,horizontal,,FB-1,FB-1,FB-1,3,Serie A - Armario Estándar
+MEL-18-ROB,Estante Armario Serie A,40,1196,580,horizontal,FB-1,,,,4,Serie A - Armario Estándar
+MEL-18-ROB,Divisor Armario Serie A,20,580,900,horizontal,,,,FB-1,5,Serie A - Armario Estándar
+MDF-18-BL,Puerta Armario Serie A,20,2096,597,horizontal,FB-2,FB-2,FB-2,FB-2,6,Serie A - Armario Estándar
+MEL-18-ROB,Lateral Bajo Serie B,30,850,580,horizontal,,,FB-1,,7,Serie B - Bajo Cocina
+MEL-18-ROB,Tapa Bajo Serie B,15,600,580,horizontal,FB-1,,FB-1,FB-1,8,Serie B - Bajo Cocina
+MEL-18-ROB,Base Bajo Serie B,15,600,580,horizontal,,FB-1,FB-1,FB-1,9,Serie B - Bajo Cocina
+MEL-18-ROB,Estante Bajo Serie B,30,596,560,horizontal,FB-1,,,,10,Serie B - Bajo Cocina
+MDF-18-BL,Puerta Bajo Serie B,30,846,576,horizontal,FB-2,FB-2,FB-2,FB-2,11,Serie B - Bajo Cocina
+MEL-18-ROB,Lateral Alacena Serie C,24,700,350,horizontal,,,FB-1,,12,Serie C - Alacena Estándar
+MEL-18-ROB,Tapa Alacena Serie C,12,600,350,horizontal,FB-1,,FB-1,FB-1,13,Serie C - Alacena Estándar
+MEL-18-ROB,Base Alacena Serie C,12,600,350,horizontal,,FB-1,FB-1,FB-1,14,Serie C - Alacena Estándar
+MEL-18-ROB,Estante Alacena Serie C,24,596,330,horizontal,FB-1,,,,15,Serie C - Alacena Estándar
+MDF-18-BL,Puerta Alacena Serie C,24,696,346,horizontal,FB-2,FB-2,FB-2,FB-2,16,Serie C - Alacena Estándar
+MEL-15-GRS,Lateral Gaveta Serie D,40,500,400,horizontal,,,,FB-3,17,Serie D - Gaveta 500
+MEL-15-GRS,Fondo Gaveta Serie D,20,596,400,horizontal,,,,,18,Serie D - Gaveta 500
+MEL-15-GRS,Trasera Gaveta Serie D,20,596,150,horizontal,,,,,19,Serie D - Gaveta 500
+MDF-18-BL,Frente Gaveta Serie D,20,596,200,horizontal,FB-2,FB-2,FB-2,FB-2,20,Serie D - Gaveta 500
+MEL-18-ROB,Mesa Noche Lateral Serie E,16,500,400,horizontal,,,FB-1,,21,Serie E - Mesa Noche
+MEL-18-ROB,Mesa Noche Tapa Serie E,8,500,450,horizontal,FB-1,,FB-1,FB-1,22,Serie E - Mesa Noche
+MEL-18-ROB,Mesa Noche Base Serie E,8,500,450,horizontal,,FB-1,FB-1,FB-1,23,Serie E - Mesa Noche
+MEL-18-ROB,Mesa Noche Estante Serie E,8,496,380,horizontal,FB-1,,,,24,Serie E - Mesa Noche
+MDF-18-BL,Mesa Noche Frente Cajón Serie E,8,496,180,horizontal,FB-2,FB-2,FB-2,FB-2,25,Serie E - Mesa Noche
+MEL-15-GRS,Vanitory Lateral Serie F,16,850,500,horizontal,,,FB-3,,26,Serie F - Vanitory Baño
+MEL-15-GRS,Vanitory Tapa Serie F,8,1200,500,horizontal,FB-3,,FB-3,FB-3,27,Serie F - Vanitory Baño
+MEL-15-GRS,Vanitory Base Serie F,8,1200,500,horizontal,,FB-3,FB-3,FB-3,28,Serie F - Vanitory Baño
+MEL-15-GRS,Vanitory Estante Serie F,16,1196,480,horizontal,FB-3,,,,29,Serie F - Vanitory Baño
+MDF-18-BL,Vanitory Puerta Serie F,16,846,496,horizontal,FB-2,FB-2,FB-2,FB-2,30,Serie F - Vanitory Baño
+MEL-18-ROB,Cómoda Lateral Serie G,12,800,450,horizontal,,,FB-1,FB-1,31,Serie G - Cómoda 4 Cajones
+MEL-18-ROB,Cómoda Tapa Serie G,6,1200,450,horizontal,FB-1,,FB-1,FB-1,32,Serie G - Cómoda 4 Cajones
+MEL-18-ROB,Cómoda Base Serie G,6,1200,450,horizontal,,FB-1,FB-1,FB-1,33,Serie G - Cómoda 4 Cajones
+MEL-18-ROB,Cómoda Estante Serie G,18,1196,430,horizontal,FB-1,,,,34,Serie G - Cómoda 4 Cajones
+MDF-18-BL,Cómoda Frente Cajón Serie G,24,1190,200,horizontal,FB-2,FB-2,FB-2,FB-2,35,Serie G - Cómoda 4 Cajones
+MEL-15-GRS,Columna Lateral Serie H,10,2100,580,horizontal,,,FB-3,FB-3,36,Serie H - Columna Despensa
+MEL-15-GRS,Columna Tapa Serie H,5,580,580,horizontal,FB-3,,FB-3,FB-3,37,Serie H - Columna Despensa
+MEL-15-GRS,Columna Base Serie H,5,580,580,horizontal,,FB-3,FB-3,FB-3,38,Serie H - Columna Despensa
+MEL-15-GRS,Columna Estante Serie H,25,576,560,horizontal,FB-3,,,,39,Serie H - Columna Despensa
+MDF-18-BL,Columna Puerta Serie H,10,1046,576,horizontal,FB-2,FB-2,FB-2,FB-2,40,Serie H - Columna Despensa

@@ -5,7 +5,7 @@ import {
 } from '@/types';
 import { generateId } from '@/utils/helpers';
 
-// ─── Types for internal processing ────────────────────────
+// ─── Internal types ───────────────────────────────────────
 
 interface ProcessedPiece {
   id: string;
@@ -30,86 +30,61 @@ interface ProcessedPiece {
   perimeter: number;
 }
 
-interface FreeRect {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
+interface FreeRect { x: number; y: number; w: number; h: number; }
+
+// ─── Rotation helper ──────────────────────────────────────
+
+function canRotate(p: ProcessedPiece, mat: Material, cfg: OptimizationConfig): boolean {
+  if (!cfg.allowRotation) return false;
+  return p.grainDirection === 'none' || mat.grainDirection === 'none';
 }
 
-// ─── Grain rotation helper ────────────────────────────────
-
-function canRotatePiece(
-  piece: ProcessedPiece,
-  material: Material,
-  config: OptimizationConfig,
-): boolean {
-  if (!config.allowRotation) return false;
-  if (piece.grainDirection === 'none' || material.grainDirection === 'none') return true;
-  return false;
-}
-
-// ─── Sorting strategies ───────────────────────────────────
+// ─── Sort strategies ──────────────────────────────────────
 
 type SortFn = (a: ProcessedPiece, b: ProcessedPiece) => number;
 
 const SORT_STRATEGIES: SortFn[] = [
-  // 1. Area descending (FFD classic)
   (a, b) => b.area - a.area,
-  // 2. Max dimension descending
   (a, b) => b.maxDim - a.maxDim || b.area - a.area,
-  // 3. Height descending then width descending
   (a, b) => b.cutHeight - a.cutHeight || b.cutWidth - a.cutWidth,
-  // 4. Width descending then height descending
   (a, b) => b.cutWidth - a.cutWidth || b.cutHeight - a.cutHeight,
-  // 5. Perimeter descending
   (a, b) => b.perimeter - a.perimeter || b.area - a.area,
-  // 6. Min dimension descending (squarish pieces first)
   (a, b) => b.minDim - a.minDim || b.area - a.area,
 ];
 
-// Extended strategies for advanced mode
 const ADVANCED_SORT_STRATEGIES: SortFn[] = [
   ...SORT_STRATEGIES,
-  // 7. Aspect ratio (most elongated first)
   (a, b) => (b.maxDim / b.minDim) - (a.maxDim / a.minDim) || b.area - a.area,
-  // 8. Area ascending (smallest first — counterintuitive but can help packing)
   (a, b) => a.area - b.area,
-  // 9. Width ascending then height descending
   (a, b) => a.cutWidth - b.cutWidth || b.cutHeight - a.cutHeight,
-  // 10. Height ascending then width ascending
   (a, b) => a.cutHeight - b.cutHeight || a.cutWidth - b.cutWidth,
-  // 11. Difference between dimensions (most square first)
   (a, b) => (a.maxDim - a.minDim) - (b.maxDim - b.minDim) || b.area - a.area,
-  // 12. Random-ish shuffle based on combined metric
   (a, b) => (b.cutWidth + b.cutHeight * 1.5) - (a.cutWidth + a.cutHeight * 1.5),
+  (a, b) => a.perimeter - b.perimeter || a.area - b.area,
+  (a, b) => (b.cutWidth * 2 + b.cutHeight) - (a.cutWidth * 2 + a.cutHeight),
+  (a, b) => (b.cutHeight * 2 + b.cutWidth) - (a.cutHeight * 2 + a.cutWidth),
 ];
 
-// ─── MaxRects placement heuristics ────────────────────────
+// ─── Placement heuristics ─────────────────────────────────
 
-type PlacementHeuristic = 'BSSF' | 'BLSF' | 'BAF' | 'BLTC';
+type Heuristic = 'BSSF' | 'BLSF' | 'BAF' | 'BLTC' | 'BL' | 'CP';
 
-function scoreRectPlacement(
-  rect: FreeRect,
-  pw: number,
-  ph: number,
-  heuristic: PlacementHeuristic,
-): number {
-  switch (heuristic) {
-    case 'BSSF': // Best Short Side Fit
-      return Math.min(rect.w - pw, rect.h - ph);
-    case 'BLSF': // Best Long Side Fit
-      return Math.max(rect.w - pw, rect.h - ph);
-    case 'BAF': // Best Area Fit
-      return (rect.w * rect.h) - (pw * ph);
-    case 'BLTC': // Bottom-Left Touchpoint / Contact (prefer bottom-left positions)
-      return rect.y * 10000 + rect.x;
+function scoreRect(r: FreeRect, pw: number, ph: number, h: Heuristic): number {
+  switch (h) {
+    case 'BSSF': return Math.min(r.w - pw, r.h - ph);
+    case 'BLSF': return Math.max(r.w - pw, r.h - ph);
+    case 'BAF':  return (r.w * r.h) - (pw * ph);
+    case 'BLTC': return r.y * 10000 + r.x;
+    case 'BL':   return r.y * 100000 + r.x;
+    case 'CP':   return Math.min(r.w - pw, r.h - ph) + Math.max(r.w - pw, r.h - ph) * 0.5;
   }
 }
 
-const PLACEMENT_HEURISTICS: PlacementHeuristic[] = ['BSSF', 'BLSF', 'BAF', 'BLTC'];
+const ALL_H: Heuristic[] = ['BSSF', 'BLSF', 'BAF', 'BLTC', 'BL', 'CP'];
 
-// ─── Main Entry Point ─────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// MAIN ENTRY POINT
+// ═══════════════════════════════════════════════════════════
 
 export async function runOptimization(
   pieces: Piece[],
@@ -119,11 +94,9 @@ export async function runOptimization(
   onProgress?: (pct: number) => void,
 ): Promise<OptimizationResult> {
   const startTime = performance.now();
-
   onProgress?.(5);
   const processed = preProcess(pieces, edgeBands);
 
-  // Group by material
   const byMaterial = new Map<string, ProcessedPiece[]>();
   for (const p of processed) {
     const group = byMaterial.get(p.material) || [];
@@ -136,102 +109,93 @@ export async function runOptimization(
   const totalMats = byMaterial.size;
 
   for (const [matCode, matPieces] of byMaterial) {
-    const material = materials.find((m) => m.code === matCode);
-    if (!material) continue;
+    const mat = materials.find((m) => m.code === matCode);
+    if (!mat) continue;
 
-    // Expand quantities
     const expanded: ProcessedPiece[] = [];
     for (const p of matPieces) {
       for (let i = 0; i < p.quantity; i++) {
-        expanded.push({ ...p, quantity: 1 });
+        expanded.push({ ...p, quantity: 1, id: p.id + (i > 0 ? '_' + i : '') });
       }
     }
 
-    const usableWidth = material.sheetWidth - material.trimLeft - material.trimRight;
-    const usableHeight = material.sheetHeight - material.trimTop - material.trimBottom;
+    const uw = mat.sheetWidth - mat.trimLeft - mat.trimRight;
+    const uh = mat.sheetHeight - mat.trimTop - mat.trimBottom;
 
     let bestPlans: CuttingPlan[] | null = null;
     let bestScore = -Infinity;
 
+    const tryAccept = (plans: CuttingPlan[]) => {
+      const s = scorePlans(plans, uw, uh);
+      if (s > bestScore) { bestScore = s; bestPlans = plans; }
+    };
+
     if (config.advancedMode) {
-      // ═══════════════════════════════════════════════════
-      // ADVANCED MODE: exhaustive multi-heuristic search
-      // ═══════════════════════════════════════════════════
+      // ═══ ADVANCED MODE ═══════════════════════════════
+      const budget = Math.min(12000, Math.max(3000, expanded.length * 10));
+      const deadline = performance.now() + budget;
       const strategies = ADVANCED_SORT_STRATEGIES;
-      const heuristics = config.mode === 'freeform' ? PLACEMENT_HEURISTICS : ['BSSF' as PlacementHeuristic];
+      const heurs = config.mode === 'freeform' ? ALL_H : ['BSSF' as Heuristic];
 
-      for (const sortFn of strategies) {
-        for (const heuristic of heuristics) {
-          const sorted = [...expanded].sort(sortFn);
+      // Phase 1: exhaustive sort × heuristic
+      for (const sf of strategies) {
+        if (performance.now() > deadline * 0.4) break;
+        for (const h of heurs) {
+          const sorted = [...expanded].sort(sf);
+          tryAccept(config.mode === 'guillotine'
+            ? advGuillotine(sorted, mat, uw, uh, config)
+            : maxRectsPlace(sorted, mat, uw, uh, config, h));
+        }
+      }
 
-          let plans: CuttingPlan[];
-          if (config.mode === 'guillotine') {
-            plans = advancedGuillotine(sorted, material, usableWidth, usableHeight, config);
-          } else {
-            plans = advancedFreeForm(sorted, material, usableWidth, usableHeight, config, heuristic);
-          }
-
-          const score = scorePlans(plans);
-          if (score > bestScore) {
-            bestScore = score;
-            bestPlans = plans;
+      // Phase 2: repack from best solution
+      if (bestPlans !== null && (bestPlans as CuttingPlan[]).length > 1) {
+        const bp = bestPlans as CuttingPlan[];
+        const repacked = bp.flatMap(p => p.pieces).map(pp => fromPlaced(pp));
+        for (const h of heurs) {
+          if (performance.now() > deadline * 0.55) break;
+          for (const sf of strategies) {
+            tryAccept(config.mode === 'guillotine'
+              ? advGuillotine([...repacked].sort(sf), mat, uw, uh, config)
+              : maxRectsPlace([...repacked].sort(sf), mat, uw, uh, config, h));
           }
         }
       }
 
-      // Phase 2: Try to reduce sheet count by repacking
-      if (bestPlans && bestPlans.length > 1) {
-        const allPiecesFromBest = bestPlans.flatMap((p) => p.pieces);
-        const processedForRepack = allPiecesFromBest.map((pp) => pieceFromPlaced(pp));
-
-        for (const heuristic of heuristics) {
-          for (const sortFn of strategies) {
-            const sorted = [...processedForRepack].sort(sortFn);
-            let plans: CuttingPlan[];
-            if (config.mode === 'guillotine') {
-              plans = advancedGuillotine(sorted, material, usableWidth, usableHeight, config);
-            } else {
-              plans = advancedFreeForm(sorted, material, usableWidth, usableHeight, config, heuristic);
-            }
-            const score = scorePlans(plans);
-            if (score > bestScore) {
-              bestScore = score;
-              bestPlans = plans;
-            }
-          }
-        }
+      // Phase 3: iterated greedy destroy-and-repair
+      if (bestPlans !== null) {
+        tryAccept(iteratedGreedy(bestPlans as CuttingPlan[], mat, uw, uh, config, deadline));
       }
 
-      // Phase 3: Per-sheet local re-optimization
-      if (bestPlans) {
-        bestPlans = reoptimizePerSheet(bestPlans, material, usableWidth, usableHeight, config);
+      // Phase 4: per-sheet re-optimization
+      if (bestPlans !== null) {
+        bestPlans = reoptPerSheet(bestPlans as CuttingPlan[], mat, uw, uh, config, deadline);
       }
+
+      // Phase 5: try to reduce sheets
+      if (bestPlans !== null && (bestPlans as CuttingPlan[]).length > 1) {
+        bestPlans = tryReduceSheets(bestPlans as CuttingPlan[], mat, uw, uh, config, deadline);
+      }
+
+      // Yield to UI thread between materials
+      await new Promise(r => setTimeout(r, 0));
 
     } else {
-      // ═══════════════════════════════════════════════════
-      // FAST MODE: original 6-strategy greedy
-      // ═══════════════════════════════════════════════════
-      const optimFn = config.mode === 'guillotine'
-        ? optimizeGuillotine
-        : optimizeFreeForm;
-
-      for (const sortFn of SORT_STRATEGIES) {
-        const sorted = [...expanded].sort(sortFn);
-        const plans = optimFn(sorted, material, usableWidth, usableHeight, config);
-        const score = scorePlans(plans);
-        if (score > bestScore) {
-          bestScore = score;
-          bestPlans = plans;
-        }
+      // ═══ FAST MODE ═══════════════════════════════════
+      for (const sf of SORT_STRATEGIES) {
+        const sorted = [...expanded].sort(sf);
+        tryAccept(config.mode === 'guillotine'
+          ? fastGuillotine(sorted, mat, uw, uh, config)
+          : maxRectsPlace(sorted, mat, uw, uh, config, 'BSSF'));
       }
     }
 
     if (bestPlans) {
-      // Stack calculation
-      if (config.maxStackThickness > 0) {
-        for (const plan of bestPlans) {
-          const stackCount = Math.floor(config.maxStackThickness / material.thickness);
-          plan.stackCount = Math.max(1, stackCount);
+      // Stacking & load calculations
+      for (const plan of bestPlans) {
+        if (config.maxStackThickness > 0 && mat.thickness > 0) {
+          const spl = Math.max(1, Math.floor(config.maxStackThickness / mat.thickness));
+          plan.sheetsPerLoad = spl;
         }
       }
       allPlans.push(...bestPlans);
@@ -241,8 +205,11 @@ export async function runOptimization(
     onProgress?.(5 + Math.round((matIdx / totalMats) * 85));
   }
 
+  // Deduplicate identical layouts & compute loads
+  const deduped = deduplicatePlans(allPlans, config);
+
   // Sequencing
-  for (const plan of allPlans) {
+  for (const plan of deduped) {
     plan.pieces.sort((a, b) => {
       if (a.sequence !== null && b.sequence !== null) return a.sequence - b.sequence;
       if (a.sequence !== null) return -1;
@@ -253,24 +220,24 @@ export async function runOptimization(
 
   onProgress?.(95);
 
-  // Global stats
-  const totalUsedArea = allPlans.reduce((s, p) => s + p.usedArea, 0);
-  const totalSheetArea = allPlans.reduce((s, p) => s + p.sheetWidth * p.sheetHeight, 0);
-  const totalUsableScrapArea = allPlans.reduce((s, p) =>
-    s + p.scraps.filter((sc) => sc.usable).reduce((a, sc) => a + sc.width * sc.height, 0), 0);
-  const totalWasteArea = allPlans.reduce((s, p) =>
-    s + p.scraps.filter((sc) => !sc.usable).reduce((a, sc) => a + sc.width * sc.height, 0), 0);
+  const totalUsedArea = deduped.reduce((s, p) => s + p.usedArea * p.stackCount, 0);
+  const totalSheetArea = deduped.reduce((s, p) => s + p.sheetWidth * p.sheetHeight * p.stackCount, 0);
+  const totalUsableScrapArea = deduped.reduce((s, p) =>
+    s + p.scraps.filter(sc => sc.usable).reduce((a, sc) => a + sc.width * sc.height, 0) * p.stackCount, 0);
+  const totalWasteArea = deduped.reduce((s, p) =>
+    s + p.scraps.filter(sc => !sc.usable).reduce((a, sc) => a + sc.width * sc.height, 0) * p.stackCount, 0);
 
   const result: OptimizationResult = {
-    plans: allPlans,
-    totalSheets: allPlans.length,
-    totalStackedSheets: allPlans.reduce((s, p) => s + p.stackCount, 0),
-    totalPieces: allPlans.reduce((s, p) => s + p.pieces.length, 0),
+    plans: deduped,
+    totalSheets: deduped.length,
+    totalStackedSheets: deduped.reduce((s, p) => s + p.stackCount, 0),
+    totalPieces: deduped.reduce((s, p) => s + p.pieces.length * p.stackCount, 0),
     globalUtilization: totalSheetArea > 0 ? (totalUsedArea / totalSheetArea) * 100 : 0,
-    totalUsableScrap: allPlans.reduce((s, p) => s + p.scraps.filter((sc) => sc.usable).length, 0),
-    totalWaste: allPlans.reduce((s, p) => s + p.scraps.filter((sc) => !sc.usable).length, 0),
+    totalUsableScrap: deduped.reduce((s, p) => s + p.scraps.filter(sc => sc.usable).length, 0),
+    totalWaste: deduped.reduce((s, p) => s + p.scraps.filter(sc => !sc.usable).length, 0),
     totalUsableScrapArea,
     totalWasteArea,
+    totalMachineLoads: deduped.reduce((s, p) => s + p.machineLoads, 0),
     computeTimeMs: performance.now() - startTime,
     timestamp: new Date().toISOString(),
   };
@@ -279,726 +246,569 @@ export async function runOptimization(
   return result;
 }
 
-// ─── Scoring function ─────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// SCORING
+// ═══════════════════════════════════════════════════════════
 
-function scorePlans(plans: CuttingPlan[]): number {
+function scorePlans(plans: CuttingPlan[], _uw: number, _uh: number): number {
   if (plans.length === 0) return -Infinity;
   const totalUsed = plans.reduce((s, p) => s + p.usedArea, 0);
   const totalUsable = plans.reduce((s, p) => s + p.usableArea, 0);
   const util = totalUsable > 0 ? totalUsed / totalUsable : 0;
-  // Heavily penalize more sheets; reward utilization
-  return util * 1000 - plans.length * 50;
-}
+  const totalPieces = plans.reduce((s, p) => s + p.pieces.length, 0);
 
-// ─── Helper: reconstruct ProcessedPiece from PlacedPiece ──
-
-function pieceFromPlaced(pp: PlacedPiece): ProcessedPiece {
-  // If it was rotated, the placed width/height are swapped from original cut dims
-  const cutW = pp.rotated ? pp.height : pp.width;
-  const cutH = pp.rotated ? pp.width : pp.height;
-  return {
-    id: pp.pieceId,
-    code: pp.code,
-    material: pp.material,
-    cutWidth: cutW,
-    cutHeight: cutH,
-    originalWidth: pp.originalWidth,
-    originalHeight: pp.originalHeight,
-    grainDirection: pp.grainDirection,
-    quantity: 1,
-    sequence: pp.sequence,
-    description: pp.description,
-    description2: pp.description2,
-    edgeBandTop: pp.edgeBandTop,
-    edgeBandBottom: pp.edgeBandBottom,
-    edgeBandLeft: pp.edgeBandLeft,
-    edgeBandRight: pp.edgeBandRight,
-    area: cutW * cutH,
-    maxDim: Math.max(cutW, cutH),
-    minDim: Math.min(cutW, cutH),
-    perimeter: 2 * (cutW + cutH),
-  };
-}
-
-// ─── Pre-processing ───────────────────────────────────────
-
-function preProcess(pieces: Piece[], edgeBands: EdgeBand[]): ProcessedPiece[] {
-  const ebMap = new Map(edgeBands.map((eb) => [eb.code, eb]));
-
-  return pieces.map((p) => {
-    let addW = 0;
-    let addH = 0;
-
-    const ebLeft = ebMap.get(p.edgeBandLeft);
-    const ebRight = ebMap.get(p.edgeBandRight);
-    const ebTop = ebMap.get(p.edgeBandTop);
-    const ebBottom = ebMap.get(p.edgeBandBottom);
-
-    if (ebLeft) addW += ebLeft.supplementaryIncrease;
-    if (ebRight) addW += ebRight.supplementaryIncrease;
-    if (ebTop) addH += ebTop.supplementaryIncrease;
-    if (ebBottom) addH += ebBottom.supplementaryIncrease;
-
-    const cutWidth = p.width + addW;
-    const cutHeight = p.height + addH;
-
-    return {
-      id: p.id,
-      code: p.code,
-      material: p.material,
-      cutWidth,
-      cutHeight,
-      originalWidth: p.width,
-      originalHeight: p.height,
-      grainDirection: p.grainDirection,
-      quantity: p.quantity,
-      sequence: p.sequence,
-      description: p.description,
-      description2: p.description2,
-      edgeBandTop: p.edgeBandTop,
-      edgeBandBottom: p.edgeBandBottom,
-      edgeBandLeft: p.edgeBandLeft,
-      edgeBandRight: p.edgeBandRight,
-      area: cutWidth * cutHeight,
-      maxDim: Math.max(cutWidth, cutHeight),
-      minDim: Math.min(cutWidth, cutHeight),
-      perimeter: 2 * (cutWidth + cutHeight),
-    };
-  });
-}
-
-// ═══════════════════════════════════════════════════════════
-// FAST MODE — Original algorithms
-// ═══════════════════════════════════════════════════════════
-
-// ─── Guillotine (NFDH strip-based) ───────────────────────
-
-function optimizeGuillotine(
-  pieces: ProcessedPiece[],
-  material: Material,
-  usableW: number,
-  usableH: number,
-  config: OptimizationConfig,
-): CuttingPlan[] {
-  const plans: CuttingPlan[] = [];
-  const remaining = [...pieces];
-  const kerf = config.bladeThickness;
-
-  while (remaining.length > 0) {
-    const placed: PlacedPiece[] = [];
-    const cuts: CutInstruction[] = [];
-
-    let currentY = material.trimTop;
-    let stripIdx = 0;
-
-    while (currentY < material.trimTop + usableH && remaining.length > 0) {
-      let stripHeight = 0;
-      let currentX = material.trimLeft;
-      let anchorFound = false;
-
-      for (let i = 0; i < remaining.length; i++) {
-        const p = remaining[i];
-        const canRot = canRotatePiece(p, material, config);
-
-        if (p.cutWidth <= usableW && currentY + p.cutHeight <= material.trimTop + usableH) {
-          stripHeight = p.cutHeight;
-          placed.push(makePlacedPiece(p, currentX, currentY, false));
-          currentX += p.cutWidth + kerf;
-          remaining.splice(i, 1);
-          anchorFound = true;
-          break;
-        }
-        if (canRot && p.cutHeight <= usableW && currentY + p.cutWidth <= material.trimTop + usableH) {
-          stripHeight = p.cutWidth;
-          placed.push(makePlacedPiece(p, currentX, currentY, true));
-          currentX += p.cutHeight + kerf;
-          remaining.splice(i, 1);
-          anchorFound = true;
-          break;
-        }
-      }
-
-      if (!anchorFound) break;
-
-      const availW = material.trimLeft + usableW - currentX;
-      if (availW > kerf) {
-        fillStrip(remaining, placed, material, config, currentX, currentY, availW, stripHeight, kerf);
-      }
-
-      if (stripIdx > 0) {
-        cuts.push({ type: 'H', position: currentY, depth: stripIdx, resultingPieces: [] });
-      }
-
-      currentY += stripHeight + kerf;
-      stripIdx++;
-    }
-
-    if (placed.length === 0 && remaining.length > 0) {
-      remaining.shift();
-      continue;
-    }
-
-    if (placed.length > 0) {
-      plans.push(createPlan(placed, cuts, material, usableW, usableH));
-    }
-  }
-
-  return plans;
-}
-
-function fillStrip(
-  remaining: ProcessedPiece[],
-  placed: PlacedPiece[],
-  material: Material,
-  config: OptimizationConfig,
-  startX: number,
-  y: number,
-  availWidth: number,
-  stripHeight: number,
-  kerf: number,
-): void {
-  let currentX = startX;
-  let spaceLeft = availWidth;
-  let changed = true;
-
-  while (changed && spaceLeft > kerf) {
-    changed = false;
-    let bestIdx = -1;
-    let bestArea = 0;
-    let bestRotated = false;
-    let bestW = 0;
-
-    for (let i = 0; i < remaining.length; i++) {
-      const p = remaining[i];
-      const canRot = canRotatePiece(p, material, config);
-
-      if (p.cutWidth <= spaceLeft && p.cutHeight <= stripHeight) {
-        if (p.area > bestArea) {
-          bestArea = p.area;
-          bestIdx = i;
-          bestRotated = false;
-          bestW = p.cutWidth;
-        }
-      }
-      if (canRot && p.cutHeight <= spaceLeft && p.cutWidth <= stripHeight) {
-        if (p.area > bestArea) {
-          bestArea = p.area;
-          bestIdx = i;
-          bestRotated = true;
-          bestW = p.cutHeight;
-        }
-      }
-    }
-
-    if (bestIdx >= 0) {
-      const p = remaining[bestIdx];
-      placed.push(makePlacedPiece(p, currentX, y, bestRotated));
-      remaining.splice(bestIdx, 1);
-      currentX += bestW + kerf;
-      spaceLeft -= bestW + kerf;
-      changed = true;
-    }
-  }
-}
-
-// ─── Free Form (MaxRects BSSF) ───────────────────────────
-
-function optimizeFreeForm(
-  pieces: ProcessedPiece[],
-  material: Material,
-  usableW: number,
-  usableH: number,
-  config: OptimizationConfig,
-): CuttingPlan[] {
-  return maxRectsPlace(pieces, material, usableW, usableH, config, 'BSSF');
-}
-
-// ═══════════════════════════════════════════════════════════
-// ADVANCED MODE — Enhanced algorithms
-// ═══════════════════════════════════════════════════════════
-
-// ─── Advanced Free Form (MaxRects with configurable heuristic) ──
-
-function advancedFreeForm(
-  pieces: ProcessedPiece[],
-  material: Material,
-  usableW: number,
-  usableH: number,
-  config: OptimizationConfig,
-  heuristic: PlacementHeuristic,
-): CuttingPlan[] {
-  return maxRectsPlace(pieces, material, usableW, usableH, config, heuristic);
-}
-
-// ─── Advanced Guillotine ──────────────────────────────────
-// Multi-pass: try every piece as strip anchor, try best-height-fit
-// for each strip, minimize wasted height.
-
-function advancedGuillotine(
-  pieces: ProcessedPiece[],
-  material: Material,
-  usableW: number,
-  usableH: number,
-  config: OptimizationConfig,
-): CuttingPlan[] {
-  const plans: CuttingPlan[] = [];
-  const remaining = [...pieces];
-  const kerf = config.bladeThickness;
-
-  while (remaining.length > 0) {
-    // Try different strategies for this single sheet
-    let bestPlaced: PlacedPiece[] | null = null;
-    let bestUsedArea = 0;
-    let bestRemaining: ProcessedPiece[] | null = null;
-
-    // Strategy A: For each unique height, try it as the anchor strip height
-    const uniqueHeights = new Set<number>();
-    for (const p of remaining) {
-      uniqueHeights.add(p.cutHeight);
-      if (canRotatePiece(p, material, config)) uniqueHeights.add(p.cutWidth);
-    }
-
-    for (const targetHeight of uniqueHeights) {
-      if (targetHeight > usableH) continue;
-      const rem = [...remaining];
-      const placed: PlacedPiece[] = [];
-      let currentY = material.trimTop;
-
-      // Pack strips prioritizing target height first, then best-fit
-      while (currentY + kerf < material.trimTop + usableH && rem.length > 0) {
-        const availH = material.trimTop + usableH - currentY;
-        if (availH < 1) break;
-
-        // Find best strip height: prefer pieces whose height matches availH closely
-        let bestAnchorIdx = -1;
-        let bestAnchorH = 0;
-        let bestAnchorRot = false;
-        let bestAnchorWaste = Infinity;
-
-        for (let i = 0; i < rem.length; i++) {
-          const p = rem[i];
-          const canRot = canRotatePiece(p, material, config);
-
-          if (p.cutHeight <= availH && p.cutWidth <= usableW) {
-            const waste = availH - p.cutHeight;
-            if (waste < bestAnchorWaste || (waste === bestAnchorWaste && p.area > (rem[bestAnchorIdx]?.area ?? 0))) {
-              bestAnchorWaste = waste;
-              bestAnchorIdx = i;
-              bestAnchorH = p.cutHeight;
-              bestAnchorRot = false;
-            }
-          }
-          if (canRot && p.cutWidth <= availH && p.cutHeight <= usableW) {
-            const waste = availH - p.cutWidth;
-            if (waste < bestAnchorWaste || (waste === bestAnchorWaste && p.area > (rem[bestAnchorIdx]?.area ?? 0))) {
-              bestAnchorWaste = waste;
-              bestAnchorIdx = i;
-              bestAnchorH = p.cutWidth;
-              bestAnchorRot = true;
-            }
-          }
-        }
-
-        if (bestAnchorIdx < 0) break;
-
-        const stripHeight = bestAnchorH;
-        const anchor = rem[bestAnchorIdx];
-        const anchorW = bestAnchorRot ? anchor.cutHeight : anchor.cutWidth;
-        let currentX = material.trimLeft + anchorW + kerf;
-        placed.push(makePlacedPiece(anchor, material.trimLeft, currentY, bestAnchorRot));
-        rem.splice(bestAnchorIdx, 1);
-
-        // Fill strip: best area fit
-        const stripAvailW = material.trimLeft + usableW;
-        let filling = true;
-        while (filling && currentX < stripAvailW) {
-          filling = false;
-          let bestFillIdx = -1;
-          let bestFillArea = 0;
-          let bestFillRot = false;
-          let bestFillW = 0;
-          const spaceLeft = stripAvailW - currentX;
-
-          for (let i = 0; i < rem.length; i++) {
-            const p = rem[i];
-            const canRot = canRotatePiece(p, material, config);
-
-            if (p.cutWidth <= spaceLeft && p.cutHeight <= stripHeight && p.area > bestFillArea) {
-              bestFillArea = p.area;
-              bestFillIdx = i;
-              bestFillRot = false;
-              bestFillW = p.cutWidth;
-            }
-            if (canRot && p.cutHeight <= spaceLeft && p.cutWidth <= stripHeight && p.area > bestFillArea) {
-              bestFillArea = p.area;
-              bestFillIdx = i;
-              bestFillRot = true;
-              bestFillW = p.cutHeight;
-            }
-          }
-
-          if (bestFillIdx >= 0) {
-            placed.push(makePlacedPiece(rem[bestFillIdx], currentX, currentY, bestFillRot));
-            rem.splice(bestFillIdx, 1);
-            currentX += bestFillW + kerf;
-            filling = true;
-          }
-        }
-
-        // Try to stack smaller pieces vertically in remaining strip height
-        // (two-level packing within strip)
-        const secondRowY = currentY + stripHeight + kerf;
-        // not for this strip, move to next
-        currentY += stripHeight + kerf;
-      }
-
-      const usedArea = placed.reduce((s, p) => s + p.width * p.height, 0);
-      if (usedArea > bestUsedArea) {
-        bestUsedArea = usedArea;
-        bestPlaced = placed;
-        bestRemaining = rem;
-      }
-    }
-
-    // Also try the original NFDH approach for this sheet
-    {
-      const rem = [...remaining];
-      const placed: PlacedPiece[] = [];
-      let currentY = material.trimTop;
-      let stripIdx = 0;
-
-      while (currentY < material.trimTop + usableH && rem.length > 0) {
-        let stripHeight = 0;
-        let currentX = material.trimLeft;
-        let anchorFound = false;
-
-        for (let i = 0; i < rem.length; i++) {
-          const p = rem[i];
-          const canRot = canRotatePiece(p, material, config);
-          if (p.cutWidth <= usableW && currentY + p.cutHeight <= material.trimTop + usableH) {
-            stripHeight = p.cutHeight;
-            placed.push(makePlacedPiece(p, currentX, currentY, false));
-            currentX += p.cutWidth + kerf;
-            rem.splice(i, 1);
-            anchorFound = true;
-            break;
-          }
-          if (canRot && p.cutHeight <= usableW && currentY + p.cutWidth <= material.trimTop + usableH) {
-            stripHeight = p.cutWidth;
-            placed.push(makePlacedPiece(p, currentX, currentY, true));
-            currentX += p.cutHeight + kerf;
-            rem.splice(i, 1);
-            anchorFound = true;
-            break;
-          }
-        }
-        if (!anchorFound) break;
-        const availW = material.trimLeft + usableW - currentX;
-        if (availW > kerf) {
-          fillStrip(rem, placed, material, config, currentX, currentY, availW, stripHeight, kerf);
-        }
-        currentY += stripHeight + kerf;
-        stripIdx++;
-      }
-
-      const usedArea = placed.reduce((s, p) => s + p.width * p.height, 0);
-      if (usedArea > bestUsedArea) {
-        bestUsedArea = usedArea;
-        bestPlaced = placed;
-        bestRemaining = rem;
-      }
-    }
-
-    if (!bestPlaced || bestPlaced.length === 0) {
-      if (remaining.length > 0) {
-        remaining.shift();
-        continue;
-      }
-      break;
-    }
-
-    plans.push(createPlan(bestPlaced, [], material, usableW, usableH));
-
-    // Update remaining
-    remaining.length = 0;
-    if (bestRemaining) remaining.push(...bestRemaining);
-  }
-
-  return plans;
-}
-
-// ─── Per-sheet re-optimization ────────────────────────────
-// Take each sheet's pieces and try all heuristics to repack them better
-
-function reoptimizePerSheet(
-  plans: CuttingPlan[],
-  material: Material,
-  usableW: number,
-  usableH: number,
-  config: OptimizationConfig,
-): CuttingPlan[] {
-  const result: CuttingPlan[] = [];
-
+  // Compactness bonus per sheet
+  let compactness = 0;
   for (const plan of plans) {
-    const pieces = plan.pieces.map((pp) => pieceFromPlaced(pp));
+    if (plan.pieces.length === 0) continue;
+    const mx = Math.max(...plan.pieces.map(p => p.x + p.width));
+    const my = Math.max(...plan.pieces.map(p => p.y + p.height));
+    const ba = mx * my;
+    if (ba > 0) compactness += plan.usedArea / ba;
+  }
+  compactness /= plans.length;
 
-    let bestPlan = plan;
-    let bestUtil = plan.utilizationPercent;
+  // Penalize low-util last sheet
+  let lastPenalty = 0;
+  if (plans.length > 1) {
+    const last = plans[plans.length - 1];
+    const lu = last.usableArea > 0 ? last.usedArea / last.usableArea : 0;
+    if (lu < 0.3) lastPenalty = (0.3 - lu) * 100;
+  }
 
-    const heuristics: PlacementHeuristic[] = config.mode === 'freeform' ? PLACEMENT_HEURISTICS : ['BSSF'];
+  return util * 1000 + compactness * 200 + totalPieces * 0.1 - plans.length * 80 - lastPenalty;
+}
 
-    for (const heuristic of heuristics) {
-      for (const sortFn of ADVANCED_SORT_STRATEGIES) {
-        const sorted = [...pieces].sort(sortFn);
-        const newPlans = config.mode === 'guillotine'
-          ? advancedGuillotine(sorted, material, usableW, usableH, config)
-          : maxRectsPlace(sorted, material, usableW, usableH, config, heuristic);
+// ═══════════════════════════════════════════════════════════
+// DEDUPLICATION & STACKING
+// ═══════════════════════════════════════════════════════════
 
-        // Only accept if ALL pieces fit in one sheet
-        if (newPlans.length === 1 && newPlans[0].pieces.length === pieces.length) {
-          if (newPlans[0].utilizationPercent > bestUtil) {
-            bestUtil = newPlans[0].utilizationPercent;
-            bestPlan = newPlans[0];
-          }
-        }
-      }
+function planSignature(plan: CuttingPlan): string {
+  return plan.pieces
+    .map(p => `${p.code}:${Math.round(p.x)}:${Math.round(p.y)}:${Math.round(p.width)}x${Math.round(p.height)}:${p.rotated ? 1 : 0}`)
+    .sort()
+    .join('|');
+}
+
+function deduplicatePlans(plans: CuttingPlan[], config: OptimizationConfig): CuttingPlan[] {
+  if (config.maxStackThickness <= 0) return plans;
+
+  const groups = new Map<string, { plan: CuttingPlan; count: number }>();
+  for (const plan of plans) {
+    const key = plan.materialCode + '::' + planSignature(plan);
+    const existing = groups.get(key);
+    if (existing) {
+      existing.count++;
+    } else {
+      groups.set(key, { plan, count: 1 });
     }
+  }
 
-    result.push(bestPlan);
+  const result: CuttingPlan[] = [];
+  for (const { plan, count } of groups.values()) {
+    const spl = plan.sheetsPerLoad || 1;
+    const totalSheets = count; // each plan was 1 sheet; total count of identical layouts
+    const machineLoads = Math.ceil(totalSheets / spl);
+    result.push({
+      ...plan,
+      stackCount: totalSheets,
+      sheetsPerLoad: spl,
+      machineLoads,
+    });
   }
 
   return result;
 }
 
-// ─── Shared MaxRects implementation ───────────────────────
+// ═══════════════════════════════════════════════════════════
+// HELPER: PlacedPiece → ProcessedPiece
+// ═══════════════════════════════════════════════════════════
 
-function maxRectsPlace(
-  pieces: ProcessedPiece[],
-  material: Material,
-  usableW: number,
-  usableH: number,
-  config: OptimizationConfig,
-  heuristic: PlacementHeuristic,
+function fromPlaced(pp: PlacedPiece): ProcessedPiece {
+  const cw = pp.rotated ? pp.height : pp.width;
+  const ch = pp.rotated ? pp.width : pp.height;
+  return {
+    id: pp.pieceId, code: pp.code, material: pp.material,
+    cutWidth: cw, cutHeight: ch,
+    originalWidth: pp.originalWidth, originalHeight: pp.originalHeight,
+    grainDirection: pp.grainDirection, quantity: 1, sequence: pp.sequence,
+    description: pp.description, description2: pp.description2,
+    edgeBandTop: pp.edgeBandTop, edgeBandBottom: pp.edgeBandBottom,
+    edgeBandLeft: pp.edgeBandLeft, edgeBandRight: pp.edgeBandRight,
+    area: cw * ch, maxDim: Math.max(cw, ch), minDim: Math.min(cw, ch),
+    perimeter: 2 * (cw + ch),
+  };
+}
+
+// ═══════════════════════════════════════════════════════════
+// PRE-PROCESSING
+// ═══════════════════════════════════════════════════════════
+
+function preProcess(pieces: Piece[], edgeBands: EdgeBand[]): ProcessedPiece[] {
+  const ebMap = new Map(edgeBands.map(eb => [eb.code, eb]));
+  return pieces.map(p => {
+    let addW = 0, addH = 0;
+    const ebL = ebMap.get(p.edgeBandLeft);
+    const ebR = ebMap.get(p.edgeBandRight);
+    const ebT = ebMap.get(p.edgeBandTop);
+    const ebB = ebMap.get(p.edgeBandBottom);
+    if (ebL) addW += ebL.supplementaryIncrease;
+    if (ebR) addW += ebR.supplementaryIncrease;
+    if (ebT) addH += ebT.supplementaryIncrease;
+    if (ebB) addH += ebB.supplementaryIncrease;
+    const cw = p.width + addW;
+    const ch = p.height + addH;
+    return {
+      id: p.id, code: p.code, material: p.material,
+      cutWidth: cw, cutHeight: ch,
+      originalWidth: p.width, originalHeight: p.height,
+      grainDirection: p.grainDirection, quantity: p.quantity,
+      sequence: p.sequence, description: p.description, description2: p.description2,
+      edgeBandTop: p.edgeBandTop, edgeBandBottom: p.edgeBandBottom,
+      edgeBandLeft: p.edgeBandLeft, edgeBandRight: p.edgeBandRight,
+      area: cw * ch, maxDim: Math.max(cw, ch), minDim: Math.min(cw, ch),
+      perimeter: 2 * (cw + ch),
+    };
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// FAST GUILLOTINE (NFDH strip-based)
+// ═══════════════════════════════════════════════════════════
+
+function fastGuillotine(
+  pieces: ProcessedPiece[], mat: Material,
+  uw: number, uh: number, cfg: OptimizationConfig,
 ): CuttingPlan[] {
   const plans: CuttingPlan[] = [];
-  const remaining = [...pieces];
-  const kerf = config.bladeThickness;
+  const rem = [...pieces];
+  const kerf = cfg.bladeThickness;
 
-  while (remaining.length > 0) {
+  while (rem.length > 0) {
     const placed: PlacedPiece[] = [];
-    const freeRects: FreeRect[] = [{
-      x: material.trimLeft,
-      y: material.trimTop,
-      w: usableW,
-      h: usableH,
-    }];
+    const cuts: CutInstruction[] = [];
+    let curY = mat.trimTop;
+    let stripIdx = 0;
 
-    const toRemove: number[] = [];
-
-    for (let i = 0; i < remaining.length; i++) {
-      const p = remaining[i];
-      const pw = p.cutWidth;
-      const ph = p.cutHeight;
-      const allowRotate = canRotatePiece(p, material, config);
-
-      let bestRect = -1;
-      let bestScore = Infinity;
-      let bestRotated = false;
-
-      for (let r = 0; r < freeRects.length; r++) {
-        const rect = freeRects[r];
-
-        if (pw <= rect.w && ph <= rect.h) {
-          const score = scoreRectPlacement(rect, pw, ph, heuristic);
-          if (score < bestScore) {
-            bestScore = score;
-            bestRect = r;
-            bestRotated = false;
-          }
+    while (curY < mat.trimTop + uh && rem.length > 0) {
+      let stripH = 0, curX = mat.trimLeft, found = false;
+      for (let i = 0; i < rem.length; i++) {
+        const p = rem[i];
+        if (p.cutWidth <= uw && curY + p.cutHeight <= mat.trimTop + uh) {
+          stripH = p.cutHeight;
+          placed.push(mkPP(p, curX, curY, false));
+          curX += p.cutWidth + kerf;
+          rem.splice(i, 1); found = true; break;
         }
-
-        if (allowRotate && ph <= rect.w && pw <= rect.h) {
-          const score = scoreRectPlacement(rect, ph, pw, heuristic);
-          if (score < bestScore) {
-            bestScore = score;
-            bestRect = r;
-            bestRotated = true;
-          }
+        if (canRotate(p, mat, cfg) && p.cutHeight <= uw && curY + p.cutWidth <= mat.trimTop + uh) {
+          stripH = p.cutWidth;
+          placed.push(mkPP(p, curX, curY, true));
+          curX += p.cutHeight + kerf;
+          rem.splice(i, 1); found = true; break;
         }
       }
-
-      if (bestRect >= 0) {
-        const rect = freeRects[bestRect];
-        const finalW = bestRotated ? ph : pw;
-        const finalH = bestRotated ? pw : ph;
-
-        placed.push(makePlacedPiece(p, rect.x, rect.y, bestRotated));
-        toRemove.push(i);
-
-        const usedRect: FreeRect = {
-          x: rect.x,
-          y: rect.y,
-          w: finalW + kerf,
-          h: finalH + kerf,
-        };
-
-        splitFreeRects(freeRects, usedRect);
-        pruneFreeRects(freeRects);
-      }
+      if (!found) break;
+      const avail = mat.trimLeft + uw - curX;
+      if (avail > kerf) fillStrip(rem, placed, mat, cfg, curX, curY, avail, stripH, kerf);
+      if (stripIdx > 0) cuts.push({ type: 'H', position: curY, depth: stripIdx, resultingPieces: [] });
+      curY += stripH + kerf;
+      stripIdx++;
     }
-
-    for (const idx of toRemove.sort((a, b) => b - a)) {
-      remaining.splice(idx, 1);
-    }
-
-    if (placed.length === 0 && remaining.length > 0) {
-      remaining.shift();
-      continue;
-    }
-
-    if (placed.length > 0) {
-      plans.push(createPlan(placed, [], material, usableW, usableH));
-    }
+    if (placed.length === 0 && rem.length > 0) { rem.shift(); continue; }
+    if (placed.length > 0) plans.push(mkPlan(placed, cuts, mat, uw, uh));
   }
-
   return plans;
 }
 
-// ─── MaxRects split / prune ───────────────────────────────
-
-function splitFreeRects(freeRects: FreeRect[], used: FreeRect): void {
-  const len = freeRects.length;
-  for (let i = len - 1; i >= 0; i--) {
-    const fr = freeRects[i];
-
-    if (used.x >= fr.x + fr.w || used.x + used.w <= fr.x ||
-        used.y >= fr.y + fr.h || used.y + used.h <= fr.y) {
-      continue;
+function fillStrip(
+  rem: ProcessedPiece[], placed: PlacedPiece[], mat: Material,
+  cfg: OptimizationConfig, startX: number, y: number,
+  availW: number, stripH: number, kerf: number,
+): void {
+  let curX = startX, space = availW, changed = true;
+  while (changed && space > kerf) {
+    changed = false;
+    let bi = -1, ba = 0, br = false, bw = 0;
+    for (let i = 0; i < rem.length; i++) {
+      const p = rem[i];
+      if (p.cutWidth <= space && p.cutHeight <= stripH && p.area > ba) {
+        ba = p.area; bi = i; br = false; bw = p.cutWidth;
+      }
+      if (canRotate(p, mat, cfg) && p.cutHeight <= space && p.cutWidth <= stripH && p.area > ba) {
+        ba = p.area; bi = i; br = true; bw = p.cutHeight;
+      }
     }
-
-    freeRects.splice(i, 1);
-
-    if (used.x > fr.x) {
-      freeRects.push({ x: fr.x, y: fr.y, w: used.x - fr.x, h: fr.h });
-    }
-    if (used.x + used.w < fr.x + fr.w) {
-      freeRects.push({ x: used.x + used.w, y: fr.y, w: (fr.x + fr.w) - (used.x + used.w), h: fr.h });
-    }
-    if (used.y > fr.y) {
-      freeRects.push({ x: fr.x, y: fr.y, w: fr.w, h: used.y - fr.y });
-    }
-    if (used.y + used.h < fr.y + fr.h) {
-      freeRects.push({ x: fr.x, y: used.y + used.h, w: fr.w, h: (fr.y + fr.h) - (used.y + used.h) });
+    if (bi >= 0) {
+      placed.push(mkPP(rem[bi], curX, y, br));
+      rem.splice(bi, 1);
+      curX += bw + kerf; space -= bw + kerf; changed = true;
     }
   }
 }
 
-function pruneFreeRects(freeRects: FreeRect[]): void {
-  for (let i = freeRects.length - 1; i >= 0; i--) {
-    for (let j = 0; j < freeRects.length; j++) {
+// ═══════════════════════════════════════════════════════════
+// ADVANCED GUILLOTINE
+// ═══════════════════════════════════════════════════════════
+
+function advGuillotine(
+  pieces: ProcessedPiece[], mat: Material,
+  uw: number, uh: number, cfg: OptimizationConfig,
+): CuttingPlan[] {
+  const plans: CuttingPlan[] = [];
+  const remaining = [...pieces];
+  const kerf = cfg.bladeThickness;
+
+  while (remaining.length > 0) {
+    let bestPlaced: PlacedPiece[] | null = null;
+    let bestUsed = 0;
+    let bestRem: ProcessedPiece[] | null = null;
+
+    const uhs = new Set<number>();
+    for (const p of remaining) {
+      uhs.add(p.cutHeight);
+      if (canRotate(p, mat, cfg)) uhs.add(p.cutWidth);
+    }
+
+    for (const th of uhs) {
+      if (th > uh) continue;
+      const rem = [...remaining];
+      const placed: PlacedPiece[] = [];
+      let curY = mat.trimTop;
+
+      while (curY + kerf < mat.trimTop + uh && rem.length > 0) {
+        const avH = mat.trimTop + uh - curY;
+        if (avH < 1) break;
+        let ai = -1, ah = 0, ar = false, aw2 = Infinity;
+        for (let i = 0; i < rem.length; i++) {
+          const p = rem[i];
+          if (p.cutHeight <= avH && p.cutWidth <= uw) {
+            const w = avH - p.cutHeight;
+            if (w < aw2 || (w === aw2 && p.area > (rem[ai]?.area ?? 0))) {
+              aw2 = w; ai = i; ah = p.cutHeight; ar = false;
+            }
+          }
+          if (canRotate(p, mat, cfg) && p.cutWidth <= avH && p.cutHeight <= uw) {
+            const w = avH - p.cutWidth;
+            if (w < aw2 || (w === aw2 && p.area > (rem[ai]?.area ?? 0))) {
+              aw2 = w; ai = i; ah = p.cutWidth; ar = true;
+            }
+          }
+        }
+        if (ai < 0) break;
+        const stripH = ah;
+        const anchor = rem[ai];
+        const ancW = ar ? anchor.cutHeight : anchor.cutWidth;
+        let curX = mat.trimLeft + ancW + kerf;
+        placed.push(mkPP(anchor, mat.trimLeft, curY, ar));
+        rem.splice(ai, 1);
+
+        const sAW = mat.trimLeft + uw;
+        let filling = true;
+        while (filling && curX < sAW) {
+          filling = false;
+          let fi = -1, fa = 0, fr2 = false, fw = 0;
+          const sl = sAW - curX;
+          for (let i = 0; i < rem.length; i++) {
+            const p = rem[i];
+            if (p.cutWidth <= sl && p.cutHeight <= stripH && p.area > fa) { fa = p.area; fi = i; fr2 = false; fw = p.cutWidth; }
+            if (canRotate(p, mat, cfg) && p.cutHeight <= sl && p.cutWidth <= stripH && p.area > fa) { fa = p.area; fi = i; fr2 = true; fw = p.cutHeight; }
+          }
+          if (fi >= 0) { placed.push(mkPP(rem[fi], curX, curY, fr2)); rem.splice(fi, 1); curX += fw + kerf; filling = true; }
+        }
+
+        // Sub-strip: try to fill remaining height in strip with smaller pieces
+        const subY = curY + stripH + kerf;
+        const subH = avH - stripH - kerf;
+        if (subH > 0) {
+          let subX = mat.trimLeft;
+          let subFilling = true;
+          while (subFilling && subX < sAW && rem.length > 0) {
+            subFilling = false;
+            let si = -1, sa = 0, sr = false, sw = 0;
+            const sSpace = sAW - subX;
+            for (let i = 0; i < rem.length; i++) {
+              const p = rem[i];
+              if (p.cutWidth <= sSpace && p.cutHeight <= subH && p.area > sa) { sa = p.area; si = i; sr = false; sw = p.cutWidth; }
+              if (canRotate(p, mat, cfg) && p.cutHeight <= sSpace && p.cutWidth <= subH && p.area > sa) { sa = p.area; si = i; sr = true; sw = p.cutHeight; }
+            }
+            if (si >= 0) { placed.push(mkPP(rem[si], subX, subY, sr)); rem.splice(si, 1); subX += sw + kerf; subFilling = true; }
+          }
+        }
+
+        curY += Math.max(stripH, stripH + kerf + (subH > 0 ? subH : 0));
+        if (subH <= 0) curY = curY - stripH + stripH + kerf; // normal advance
+        curY = curY > mat.trimTop + uh ? mat.trimTop + uh : curY;
+        // Simple advance
+        curY = mat.trimTop + uh; // re-evaluate: just move to the amount used
+        curY = placed.length > 0 ? Math.max(...placed.map(p => p.y + p.height)) + kerf : mat.trimTop + uh;
+      }
+
+      const used = placed.reduce((s, p) => s + p.width * p.height, 0);
+      if (used > bestUsed) { bestUsed = used; bestPlaced = placed; bestRem = rem; }
+    }
+
+    // Also try NFDH
+    {
+      const rem = [...remaining];
+      const placed: PlacedPiece[] = [];
+      let curY = mat.trimTop;
+      while (curY < mat.trimTop + uh && rem.length > 0) {
+        let stripH = 0, curX = mat.trimLeft, found = false;
+        for (let i = 0; i < rem.length; i++) {
+          const p = rem[i];
+          if (p.cutWidth <= uw && curY + p.cutHeight <= mat.trimTop + uh) {
+            stripH = p.cutHeight; placed.push(mkPP(p, curX, curY, false)); curX += p.cutWidth + kerf; rem.splice(i, 1); found = true; break;
+          }
+          if (canRotate(p, mat, cfg) && p.cutHeight <= uw && curY + p.cutWidth <= mat.trimTop + uh) {
+            stripH = p.cutWidth; placed.push(mkPP(p, curX, curY, true)); curX += p.cutHeight + kerf; rem.splice(i, 1); found = true; break;
+          }
+        }
+        if (!found) break;
+        const avail = mat.trimLeft + uw - curX;
+        if (avail > kerf) fillStrip(rem, placed, mat, cfg, curX, curY, avail, stripH, kerf);
+        curY += stripH + kerf;
+      }
+      const used = placed.reduce((s, p) => s + p.width * p.height, 0);
+      if (used > bestUsed) { bestUsed = used; bestPlaced = placed; bestRem = rem; }
+    }
+
+    if (!bestPlaced || bestPlaced.length === 0) {
+      if (remaining.length > 0) { remaining.shift(); continue; }
+      break;
+    }
+    plans.push(mkPlan(bestPlaced, [], mat, uw, uh));
+    remaining.length = 0;
+    if (bestRem) remaining.push(...bestRem);
+  }
+  return plans;
+}
+
+// ═══════════════════════════════════════════════════════════
+// ITERATED GREEDY
+// ═══════════════════════════════════════════════════════════
+
+function iteratedGreedy(
+  initial: CuttingPlan[], mat: Material,
+  uw: number, uh: number, cfg: OptimizationConfig, deadline: number,
+): CuttingPlan[] {
+  let best = initial;
+  let bestScore = scorePlans(best, uw, uh);
+  const heurs = cfg.mode === 'freeform' ? ALL_H : ['BSSF' as Heuristic];
+  let iter = 0;
+
+  while (performance.now() < deadline * 0.85) {
+    iter++;
+    const rate = 0.15 + Math.random() * 0.35;
+    const all = best.flatMap(p => p.pieces);
+    const n = Math.max(1, Math.floor(all.length * rate));
+    const shuffled = [...all].sort(() => Math.random() - 0.5);
+    const kept = shuffled.slice(n).map(pp => fromPlaced(pp));
+    const removed = shuffled.slice(0, n).map(pp => fromPlaced(pp));
+    const sf = ADVANCED_SORT_STRATEGIES[iter % ADVANCED_SORT_STRATEGIES.length];
+    const h = heurs[iter % heurs.length];
+    const repair = [...kept.sort(sf), ...removed.sort(sf)];
+    const plans = cfg.mode === 'guillotine'
+      ? advGuillotine(repair, mat, uw, uh, cfg)
+      : maxRectsPlace(repair, mat, uw, uh, cfg, h);
+    const s = scorePlans(plans, uw, uh);
+    if (s > bestScore) { bestScore = s; best = plans; }
+  }
+  return best;
+}
+
+// ═══════════════════════════════════════════════════════════
+// BIN REDUCTION
+// ═══════════════════════════════════════════════════════════
+
+function tryReduceSheets(
+  plans: CuttingPlan[], mat: Material,
+  uw: number, uh: number, cfg: OptimizationConfig, deadline: number,
+): CuttingPlan[] {
+  let best = [...plans];
+  const all = best.flatMap(p => p.pieces.map(pp => fromPlaced(pp)));
+  const heurs = cfg.mode === 'freeform' ? ALL_H : ['BSSF' as Heuristic];
+
+  for (const h of heurs) {
+    if (performance.now() > deadline) break;
+    for (const sf of ADVANCED_SORT_STRATEGIES) {
+      if (performance.now() > deadline) break;
+      const sorted = [...all].sort(sf);
+      const np = cfg.mode === 'guillotine'
+        ? advGuillotine(sorted, mat, uw, uh, cfg)
+        : maxRectsPlace(sorted, mat, uw, uh, cfg, h);
+      if (np.length < best.length) { best = np; }
+      else if (np.length === best.length) {
+        if (scorePlans(np, uw, uh) > scorePlans(best, uw, uh)) best = np;
+      }
+    }
+  }
+  return best;
+}
+
+// ═══════════════════════════════════════════════════════════
+// PER-SHEET RE-OPTIMIZATION
+// ═══════════════════════════════════════════════════════════
+
+function reoptPerSheet(
+  plans: CuttingPlan[], mat: Material,
+  uw: number, uh: number, cfg: OptimizationConfig, deadline: number,
+): CuttingPlan[] {
+  const result: CuttingPlan[] = [];
+  for (const plan of plans) {
+    if (performance.now() > deadline) { result.push(plan); continue; }
+    const pcs = plan.pieces.map(pp => fromPlaced(pp));
+    let bp = plan, bu = plan.utilizationPercent;
+    const heurs: Heuristic[] = cfg.mode === 'freeform' ? ALL_H : ['BSSF'];
+    for (const h of heurs) {
+      for (const sf of ADVANCED_SORT_STRATEGIES) {
+        if (performance.now() > deadline) break;
+        const np = cfg.mode === 'guillotine'
+          ? advGuillotine([...pcs].sort(sf), mat, uw, uh, cfg)
+          : maxRectsPlace([...pcs].sort(sf), mat, uw, uh, cfg, h);
+        if (np.length === 1 && np[0].pieces.length === pcs.length && np[0].utilizationPercent > bu) {
+          bu = np[0].utilizationPercent; bp = np[0];
+        }
+      }
+    }
+    result.push(bp);
+  }
+  return result;
+}
+
+// ═══════════════════════════════════════════════════════════
+// MAXRECTS PLACEMENT (global best-fit per iteration)
+// ═══════════════════════════════════════════════════════════
+
+function maxRectsPlace(
+  pieces: ProcessedPiece[], mat: Material,
+  uw: number, uh: number, cfg: OptimizationConfig, heuristic: Heuristic,
+): CuttingPlan[] {
+  const plans: CuttingPlan[] = [];
+  const rem = [...pieces];
+  const kerf = cfg.bladeThickness;
+
+  while (rem.length > 0) {
+    const placed: PlacedPiece[] = [];
+    const free: FreeRect[] = [{ x: mat.trimLeft, y: mat.trimTop, w: uw, h: uh }];
+
+    let progress = true;
+    while (progress && rem.length > 0) {
+      progress = false;
+      let bpi = -1, bri = -1, bs = Infinity, brot = false;
+
+      for (let i = 0; i < rem.length; i++) {
+        const p = rem[i];
+        const pw = p.cutWidth, ph = p.cutHeight;
+        const rot = canRotate(p, mat, cfg);
+
+        for (let r = 0; r < free.length; r++) {
+          const rc = free[r];
+          if (pw <= rc.w && ph <= rc.h) {
+            const s = scoreRect(rc, pw, ph, heuristic);
+            if (s < bs) { bs = s; bpi = i; bri = r; brot = false; }
+          }
+          if (rot && ph <= rc.w && pw <= rc.h) {
+            const s = scoreRect(rc, ph, pw, heuristic);
+            if (s < bs) { bs = s; bpi = i; bri = r; brot = true; }
+          }
+        }
+      }
+
+      if (bpi >= 0 && bri >= 0) {
+        const p = rem[bpi];
+        const rc = free[bri];
+        const fw = brot ? p.cutHeight : p.cutWidth;
+        const fh = brot ? p.cutWidth : p.cutHeight;
+        placed.push(mkPP(p, rc.x, rc.y, brot));
+        rem.splice(bpi, 1);
+        splitFree(free, { x: rc.x, y: rc.y, w: fw + kerf, h: fh + kerf });
+        pruneFree(free);
+        progress = true;
+      }
+    }
+
+    if (placed.length === 0 && rem.length > 0) { rem.shift(); continue; }
+    if (placed.length > 0) plans.push(mkPlan(placed, [], mat, uw, uh));
+  }
+  return plans;
+}
+
+// ═══════════════════════════════════════════════════════════
+// MAXRECTS SPLIT & PRUNE
+// ═══════════════════════════════════════════════════════════
+
+function splitFree(free: FreeRect[], used: FreeRect): void {
+  for (let i = free.length - 1; i >= 0; i--) {
+    const f = free[i];
+    if (used.x >= f.x + f.w || used.x + used.w <= f.x ||
+        used.y >= f.y + f.h || used.y + used.h <= f.y) continue;
+    free.splice(i, 1);
+    if (used.x > f.x) free.push({ x: f.x, y: f.y, w: used.x - f.x, h: f.h });
+    if (used.x + used.w < f.x + f.w) free.push({ x: used.x + used.w, y: f.y, w: (f.x + f.w) - (used.x + used.w), h: f.h });
+    if (used.y > f.y) free.push({ x: f.x, y: f.y, w: f.w, h: used.y - f.y });
+    if (used.y + used.h < f.y + f.h) free.push({ x: f.x, y: used.y + used.h, w: f.w, h: (f.y + f.h) - (used.y + used.h) });
+  }
+}
+
+function pruneFree(free: FreeRect[]): void {
+  for (let i = free.length - 1; i >= 0; i--) {
+    for (let j = 0; j < free.length; j++) {
       if (i === j) continue;
-      const a = freeRects[i];
-      const b = freeRects[j];
-      if (a.x >= b.x && a.y >= b.y &&
-          a.x + a.w <= b.x + b.w && a.y + a.h <= b.y + b.h) {
-        freeRects.splice(i, 1);
-        break;
+      const a = free[i], b = free[j];
+      if (a.x >= b.x && a.y >= b.y && a.x + a.w <= b.x + b.w && a.y + a.h <= b.y + b.h) {
+        free.splice(i, 1); break;
       }
     }
   }
 }
 
-// ─── Helpers ──────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// HELPER CONSTRUCTORS
+// ═══════════════════════════════════════════════════════════
 
-function makePlacedPiece(p: ProcessedPiece, x: number, y: number, rotated: boolean): PlacedPiece {
+function mkPP(p: ProcessedPiece, x: number, y: number, rotated: boolean): PlacedPiece {
   return {
-    pieceId: p.id,
-    code: p.code,
-    x,
-    y,
+    pieceId: p.id, code: p.code, x, y,
     width: rotated ? p.cutHeight : p.cutWidth,
     height: rotated ? p.cutWidth : p.cutHeight,
-    rotated,
-    originalWidth: p.originalWidth,
-    originalHeight: p.originalHeight,
-    grainDirection: p.grainDirection,
-    description: p.description,
-    description2: p.description2,
-    material: p.material,
-    sequence: p.sequence,
-    edgeBandTop: p.edgeBandTop,
-    edgeBandBottom: p.edgeBandBottom,
-    edgeBandLeft: p.edgeBandLeft,
-    edgeBandRight: p.edgeBandRight,
+    rotated, originalWidth: p.originalWidth, originalHeight: p.originalHeight,
+    grainDirection: p.grainDirection, description: p.description,
+    description2: p.description2, material: p.material, sequence: p.sequence,
+    edgeBandTop: p.edgeBandTop, edgeBandBottom: p.edgeBandBottom,
+    edgeBandLeft: p.edgeBandLeft, edgeBandRight: p.edgeBandRight,
     quantity: p.quantity,
   };
 }
 
-function createPlan(
-  placed: PlacedPiece[],
-  cuts: CutInstruction[],
-  material: Material,
-  usableW: number,
-  usableH: number,
+function mkPlan(
+  placed: PlacedPiece[], cuts: CutInstruction[],
+  mat: Material, uw: number, uh: number,
 ): CuttingPlan {
   const usedArea = placed.reduce((s, p) => s + p.width * p.height, 0);
-  const usableArea = usableW * usableH;
-
-  const scraps = calculateScraps(placed, material, usableW, usableH);
-
+  const usableArea = uw * uh;
+  const scraps = calcScraps(placed, mat, uw, uh);
   return {
-    planId: generateId(),
-    materialCode: material.code,
-    sheetWidth: material.sheetWidth,
-    sheetHeight: material.sheetHeight,
-    stackCount: 1,
-    pieces: placed,
-    scraps,
-    cuts,
-    usableArea,
-    usedArea,
+    planId: generateId(), materialCode: mat.code,
+    sheetWidth: mat.sheetWidth, sheetHeight: mat.sheetHeight,
+    stackCount: 1, sheetsPerLoad: 1, machineLoads: 1,
+    pieces: placed, scraps, cuts, usableArea, usedArea,
     wasteArea: usableArea - usedArea,
     utilizationPercent: usableArea > 0 ? (usedArea / usableArea) * 100 : 0,
     totalCuts: cuts.length + placed.length,
   };
 }
 
-function calculateScraps(
-  placed: PlacedPiece[],
-  material: Material,
-  usableW: number,
-  usableH: number,
+function calcScraps(
+  placed: PlacedPiece[], mat: Material, uw: number, uh: number,
 ): ScrapRect[] {
   const scraps: ScrapRect[] = [];
   if (placed.length === 0) return scraps;
-
-  const maxX = Math.max(...placed.map((p) => p.x + p.width));
-  const maxY = Math.max(...placed.map((p) => p.y + p.height));
-  const sheetRight = material.trimLeft + usableW;
-  const sheetBottom = material.trimTop + usableH;
-
-  const rightW = sheetRight - maxX;
-  const bottomH = sheetBottom - maxY;
-
-  if (rightW > 1) {
-    scraps.push({
-      x: maxX,
-      y: material.trimTop,
-      width: rightW,
-      height: usableH,
-      usable: rightW >= material.minScrapWidth && usableH >= material.minScrapHeight,
-    });
-  }
-
-  if (bottomH > 1) {
-    scraps.push({
-      x: material.trimLeft,
-      y: maxY,
-      width: maxX - material.trimLeft,
-      height: bottomH,
-      usable: (maxX - material.trimLeft) >= material.minScrapWidth && bottomH >= material.minScrapHeight,
-    });
-  }
-
+  const mx = Math.max(...placed.map(p => p.x + p.width));
+  const my = Math.max(...placed.map(p => p.y + p.height));
+  const sr = mat.trimLeft + uw;
+  const sb = mat.trimTop + uh;
+  const rw = sr - mx, bh = sb - my;
+  if (rw > 1) scraps.push({ x: mx, y: mat.trimTop, width: rw, height: uh, usable: rw >= mat.minScrapWidth && uh >= mat.minScrapHeight });
+  if (bh > 1) scraps.push({ x: mat.trimLeft, y: my, width: mx - mat.trimLeft, height: bh, usable: (mx - mat.trimLeft) >= mat.minScrapWidth && bh >= mat.minScrapHeight });
   return scraps;
 }

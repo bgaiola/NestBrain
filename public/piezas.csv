@@ -1,181 +1,329 @@
 material,descripción,cantidad,ancho,alto,veta,canto sup,canto inf,canto izq,canto der,secuencia,descripción 2
-MEL-18-ROB,Lateral Armario Izq,2,2100,600,horizontal,,,FB-1,FB-1,1,Módulo A
-MEL-18-ROB,Lateral Armario Der,2,2100,600,horizontal,,,FB-1,FB-1,2,Módulo A
-MEL-18-ROB,Tapa Superior Armario,2,1200,600,horizontal,FB-1,,FB-1,FB-1,3,Módulo A
-MEL-18-ROB,Base Armario,2,1200,600,horizontal,,FB-1,FB-1,FB-1,4,Módulo A
-MEL-18-ROB,Estante Armario,6,1196,580,horizontal,FB-1,,,,5,Módulo A
-MEL-18-ROB,Divisor Vertical Armario,4,900,580,horizontal,,,,FB-1,6,Módulo A
-MEL-18-ROB,Trasera Interior,2,2050,1196,horizontal,,,,,7,Módulo A
-MEL-18-ROB,Lateral Armario 2 Izq,2,2200,550,horizontal,,,FB-1,FB-1,8,Módulo B
-MEL-18-ROB,Lateral Armario 2 Der,2,2200,550,horizontal,,,FB-1,FB-1,9,Módulo B
-MEL-18-ROB,Tapa Armario 2,2,1000,550,horizontal,FB-1,,FB-1,FB-1,10,Módulo B
-MEL-18-ROB,Base Armario 2,2,1000,550,horizontal,,FB-1,FB-1,FB-1,11,Módulo B
-MEL-18-ROB,Estante Armario 2,8,996,530,horizontal,FB-1,,,,12,Módulo B
-MEL-18-ROB,Divisor Armario 2,2,800,530,horizontal,,,,FB-1,13,Módulo B
-MEL-18-ROB,Trasera Armario 2,2,2150,996,horizontal,,,,,14,Módulo B
-MDF-18-BL,Puerta Armario Izq,2,2096,597,horizontal,FB-2,FB-2,FB-2,FB-2,15,Módulo A
-MDF-18-BL,Puerta Armario Der,2,2096,597,horizontal,FB-2,FB-2,FB-2,FB-2,16,Módulo A
-MDF-18-BL,Puerta Armario Centro,2,1045,597,horizontal,FB-2,FB-2,FB-2,FB-2,17,Módulo A
-MDF-18-BL,Puerta Armario 2 Izq,2,2196,547,horizontal,FB-2,FB-2,FB-2,FB-2,18,Módulo B
-MDF-18-BL,Puerta Armario 2 Der,2,2196,547,horizontal,FB-2,FB-2,FB-2,FB-2,19,Módulo B
-MDF-18-BL,Puerta Armario 2 Centro,2,1096,547,horizontal,FB-2,FB-2,FB-2,FB-2,20,Módulo B
-MDF-18-BL,Puerta Bajo Cocina 1,4,596,716,horizontal,FB-2,FB-2,FB-2,FB-2,21,Cocina
-MDF-18-BL,Puerta Bajo Cocina 2,2,396,716,horizontal,FB-2,FB-2,FB-2,FB-2,22,Cocina
-MDF-18-BL,Puerta Alto Cocina 1,4,596,396,horizontal,FB-2,FB-2,FB-2,FB-2,23,Cocina
-MDF-18-BL,Puerta Alto Cocina 2,2,396,396,horizontal,FB-2,FB-2,FB-2,FB-2,24,Cocina
-MDF-18-BL,Puerta Isla,3,596,816,horizontal,FB-2,FB-2,FB-2,FB-2,25,Cocina
-MEL-18-NOG,Lateral Mesa,2,730,700,horizontal,,,FB-1,FB-1,26,Escritorio 1
-MEL-18-NOG,Tapa Mesa,1,1600,800,horizontal,FB-1,FB-1,FB-1,FB-1,27,Escritorio 1
-MEL-18-NOG,Estante Mesa,1,1560,450,horizontal,FB-1,,,,28,Escritorio 1
-MEL-18-NOG,Trasera Mesa,1,1560,300,horizontal,,,,,29,Escritorio 1
-MEL-18-NOG,Pasacables Panel,2,400,100,horizontal,,,,,30,Escritorio 1
-MEL-18-NOG,Lateral Mesa 2,2,730,650,horizontal,,,FB-1,FB-1,31,Escritorio 2
-MEL-18-NOG,Tapa Mesa 2,1,1400,700,horizontal,FB-1,FB-1,FB-1,FB-1,32,Escritorio 2
-MEL-18-NOG,Estante Mesa 2,2,1360,400,horizontal,FB-1,,,,33,Escritorio 2
-MEL-18-NOG,Trasera Mesa 2,1,1360,250,horizontal,,,,,34,Escritorio 2
-MEL-18-NOG,Pasacables Mesa 2,2,350,100,horizontal,,,,,35,Escritorio 2
-MEL-18-NOG,Cajonera Lateral,2,500,650,horizontal,,,FB-1,FB-1,36,Escritorio 2
-MEL-18-NOG,Cajonera Frente,3,480,180,horizontal,FB-1,FB-1,FB-1,FB-1,37,Escritorio 2
-MEL-18-NOG,Cajonera Fondo,3,480,600,horizontal,,,,,38,Escritorio 2
-MEL-18-NOG,Cajonera Base,1,500,480,horizontal,,,,,39,Escritorio 2
-MEL-18-CER,Cabecera Cama,1,1800,1100,horizontal,FB-1,FB-1,FB-1,FB-1,40,Dormitorio Principal
-MEL-18-CER,Piecera Cama,1,1800,450,horizontal,FB-1,,FB-1,FB-1,41,Dormitorio Principal
-MEL-18-CER,Lateral Cama Izq,1,2000,350,horizontal,FB-1,,,FB-1,42,Dormitorio Principal
-MEL-18-CER,Lateral Cama Der,1,2000,350,horizontal,FB-1,,FB-1,,43,Dormitorio Principal
-MEL-18-CER,Somier Central,2,1960,980,horizontal,,,,,44,Dormitorio Principal
-MEL-18-CER,Travesaño Somier,3,1800,100,horizontal,,,,,45,Dormitorio Principal
-MEL-18-CER,Cabecera Cama Niño,1,1000,800,horizontal,FB-1,FB-1,FB-1,FB-1,46,Dormitorio Niño
-MEL-18-CER,Piecera Cama Niño,1,1000,350,horizontal,FB-1,,FB-1,FB-1,47,Dormitorio Niño
-MEL-18-CER,Lateral Cama Niño Izq,1,1900,300,horizontal,FB-1,,,FB-1,48,Dormitorio Niño
-MEL-18-CER,Lateral Cama Niño Der,1,1900,300,horizontal,FB-1,,FB-1,,49,Dormitorio Niño
-MEL-18-CER,Somier Niño,1,1860,960,horizontal,,,,,50,Dormitorio Niño
-MEL-18-CER,Mesita Noche Lateral,4,450,400,horizontal,,,FB-1,FB-1,51,Dormitorio Principal
-MEL-18-CER,Mesita Noche Tapa,2,500,400,horizontal,FB-1,,FB-1,FB-1,52,Dormitorio Principal
-MEL-18-CER,Mesita Noche Base,2,500,400,horizontal,,FB-1,FB-1,FB-1,53,Dormitorio Principal
-MEL-18-CER,Mesita Noche Estante,2,496,380,horizontal,FB-1,,,,54,Dormitorio Principal
-MEL-18-CER,Mesita Noche Trasera,2,480,396,horizontal,,,,,55,Dormitorio Principal
-MDF-15-BL,Fondo Cajón Grande,4,500,400,horizontal,,,,,56,Cajones
-MDF-15-BL,Lateral Cajón Grande,8,500,150,horizontal,FB-3,,,,57,Cajones
-MDF-15-BL,Frente Cajón Grande,4,520,170,horizontal,FB-3,FB-3,FB-3,FB-3,58,Cajones
-MDF-15-BL,Trasera Cajón Grande,4,500,150,horizontal,,,,,59,Cajones
-MDF-15-BL,Fondo Cajón Pequeño,6,350,300,horizontal,,,,,60,Cajones
-MDF-15-BL,Lateral Cajón Pequeño,12,350,120,horizontal,FB-3,,,,61,Cajones
-MDF-15-BL,Frente Cajón Pequeño,6,370,140,horizontal,FB-3,FB-3,FB-3,FB-3,62,Cajones
-MDF-15-BL,Trasera Cajón Pequeño,6,350,120,horizontal,,,,,63,Cajones
-MDF-15-BL,Fondo Cajón Cocina 1,6,550,450,horizontal,,,,,64,Cocina
-MDF-15-BL,Lateral Cajón Cocina 1,12,550,180,horizontal,FB-3,,,,65,Cocina
-MDF-15-BL,Frente Cajón Cocina 1,6,570,200,horizontal,FB-3,FB-3,FB-3,FB-3,66,Cocina
-MDF-15-BL,Trasera Cajón Cocina 1,6,550,180,horizontal,,,,,67,Cocina
-MDF-15-BL,Fondo Cajón Cocina 2,4,400,450,horizontal,,,,,68,Cocina
-MDF-15-BL,Lateral Cajón Cocina 2,8,400,180,horizontal,FB-3,,,,69,Cocina
-MDF-15-BL,Frente Cajón Cocina 2,4,420,200,horizontal,FB-3,FB-3,FB-3,FB-3,70,Cocina
-MDF-15-BL,Trasera Cajón Cocina 2,4,400,180,horizontal,,,,,71,Cocina
-MEL-18-GRS,Costado Mueble TV,2,500,450,horizontal,,,FB-1,FB-1,72,Living
-MEL-18-GRS,Tapa Mueble TV,1,1800,450,horizontal,FB-1,,FB-1,FB-1,73,Living
-MEL-18-GRS,Base Mueble TV,1,1800,450,horizontal,,FB-1,FB-1,FB-1,74,Living
-MEL-18-GRS,Estante Mueble TV,2,1796,430,horizontal,FB-1,,,,75,Living
-MEL-18-GRS,Divisor Mueble TV,3,480,430,horizontal,,,,FB-1,76,Living
-MEL-18-GRS,Puerta Mueble TV,2,590,478,horizontal,FB-2,FB-2,FB-2,FB-2,77,Living
-MEL-18-GRS,Cajón Frente TV,2,570,200,horizontal,FB-2,FB-2,FB-2,FB-2,78,Living
-MEL-18-GRS,Cajón Lateral TV,4,420,200,horizontal,,,,,79,Living
-MEL-18-GRS,Cajón Fondo TV,2,570,420,horizontal,,,,,80,Living
-MEL-18-GRS,Costado Aparador,2,400,850,horizontal,,,FB-1,FB-1,81,Living
-MEL-18-GRS,Tapa Aparador,1,1600,400,horizontal,FB-1,,FB-1,FB-1,82,Living
-MEL-18-GRS,Base Aparador,1,1600,400,horizontal,,FB-1,FB-1,FB-1,83,Living
-MEL-18-GRS,Estante Aparador,3,1596,380,horizontal,FB-1,,,,84,Living
-MEL-18-GRS,Divisor Aparador,2,380,830,horizontal,,,,FB-1,85,Living
-MEL-18-GRS,Puerta Aparador,4,390,410,horizontal,FB-2,FB-2,FB-2,FB-2,86,Living
-MEL-18-GRS,Trasera Aparador,1,1596,830,horizontal,,,,,87,Living
-AGL-16-BL,Estante Despensa,8,800,400,horizontal,,,,,88,Cocina
-AGL-16-BL,Lateral Despensa,2,2000,400,horizontal,,,FB-1,FB-1,89,Cocina
-AGL-16-BL,Tapa Despensa,1,800,400,horizontal,FB-1,,FB-1,FB-1,90,Cocina
-AGL-16-BL,Base Despensa,1,800,400,horizontal,,FB-1,FB-1,FB-1,91,Cocina
-AGL-16-BL,Trasera Despensa,1,1980,796,horizontal,,,,,92,Cocina
-AGL-16-BL,Lateral Bajo Cocina 1,4,700,560,horizontal,,,FB-1,FB-1,93,Cocina
-AGL-16-BL,Tapa Bajo Cocina 1,2,600,560,horizontal,FB-1,,FB-1,FB-1,94,Cocina
-AGL-16-BL,Base Bajo Cocina 1,2,600,560,horizontal,,FB-1,FB-1,FB-1,95,Cocina
-AGL-16-BL,Estante Bajo Cocina 1,4,596,540,horizontal,FB-1,,,,96,Cocina
-AGL-16-BL,Trasera Bajo Cocina 1,2,680,596,horizontal,,,,,97,Cocina
-AGL-16-BL,Lateral Bajo Cocina 2,2,700,400,horizontal,,,FB-1,FB-1,98,Cocina
-AGL-16-BL,Tapa Bajo Cocina 2,1,400,400,horizontal,FB-1,,FB-1,FB-1,99,Cocina
-AGL-16-BL,Base Bajo Cocina 2,1,400,400,horizontal,,FB-1,FB-1,FB-1,100,Cocina
-AGL-16-BL,Trasera Bajo Cocina 2,1,680,396,horizontal,,,,,101,Cocina
-AGL-16-BL,Lateral Alto Cocina,4,400,560,horizontal,,,FB-1,FB-1,102,Cocina
-AGL-16-BL,Tapa Alto Cocina,2,600,400,horizontal,FB-1,,FB-1,FB-1,103,Cocina
-AGL-16-BL,Base Alto Cocina,2,600,400,horizontal,,FB-1,FB-1,FB-1,104,Cocina
-AGL-16-BL,Estante Alto Cocina,4,596,380,horizontal,FB-1,,,,105,Cocina
-AGL-16-BL,Trasera Alto Cocina,2,380,596,horizontal,,,,,106,Cocina
-MEL-15-ROB,Lateral Estantería,4,1800,300,horizontal,,,FB-1,FB-1,107,Estudio
-MEL-15-ROB,Estante Estantería,20,900,300,horizontal,FB-1,,,,108,Estudio
-MEL-15-ROB,Tapa Estantería,4,900,300,horizontal,FB-1,,FB-1,FB-1,109,Estudio
-MEL-15-ROB,Base Estantería,4,900,300,horizontal,,FB-1,FB-1,FB-1,110,Estudio
-MEL-15-ROB,Trasera Estantería,4,1780,896,horizontal,,,,,111,Estudio
-MEL-15-ROB,Lateral Mueble Entrada,2,1200,350,horizontal,,,FB-1,FB-1,112,Entrada
-MEL-15-ROB,Tapa Mueble Entrada,1,800,350,horizontal,FB-1,,FB-1,FB-1,113,Entrada
-MEL-15-ROB,Base Mueble Entrada,1,800,350,horizontal,,FB-1,FB-1,FB-1,114,Entrada
-MEL-15-ROB,Estante Mueble Entrada,3,796,330,horizontal,FB-1,,,,115,Entrada
-MEL-15-ROB,Trasera Mueble Entrada,1,1180,796,horizontal,,,,,116,Entrada
-MEL-15-ROB,Zapatero Lateral,2,900,350,horizontal,,,FB-1,FB-1,117,Entrada
-MEL-15-ROB,Zapatero Tapa,1,600,350,horizontal,FB-1,,FB-1,FB-1,118,Entrada
-MEL-15-ROB,Zapatero Base,1,600,350,horizontal,,FB-1,FB-1,FB-1,119,Entrada
-MEL-15-ROB,Zapatero Estante,4,596,330,horizontal,FB-1,,,,120,Entrada
-MEL-15-ROB,Zapatero Trasera,1,880,596,horizontal,,,,,121,Entrada
-MEL-18-ROB,Lateral Cómoda,2,800,500,horizontal,,,FB-1,FB-1,122,Dormitorio
-MEL-18-ROB,Tapa Cómoda,1,1000,500,horizontal,FB-1,,FB-1,FB-1,123,Dormitorio
-MEL-18-ROB,Base Cómoda,1,1000,500,horizontal,,FB-1,FB-1,FB-1,124,Dormitorio
-MEL-18-ROB,Divisor Cómoda,2,480,400,horizontal,,,,FB-1,125,Dormitorio
-MEL-18-ROB,Trasera Cómoda,1,996,780,horizontal,,,,,126,Dormitorio
-MDF-18-BL,Frente Cajón Cómoda 1,3,320,180,horizontal,FB-2,FB-2,FB-2,FB-2,127,Dormitorio
-MDF-18-BL,Frente Cajón Cómoda 2,2,660,180,horizontal,FB-2,FB-2,FB-2,FB-2,128,Dormitorio
-MDF-18-BL,Frente Cajón Cómoda 3,1,996,250,horizontal,FB-2,FB-2,FB-2,FB-2,129,Dormitorio
-MEL-18-NOG,Lateral Vitrina,2,1200,350,horizontal,,,FB-1,FB-1,130,Living
-MEL-18-NOG,Tapa Vitrina,1,800,350,horizontal,FB-1,,FB-1,FB-1,131,Living
-MEL-18-NOG,Base Vitrina,1,800,350,horizontal,,FB-1,FB-1,FB-1,132,Living
-MEL-18-NOG,Estante Vitrina,4,796,340,horizontal,FB-1,,,,133,Living
-MEL-18-NOG,Trasera Vitrina,1,1180,796,horizontal,,,,,134,Living
-MEL-18-NOG,Puerta Vitrina Vidrio,2,1176,396,horizontal,,,,,135,Living
-MEL-18-NOG,Lateral Estante Baño,2,600,250,horizontal,,,FB-1,FB-1,136,Baño
-MEL-18-NOG,Tapa Estante Baño,1,800,250,horizontal,FB-1,,FB-1,FB-1,137,Baño
-MEL-18-NOG,Base Estante Baño,1,800,250,horizontal,,FB-1,FB-1,FB-1,138,Baño
-MEL-18-NOG,Estante Baño Interior,2,796,230,horizontal,FB-1,,,,139,Baño
-MEL-18-NOG,Trasera Estante Baño,1,580,796,horizontal,,,,,140,Baño
-MDF-22-BL,Tapa Encimera Cocina,1,2500,650,horizontal,FB-1,FB-1,FB-1,FB-1,141,Cocina
-MDF-22-BL,Tapa Isla Cocina,1,1200,800,horizontal,FB-1,FB-1,FB-1,FB-1,142,Cocina
-MDF-22-BL,Estante Flotante 1,2,1000,250,horizontal,FB-1,FB-1,FB-1,FB-1,143,Cocina
-MDF-22-BL,Estante Flotante 2,2,600,250,horizontal,FB-1,FB-1,FB-1,FB-1,144,Cocina
-MDF-22-BL,Tapa Lavadero,1,1200,600,horizontal,FB-1,FB-1,FB-1,FB-1,145,Lavadero
-MDF-22-BL,Estante Flotante Baño,2,800,200,horizontal,FB-1,FB-1,FB-1,FB-1,146,Baño
-MEL-25-ROB,Lateral Librería,2,2400,400,horizontal,,,FB-1,FB-1,147,Estudio
-MEL-25-ROB,Estante Librería,10,1200,400,horizontal,FB-1,,,,148,Estudio
-MEL-25-ROB,Tapa Librería,1,1200,400,horizontal,FB-1,,FB-1,FB-1,149,Estudio
-MEL-25-ROB,Base Librería,1,1200,400,horizontal,,FB-1,FB-1,FB-1,150,Estudio
-MEL-25-ROB,Divisor Librería,2,600,380,horizontal,,,,FB-1,151,Estudio
-MEL-25-ROB,Trasera Librería,1,2380,1196,horizontal,,,,,152,Estudio
-MEL-25-ROB,Lateral Mueble Salón,2,1800,500,horizontal,,,FB-1,FB-1,153,Salón
-MEL-25-ROB,Tapa Mueble Salón,1,2000,500,horizontal,FB-1,,FB-1,FB-1,154,Salón
-MEL-25-ROB,Base Mueble Salón,1,2000,500,horizontal,,FB-1,FB-1,FB-1,155,Salón
-MEL-25-ROB,Estante Mueble Salón,4,1996,480,horizontal,FB-1,,,,156,Salón
-MEL-25-ROB,Divisor Mueble Salón,3,480,1780,horizontal,,,,FB-1,157,Salón
-MEL-25-ROB,Trasera Mueble Salón,1,1780,1996,horizontal,,,,,158,Salón
-AGL-16-CR,Panel Trasero Mueble 1,2,1200,800,horizontal,,,,,159,Varios
-AGL-16-CR,Panel Trasero Mueble 2,2,900,600,horizontal,,,,,160,Varios
-AGL-16-CR,Panel Trasero Mueble 3,3,500,400,horizontal,,,,,161,Varios
-AGL-16-CR,Fondo Cajón Aux,4,450,350,horizontal,,,,,162,Varios
-AGL-16-CR,Refuerzo Interior,6,300,200,horizontal,,,,,163,Varios
-AGL-16-CR,Panel Isla Cocina,2,1180,800,horizontal,,,,,164,Cocina
-AGL-16-CR,Fondo Interior Mueble TV,1,1780,430,horizontal,,,,,165,Living
-AGL-16-CR,Fondo Interior Aparador,1,1580,830,horizontal,,,,,166,Living
-AGL-16-CR,Panel Lateral Isla,2,800,820,horizontal,,,,,167,Cocina
-AGL-16-CR,Fondo Mesita Noche,2,480,380,horizontal,,,,,168,Dormitorio
-AGL-16-CR,Fondo Cajonera,1,480,600,horizontal,,,,,169,Escritorio
-MDF-15-NG,Panel Decorativo,2,800,600,horizontal,FB-3,FB-3,FB-3,FB-3,170,Deco
-MDF-15-NG,Estante Especial,4,500,300,horizontal,FB-3,,,,171,Deco
-MDF-15-NG,Lateral Nicho,4,400,300,horizontal,,,,FB-3,172,Deco
-MDF-15-NG,Tapa Nicho,4,500,300,horizontal,FB-3,,FB-3,FB-3,173,Deco
-MDF-15-NG,Base Nicho,4,500,300,horizontal,,FB-3,FB-3,FB-3,174,Deco
-MDF-15-NG,Panel TV Feature,1,2400,600,horizontal,FB-3,FB-3,FB-3,FB-3,175,Living
-MDF-15-NG,Estante TV Feature,2,1200,300,horizontal,FB-3,,,,176,Living
-MDF-15-NG,Panel Cabecero Deco,1,1800,400,horizontal,FB-3,FB-3,FB-3,FB-3,177,Dormitorio
-MDF-15-NG,Estante Cabecero Deco,2,600,200,horizontal,FB-3,,FB-3,FB-3,178,Dormitorio
-MDF-15-NG,Panel Entrada Deco,1,1000,500,horizontal,FB-3,FB-3,FB-3,FB-3,179,Entrada
-MDF-15-NG,Repisa Entrada,2,500,200,horizontal,FB-3,FB-3,FB-3,FB-3,180,Entrada
+MEL-18-ROB,Lateral Armario 1 Izq,2,2100,600,horizontal,,,FB-1,FB-1,1,Dormitorio Principal
+MEL-18-ROB,Lateral Armario 1 Der,2,2100,600,horizontal,,,FB-1,FB-1,2,Dormitorio Principal
+MEL-18-ROB,Tapa Superior Armario 1,2,1200,600,horizontal,FB-1,,FB-1,FB-1,3,Dormitorio Principal
+MEL-18-ROB,Base Armario 1,2,1200,600,horizontal,,FB-1,FB-1,FB-1,4,Dormitorio Principal
+MEL-18-ROB,Estante Armario 1,6,1196,580,horizontal,FB-1,,,,5,Dormitorio Principal
+MEL-18-ROB,Divisor Vertical Armario 1,4,900,580,horizontal,,,,FB-1,6,Dormitorio Principal
+MEL-18-ROB,Trasera Interior Armario 1,2,2050,1196,horizontal,,,,,7,Dormitorio Principal
+MEL-18-ROB,Lateral Armario 2 Izq,2,2200,550,horizontal,,,FB-1,FB-1,8,Dormitorio Principal
+MEL-18-ROB,Lateral Armario 2 Der,2,2200,550,horizontal,,,FB-1,FB-1,9,Dormitorio Principal
+MEL-18-ROB,Tapa Armario 2,2,1000,550,horizontal,FB-1,,FB-1,FB-1,10,Dormitorio Principal
+MEL-18-ROB,Base Armario 2,2,1000,550,horizontal,,FB-1,FB-1,FB-1,11,Dormitorio Principal
+MEL-18-ROB,Estante Armario 2,8,996,530,horizontal,FB-1,,,,12,Dormitorio Principal
+MEL-18-ROB,Divisor Armario 2,2,800,530,horizontal,,,,FB-1,13,Dormitorio Principal
+MEL-18-ROB,Trasera Armario 2,2,2150,996,horizontal,,,,,14,Dormitorio Principal
+MDF-18-BL,Puerta Armario 1 Izq,2,2096,597,horizontal,FB-2,FB-2,FB-2,FB-2,15,Dormitorio Principal
+MDF-18-BL,Puerta Armario 1 Der,2,2096,597,horizontal,FB-2,FB-2,FB-2,FB-2,16,Dormitorio Principal
+MDF-18-BL,Puerta Armario 1 Centro,2,1045,597,horizontal,FB-2,FB-2,FB-2,FB-2,17,Dormitorio Principal
+MDF-18-BL,Puerta Armario 2 Izq,2,2196,547,horizontal,FB-2,FB-2,FB-2,FB-2,18,Dormitorio Principal
+MDF-18-BL,Puerta Armario 2 Der,2,2196,547,horizontal,FB-2,FB-2,FB-2,FB-2,19,Dormitorio Principal
+MEL-18-ROB,Mesa de Noche Lat Izq,2,500,400,horizontal,,,FB-1,,20,Dormitorio Principal
+MEL-18-ROB,Mesa de Noche Lat Der,2,500,400,horizontal,,,FB-1,,21,Dormitorio Principal
+MEL-18-ROB,Mesa de Noche Tapa,2,500,450,horizontal,FB-1,,FB-1,FB-1,22,Dormitorio Principal
+MEL-18-ROB,Mesa de Noche Base,2,500,450,horizontal,,FB-1,FB-1,FB-1,23,Dormitorio Principal
+MEL-18-ROB,Mesa de Noche Estante,2,496,380,horizontal,FB-1,,,,24,Dormitorio Principal
+MEL-18-ROB,Mesa de Noche Trasera,2,450,496,horizontal,,,,,25,Dormitorio Principal
+MEL-18-ROB,Cómoda Lateral Izq,2,800,450,horizontal,,,FB-1,FB-1,26,Dormitorio Principal
+MEL-18-ROB,Cómoda Lateral Der,2,800,450,horizontal,,,FB-1,FB-1,27,Dormitorio Principal
+MEL-18-ROB,Cómoda Tapa,1,1200,450,horizontal,FB-1,,FB-1,FB-1,28,Dormitorio Principal
+MEL-18-ROB,Cómoda Base,1,1200,450,horizontal,,FB-1,FB-1,FB-1,29,Dormitorio Principal
+MEL-18-ROB,Cómoda Estante Int,3,1196,430,horizontal,FB-1,,,,30,Dormitorio Principal
+MDF-18-BL,Cómoda Frente Cajón 1,1,1190,200,horizontal,FB-2,FB-2,FB-2,FB-2,31,Dormitorio Principal
+MDF-18-BL,Cómoda Frente Cajón 2,1,1190,200,horizontal,FB-2,FB-2,FB-2,FB-2,32,Dormitorio Principal
+MDF-18-BL,Cómoda Frente Cajón 3,1,1190,200,horizontal,FB-2,FB-2,FB-2,FB-2,33,Dormitorio Principal
+MDF-18-BL,Cómoda Frente Cajón 4,1,1190,150,horizontal,FB-2,FB-2,FB-2,FB-2,34,Dormitorio Principal
+MEL-18-ROB,Tocador Lateral Izq,2,750,400,horizontal,,,FB-1,,35,Dormitorio Principal
+MEL-18-ROB,Tocador Lateral Der,2,750,400,horizontal,,,FB-1,,36,Dormitorio Principal
+MEL-18-ROB,Tocador Tapa,1,1000,400,horizontal,FB-1,,FB-1,FB-1,37,Dormitorio Principal
+MEL-18-ROB,Tocador Base,1,1000,400,horizontal,,FB-1,FB-1,FB-1,38,Dormitorio Principal
+MEL-18-ROB,Tocador Estante,2,996,380,horizontal,FB-1,,,,39,Dormitorio Principal
+MDF-18-BL,Tocador Frente Cajón,3,480,180,horizontal,FB-2,FB-2,FB-2,FB-2,40,Dormitorio Principal
+MEL-15-GRS,Cocina Bajo Lat Izq,2,850,580,horizontal,,,FB-3,,41,Cocina
+MEL-15-GRS,Cocina Bajo Lat Der,2,850,580,horizontal,,,FB-3,,42,Cocina
+MEL-15-GRS,Cocina Bajo Tapa,2,600,580,horizontal,FB-3,,FB-3,FB-3,43,Cocina
+MEL-15-GRS,Cocina Bajo Base,2,600,580,horizontal,,FB-3,FB-3,FB-3,44,Cocina
+MEL-15-GRS,Cocina Bajo Estante,4,596,560,horizontal,FB-3,,,,45,Cocina
+MEL-15-GRS,Cocina Bajo Trasera,2,800,596,horizontal,,,,,46,Cocina
+MDF-18-BL,Cocina Bajo Puerta,4,846,596,horizontal,FB-2,FB-2,FB-2,FB-2,47,Cocina
+MEL-15-GRS,Cocina Alacena Lat Izq,2,700,350,horizontal,,,FB-3,,48,Cocina
+MEL-15-GRS,Cocina Alacena Lat Der,2,700,350,horizontal,,,FB-3,,49,Cocina
+MEL-15-GRS,Cocina Alacena Tapa,2,600,350,horizontal,FB-3,,FB-3,FB-3,50,Cocina
+MEL-15-GRS,Cocina Alacena Base,2,600,350,horizontal,,FB-3,FB-3,FB-3,51,Cocina
+MEL-15-GRS,Cocina Alacena Estante,4,596,330,horizontal,FB-3,,,,52,Cocina
+MDF-18-BL,Cocina Alacena Puerta,4,696,596,horizontal,FB-2,FB-2,FB-2,FB-2,53,Cocina
+MEL-15-GRS,Cocina Isla Lateral,4,900,600,horizontal,,,FB-3,FB-3,54,Cocina
+MEL-15-GRS,Cocina Isla Tapa,1,1800,600,horizontal,FB-3,,FB-3,FB-3,55,Cocina
+MEL-15-GRS,Cocina Isla Base,1,1800,600,horizontal,,FB-3,FB-3,FB-3,56,Cocina
+MEL-15-GRS,Cocina Isla Estante,4,1796,580,horizontal,FB-3,,,,57,Cocina
+MEL-15-GRS,Cocina Isla Divisor,2,580,900,horizontal,,,,FB-3,58,Cocina
+MDF-18-BL,Cocina Isla Puerta,3,596,900,horizontal,FB-2,FB-2,FB-2,FB-2,59,Cocina
+MEL-15-GRS,Cocina Columna Lat,2,2100,580,horizontal,,,FB-3,FB-3,60,Cocina
+MEL-15-GRS,Cocina Columna Tapa,1,580,580,horizontal,FB-3,,FB-3,FB-3,61,Cocina
+MEL-15-GRS,Cocina Columna Base,1,580,580,horizontal,,FB-3,FB-3,FB-3,62,Cocina
+MEL-15-GRS,Cocina Columna Estante,5,576,560,horizontal,FB-3,,,,63,Cocina
+MDF-18-BL,Cocina Columna Puerta Sup,1,1046,576,horizontal,FB-2,FB-2,FB-2,FB-2,64,Cocina
+MDF-18-BL,Cocina Columna Puerta Inf,1,1046,576,horizontal,FB-2,FB-2,FB-2,FB-2,65,Cocina
+MEL-15-GRS,Cocina Gaveta Lateral,6,500,400,horizontal,,,,FB-3,66,Cocina
+MEL-15-GRS,Cocina Gaveta Fondo,3,596,400,horizontal,,,,,67,Cocina
+MEL-15-GRS,Cocina Gaveta Trasera,3,596,150,horizontal,,,,,68,Cocina
+MDF-18-BL,Cocina Gaveta Frente,3,596,200,horizontal,FB-2,FB-2,FB-2,FB-2,69,Cocina
+MEL-18-ROB,Estantería Lateral Izq,2,1800,300,horizontal,,,FB-1,,70,Living Room
+MEL-18-ROB,Estantería Lateral Der,2,1800,300,horizontal,,,FB-1,,71,Living Room
+MEL-18-ROB,Estantería Tapa,1,2400,300,horizontal,FB-1,,FB-1,FB-1,72,Living Room
+MEL-18-ROB,Estantería Base,1,2400,300,horizontal,,FB-1,FB-1,FB-1,73,Living Room
+MEL-18-ROB,Estantería Estante,8,2396,280,horizontal,FB-1,,,,74,Living Room
+MEL-18-ROB,Estantería Divisor,6,280,450,horizontal,,,,FB-1,75,Living Room
+MEL-18-ROB,TV Unit Lateral Izq,2,500,450,horizontal,,,FB-1,FB-1,76,Living Room
+MEL-18-ROB,TV Unit Lateral Der,2,500,450,horizontal,,,FB-1,FB-1,77,Living Room
+MEL-18-ROB,TV Unit Tapa,1,2000,450,horizontal,FB-1,,FB-1,FB-1,78,Living Room
+MEL-18-ROB,TV Unit Base,1,2000,450,horizontal,,FB-1,FB-1,FB-1,79,Living Room
+MEL-18-ROB,TV Unit Estante,3,1996,430,horizontal,FB-1,,,,80,Living Room
+MEL-18-ROB,TV Unit Divisor,2,430,500,horizontal,,,,FB-1,81,Living Room
+MDF-18-BL,TV Unit Puerta,2,496,496,horizontal,FB-2,FB-2,FB-2,FB-2,82,Living Room
+MEL-18-ROB,Vitrina Lateral Izq,2,1600,350,horizontal,,,FB-1,FB-1,83,Living Room
+MEL-18-ROB,Vitrina Lateral Der,2,1600,350,horizontal,,,FB-1,FB-1,84,Living Room
+MEL-18-ROB,Vitrina Tapa,1,800,350,horizontal,FB-1,,FB-1,FB-1,85,Living Room
+MEL-18-ROB,Vitrina Base,1,800,350,horizontal,,FB-1,FB-1,FB-1,86,Living Room
+MEL-18-ROB,Vitrina Estante,5,796,330,horizontal,FB-1,,,,87,Living Room
+MDF-18-BL,Vitrina Puerta Vidrio,2,1596,396,horizontal,FB-2,FB-2,FB-2,FB-2,88,Living Room
+MEL-18-ROB,Mesa Centro Tapa,1,1200,600,horizontal,FB-1,,FB-1,FB-1,89,Living Room
+MEL-18-ROB,Mesa Centro Estante,1,1196,580,horizontal,FB-1,,,,90,Living Room
+MEL-18-ROB,Mesa Centro Lateral,4,400,580,horizontal,,,FB-1,,91,Living Room
+MEL-18-NOG,Escritorio Tapa,1,1600,700,horizontal,FB-4,FB-4,FB-4,FB-4,92,Oficina
+MEL-18-NOG,Escritorio Lateral Izq,1,700,720,horizontal,,,FB-4,FB-4,93,Oficina
+MEL-18-NOG,Escritorio Lateral Der,1,700,720,horizontal,,,FB-4,FB-4,94,Oficina
+MEL-18-NOG,Escritorio Fondo,1,1560,200,horizontal,,,,FB-4,95,Oficina
+MEL-18-NOG,Escritorio Cajón Lat,4,500,350,horizontal,,,,FB-4,96,Oficina
+MEL-18-NOG,Escritorio Cajón Fondo,2,400,350,horizontal,,,,,97,Oficina
+MDF-18-BL,Escritorio Cajón Frente,2,400,200,horizontal,FB-2,FB-2,FB-2,FB-2,98,Oficina
+MEL-18-NOG,Librero Lateral Izq,2,2000,350,horizontal,,,FB-4,FB-4,99,Oficina
+MEL-18-NOG,Librero Lateral Der,2,2000,350,horizontal,,,FB-4,FB-4,100,Oficina
+MEL-18-NOG,Librero Tapa,1,1000,350,horizontal,FB-4,,FB-4,FB-4,101,Oficina
+MEL-18-NOG,Librero Base,1,1000,350,horizontal,,FB-4,FB-4,FB-4,102,Oficina
+MEL-18-NOG,Librero Estante,8,996,330,horizontal,FB-4,,,,103,Oficina
+MEL-18-NOG,Librero Trasera,1,1950,996,horizontal,,,,,104,Oficina
+MEL-18-NOG,Archivo Lateral,4,750,450,horizontal,,,FB-4,FB-4,105,Oficina
+MEL-18-NOG,Archivo Tapa,2,450,450,horizontal,FB-4,,FB-4,FB-4,106,Oficina
+MEL-18-NOG,Archivo Base,2,450,450,horizontal,,FB-4,FB-4,FB-4,107,Oficina
+MEL-18-NOG,Archivo Estante,4,446,430,horizontal,FB-4,,,,108,Oficina
+MDF-18-BL,Archivo Frente Cajón,4,446,200,horizontal,FB-2,FB-2,FB-2,FB-2,109,Oficina
+MEL-18-NOG,Credenza Lateral,4,600,450,horizontal,,,FB-4,FB-4,110,Oficina
+MEL-18-NOG,Credenza Tapa,1,1800,450,horizontal,FB-4,,FB-4,FB-4,111,Oficina
+MEL-18-NOG,Credenza Base,1,1800,450,horizontal,,FB-4,FB-4,FB-4,112,Oficina
+MEL-18-NOG,Credenza Estante,3,896,430,horizontal,FB-4,,,,113,Oficina
+MEL-18-NOG,Credenza Divisor,2,430,600,horizontal,,,,FB-4,114,Oficina
+MDF-18-BL,Credenza Puerta,4,446,596,horizontal,FB-2,FB-2,FB-2,FB-2,115,Oficina
+MEL-18-ROB,Vestidor Lateral Izq,2,2400,600,horizontal,,,FB-1,FB-1,116,Vestidor
+MEL-18-ROB,Vestidor Lateral Der,2,2400,600,horizontal,,,FB-1,FB-1,117,Vestidor
+MEL-18-ROB,Vestidor Tapa,3,1000,600,horizontal,FB-1,,FB-1,FB-1,118,Vestidor
+MEL-18-ROB,Vestidor Base,3,1000,600,horizontal,,FB-1,FB-1,FB-1,119,Vestidor
+MEL-18-ROB,Vestidor Estante,12,996,580,horizontal,FB-1,,,,120,Vestidor
+MEL-18-ROB,Vestidor Divisor,6,580,800,horizontal,,,,FB-1,121,Vestidor
+MEL-18-ROB,Vestidor Barra Soporte,4,996,100,horizontal,FB-1,,,,122,Vestidor
+MEL-18-ROB,Vestidor Zapatero Lat,4,400,300,horizontal,,,,FB-1,123,Vestidor
+MEL-18-ROB,Vestidor Zapatero Est,6,396,280,horizontal,FB-1,,,,124,Vestidor
+MDF-18-BL,Vestidor Puerta,6,2396,496,horizontal,FB-2,FB-2,FB-2,FB-2,125,Vestidor
+MEL-18-ROB,Vestidor Cajón Lat,8,500,300,horizontal,,,,FB-1,126,Vestidor
+MEL-18-ROB,Vestidor Cajón Fondo,4,996,300,horizontal,,,,,127,Vestidor
+MDF-18-BL,Vestidor Cajón Frente,4,996,200,horizontal,FB-2,FB-2,FB-2,FB-2,128,Vestidor
+MEL-15-GRS,Baño Vanitory Lat Izq,2,850,500,horizontal,,,FB-3,,129,Baño Principal
+MEL-15-GRS,Baño Vanitory Lat Der,2,850,500,horizontal,,,FB-3,,130,Baño Principal
+MEL-15-GRS,Baño Vanitory Tapa,1,1200,500,horizontal,FB-3,,FB-3,FB-3,131,Baño Principal
+MEL-15-GRS,Baño Vanitory Base,1,1200,500,horizontal,,FB-3,FB-3,FB-3,132,Baño Principal
+MEL-15-GRS,Baño Vanitory Estante,2,1196,480,horizontal,FB-3,,,,133,Baño Principal
+MDF-18-BL,Baño Vanitory Puerta,2,846,596,horizontal,FB-2,FB-2,FB-2,FB-2,134,Baño Principal
+MEL-15-GRS,Baño Espejero Lat,2,600,300,horizontal,,,FB-3,,135,Baño Principal
+MEL-15-GRS,Baño Espejero Tapa,1,800,300,horizontal,FB-3,,FB-3,FB-3,136,Baño Principal
+MEL-15-GRS,Baño Espejero Base,1,800,300,horizontal,,FB-3,FB-3,FB-3,137,Baño Principal
+MEL-15-GRS,Baño Espejero Estante,2,796,280,horizontal,FB-3,,,,138,Baño Principal
+MEL-15-GRS,Baño Columna Lat,2,1800,350,horizontal,,,FB-3,FB-3,139,Baño Principal
+MEL-15-GRS,Baño Columna Tapa,1,350,350,horizontal,FB-3,,FB-3,FB-3,140,Baño Principal
+MEL-15-GRS,Baño Columna Base,1,350,350,horizontal,,FB-3,FB-3,FB-3,141,Baño Principal
+MEL-15-GRS,Baño Columna Estante,5,346,330,horizontal,FB-3,,,,142,Baño Principal
+MDF-18-BL,Baño Columna Puerta,1,1796,346,horizontal,FB-2,FB-2,FB-2,FB-2,143,Baño Principal
+MEL-18-ROB,Dormitorio 2 Armario Lat,4,2000,550,horizontal,,,FB-1,FB-1,144,Dormitorio 2
+MEL-18-ROB,Dormitorio 2 Armario Tapa,2,900,550,horizontal,FB-1,,FB-1,FB-1,145,Dormitorio 2
+MEL-18-ROB,Dormitorio 2 Armario Base,2,900,550,horizontal,,FB-1,FB-1,FB-1,146,Dormitorio 2
+MEL-18-ROB,Dormitorio 2 Armario Est,10,896,530,horizontal,FB-1,,,,147,Dormitorio 2
+MEL-18-ROB,Dormitorio 2 Armario Div,4,530,700,horizontal,,,,FB-1,148,Dormitorio 2
+MDF-18-BL,Dormitorio 2 Armario Pta,4,1996,446,horizontal,FB-2,FB-2,FB-2,FB-2,149,Dormitorio 2
+MEL-18-ROB,Dormitorio 2 Mesa Noche Lat,4,450,380,horizontal,,,FB-1,,150,Dormitorio 2
+MEL-18-ROB,Dormitorio 2 Mesa Noche Tapa,2,450,400,horizontal,FB-1,,FB-1,FB-1,151,Dormitorio 2
+MEL-18-ROB,Dormitorio 2 Mesa Noche Base,2,450,400,horizontal,,FB-1,FB-1,FB-1,152,Dormitorio 2
+MEL-18-ROB,Dormitorio 2 Mesa Noche Est,2,446,360,horizontal,FB-1,,,,153,Dormitorio 2
+MEL-18-ROB,Dormitorio 3 Armario Lat,4,1800,500,horizontal,,,FB-1,FB-1,154,Dormitorio 3
+MEL-18-ROB,Dormitorio 3 Armario Tapa,2,800,500,horizontal,FB-1,,FB-1,FB-1,155,Dormitorio 3
+MEL-18-ROB,Dormitorio 3 Armario Base,2,800,500,horizontal,,FB-1,FB-1,FB-1,156,Dormitorio 3
+MEL-18-ROB,Dormitorio 3 Armario Est,6,796,480,horizontal,FB-1,,,,157,Dormitorio 3
+MDF-18-BL,Dormitorio 3 Armario Pta,4,1796,396,horizontal,FB-2,FB-2,FB-2,FB-2,158,Dormitorio 3
+MEL-18-ROB,Dormitorio 3 Escritorio Tapa,1,1200,600,horizontal,FB-1,FB-1,FB-1,FB-1,159,Dormitorio 3
+MEL-18-ROB,Dormitorio 3 Escritorio Lat,2,600,720,horizontal,,,FB-1,FB-1,160,Dormitorio 3
+MEL-18-ROB,Dormitorio 3 Escritorio Fondo,1,1160,200,horizontal,,,,FB-1,161,Dormitorio 3
+MEL-18-NOG,Comedor Mesa Tapa,1,2200,1000,horizontal,FB-4,FB-4,FB-4,FB-4,162,Comedor
+MEL-18-NOG,Comedor Bufet Lat,4,800,450,horizontal,,,FB-4,FB-4,163,Comedor
+MEL-18-NOG,Comedor Bufet Tapa,1,2000,450,horizontal,FB-4,,FB-4,FB-4,164,Comedor
+MEL-18-NOG,Comedor Bufet Base,1,2000,450,horizontal,,FB-4,FB-4,FB-4,165,Comedor
+MEL-18-NOG,Comedor Bufet Estante,4,996,430,horizontal,FB-4,,,,166,Comedor
+MEL-18-NOG,Comedor Bufet Divisor,2,430,800,horizontal,,,,FB-4,167,Comedor
+MDF-18-BL,Comedor Bufet Puerta,4,996,396,horizontal,FB-2,FB-2,FB-2,FB-2,168,Comedor
+MEL-18-NOG,Comedor Vitrina Lat,4,1500,350,horizontal,,,FB-4,FB-4,169,Comedor
+MEL-18-NOG,Comedor Vitrina Tapa,2,800,350,horizontal,FB-4,,FB-4,FB-4,170,Comedor
+MEL-18-NOG,Comedor Vitrina Base,2,800,350,horizontal,,FB-4,FB-4,FB-4,171,Comedor
+MEL-18-NOG,Comedor Vitrina Estante,8,796,330,horizontal,FB-4,,,,172,Comedor
+MDF-18-BL,Comedor Vitrina Puerta,4,1496,396,horizontal,FB-2,FB-2,FB-2,FB-2,173,Comedor
+MEL-15-GRS,Lavadero Lat Izq,2,900,600,horizontal,,,FB-3,,174,Lavadero
+MEL-15-GRS,Lavadero Lat Der,2,900,600,horizontal,,,FB-3,,175,Lavadero
+MEL-15-GRS,Lavadero Tapa,1,1200,600,horizontal,FB-3,,FB-3,FB-3,176,Lavadero
+MEL-15-GRS,Lavadero Base,1,1200,600,horizontal,,FB-3,FB-3,FB-3,177,Lavadero
+MEL-15-GRS,Lavadero Estante,4,1196,580,horizontal,FB-3,,,,178,Lavadero
+MEL-15-GRS,Lavadero Alacena Lat,2,600,300,horizontal,,,FB-3,,179,Lavadero
+MEL-15-GRS,Lavadero Alacena Tapa,1,800,300,horizontal,FB-3,,FB-3,FB-3,180,Lavadero
+MEL-15-GRS,Lavadero Alacena Base,1,800,300,horizontal,,FB-3,FB-3,FB-3,181,Lavadero
+MEL-15-GRS,Lavadero Alacena Est,3,796,280,horizontal,FB-3,,,,182,Lavadero
+MDF-18-BL,Lavadero Puerta,3,896,596,horizontal,FB-2,FB-2,FB-2,FB-2,183,Lavadero
+MEL-18-ROB,Pasillo Perchero Lat,2,1200,350,horizontal,,,FB-1,,184,Pasillo
+MEL-18-ROB,Pasillo Perchero Tapa,1,1500,350,horizontal,FB-1,,FB-1,FB-1,185,Pasillo
+MEL-18-ROB,Pasillo Perchero Base,1,1500,350,horizontal,,FB-1,FB-1,FB-1,186,Pasillo
+MEL-18-ROB,Pasillo Perchero Est,3,1496,330,horizontal,FB-1,,,,187,Pasillo
+MEL-18-ROB,Pasillo Zapatero Lat,2,900,300,horizontal,,,FB-1,,188,Pasillo
+MEL-18-ROB,Pasillo Zapatero Tapa,1,800,300,horizontal,FB-1,,FB-1,FB-1,189,Pasillo
+MEL-18-ROB,Pasillo Zapatero Base,1,800,300,horizontal,,FB-1,FB-1,FB-1,190,Pasillo
+MEL-18-ROB,Pasillo Zapatero Est,5,796,280,horizontal,FB-1,,,,191,Pasillo
+MDF-18-BL,Pasillo Zapatero Pta,2,896,446,horizontal,FB-2,FB-2,FB-2,FB-2,192,Pasillo
+MEL-18-ROB,Hall Mueble Lat,4,1600,400,horizontal,,,FB-1,FB-1,193,Hall
+MEL-18-ROB,Hall Mueble Tapa,2,800,400,horizontal,FB-1,,FB-1,FB-1,194,Hall
+MEL-18-ROB,Hall Mueble Base,2,800,400,horizontal,,FB-1,FB-1,FB-1,195,Hall
+MEL-18-ROB,Hall Mueble Est,6,796,380,horizontal,FB-1,,,,196,Hall
+MDF-18-BL,Hall Mueble Pta,4,1596,396,horizontal,FB-2,FB-2,FB-2,FB-2,197,Hall
+MEL-18-NOG,Sala TV Mueble Lat,4,600,500,horizontal,,,FB-4,FB-4,198,Sala TV
+MEL-18-NOG,Sala TV Mueble Tapa,1,2400,500,horizontal,FB-4,,FB-4,FB-4,199,Sala TV
+MEL-18-NOG,Sala TV Mueble Base,1,2400,500,horizontal,,FB-4,FB-4,FB-4,200,Sala TV
+MEL-18-NOG,Sala TV Mueble Est,4,1196,480,horizontal,FB-4,,,,201,Sala TV
+MEL-18-NOG,Sala TV Mueble Div,2,480,600,horizontal,,,,FB-4,202,Sala TV
+MDF-18-BL,Sala TV Mueble Pta,4,596,596,horizontal,FB-2,FB-2,FB-2,FB-2,203,Sala TV
+MEL-18-NOG,Sala TV Panel Lat,2,2100,150,horizontal,,,,,204,Sala TV
+MEL-18-NOG,Sala TV Panel Central,1,2400,1200,horizontal,,,,,205,Sala TV
+MEL-15-GRS,Cocina 2 Bajo Lat,4,850,550,horizontal,,,FB-3,,206,Cocina 2
+MEL-15-GRS,Cocina 2 Bajo Tapa,2,550,550,horizontal,FB-3,,FB-3,FB-3,207,Cocina 2
+MEL-15-GRS,Cocina 2 Bajo Base,2,550,550,horizontal,,FB-3,FB-3,FB-3,208,Cocina 2
+MEL-15-GRS,Cocina 2 Bajo Est,4,546,530,horizontal,FB-3,,,,209,Cocina 2
+MDF-18-BL,Cocina 2 Bajo Pta,4,846,546,horizontal,FB-2,FB-2,FB-2,FB-2,210,Cocina 2
+MEL-15-GRS,Cocina 2 Alacena Lat,4,700,330,horizontal,,,FB-3,,211,Cocina 2
+MEL-15-GRS,Cocina 2 Alacena Tapa,2,550,330,horizontal,FB-3,,FB-3,FB-3,212,Cocina 2
+MEL-15-GRS,Cocina 2 Alacena Base,2,550,330,horizontal,,FB-3,FB-3,FB-3,213,Cocina 2
+MEL-15-GRS,Cocina 2 Alacena Est,4,546,310,horizontal,FB-3,,,,214,Cocina 2
+MDF-18-BL,Cocina 2 Alacena Pta,4,696,546,horizontal,FB-2,FB-2,FB-2,FB-2,215,Cocina 2
+MEL-15-GRS,Cocina 2 Gaveta Lat,4,450,380,horizontal,,,,FB-3,216,Cocina 2
+MEL-15-GRS,Cocina 2 Gaveta Fondo,2,546,380,horizontal,,,,,217,Cocina 2
+MDF-18-BL,Cocina 2 Gaveta Frente,2,546,180,horizontal,FB-2,FB-2,FB-2,FB-2,218,Cocina 2
+MEL-18-ROB,Dormitorio 4 Armario Lat,4,1900,520,horizontal,,,FB-1,FB-1,219,Dormitorio 4
+MEL-18-ROB,Dormitorio 4 Armario Tapa,2,850,520,horizontal,FB-1,,FB-1,FB-1,220,Dormitorio 4
+MEL-18-ROB,Dormitorio 4 Armario Base,2,850,520,horizontal,,FB-1,FB-1,FB-1,221,Dormitorio 4
+MEL-18-ROB,Dormitorio 4 Armario Est,8,846,500,horizontal,FB-1,,,,222,Dormitorio 4
+MEL-18-ROB,Dormitorio 4 Armario Div,2,500,650,horizontal,,,,FB-1,223,Dormitorio 4
+MDF-18-BL,Dormitorio 4 Armario Pta,4,1896,446,horizontal,FB-2,FB-2,FB-2,FB-2,224,Dormitorio 4
+MEL-18-ROB,Dormitorio 4 Cómoda Lat,2,700,400,horizontal,,,FB-1,FB-1,225,Dormitorio 4
+MEL-18-ROB,Dormitorio 4 Cómoda Tapa,1,1000,400,horizontal,FB-1,,FB-1,FB-1,226,Dormitorio 4
+MEL-18-ROB,Dormitorio 4 Cómoda Base,1,1000,400,horizontal,,FB-1,FB-1,FB-1,227,Dormitorio 4
+MEL-18-ROB,Dormitorio 4 Cómoda Est,2,996,380,horizontal,FB-1,,,,228,Dormitorio 4
+MDF-18-BL,Dormitorio 4 Cómoda Frente,3,996,150,horizontal,FB-2,FB-2,FB-2,FB-2,229,Dormitorio 4
+MEL-15-GRS,Baño 2 Vanitory Lat,2,750,450,horizontal,,,FB-3,,230,Baño 2
+MEL-15-GRS,Baño 2 Vanitory Tapa,1,900,450,horizontal,FB-3,,FB-3,FB-3,231,Baño 2
+MEL-15-GRS,Baño 2 Vanitory Base,1,900,450,horizontal,,FB-3,FB-3,FB-3,232,Baño 2
+MEL-15-GRS,Baño 2 Vanitory Est,2,896,430,horizontal,FB-3,,,,233,Baño 2
+MDF-18-BL,Baño 2 Vanitory Pta,2,746,446,horizontal,FB-2,FB-2,FB-2,FB-2,234,Baño 2
+MEL-15-GRS,Baño 2 Espejero Lat,2,500,280,horizontal,,,FB-3,,235,Baño 2
+MEL-15-GRS,Baño 2 Espejero Tapa,1,700,280,horizontal,FB-3,,FB-3,FB-3,236,Baño 2
+MEL-15-GRS,Baño 2 Espejero Base,1,700,280,horizontal,,FB-3,FB-3,FB-3,237,Baño 2
+MEL-15-GRS,Baño 2 Espejero Est,2,696,260,horizontal,FB-3,,,,238,Baño 2
+MEL-18-NOG,Recepción Mostrador Tapa,1,2000,600,horizontal,FB-4,FB-4,FB-4,FB-4,239,Recepción
+MEL-18-NOG,Recepción Mostrador Lat,4,600,1100,horizontal,,,FB-4,FB-4,240,Recepción
+MEL-18-NOG,Recepción Mostrador Base,1,2000,600,horizontal,,FB-4,FB-4,FB-4,241,Recepción
+MEL-18-NOG,Recepción Mostrador Est,3,1996,580,horizontal,FB-4,,,,242,Recepción
+MEL-18-NOG,Recepción Mostrador Div,2,580,500,horizontal,,,,FB-4,243,Recepción
+MDF-18-BL,Recepción Mostrador Pta,4,496,546,horizontal,FB-2,FB-2,FB-2,FB-2,244,Recepción
+MEL-18-NOG,Recepción Estante Lat,2,1200,300,horizontal,,,FB-4,,245,Recepción
+MEL-18-NOG,Recepción Estante Tapa,1,1500,300,horizontal,FB-4,,FB-4,FB-4,246,Recepción
+MEL-18-NOG,Recepción Estante Base,1,1500,300,horizontal,,FB-4,FB-4,FB-4,247,Recepción
+MEL-18-NOG,Recepción Estante Est,4,1496,280,horizontal,FB-4,,,,248,Recepción
+MEL-18-ROB,Playroom Mueble Lat,4,1200,500,horizontal,,,FB-1,FB-1,249,Playroom
+MEL-18-ROB,Playroom Mueble Tapa,2,900,500,horizontal,FB-1,,FB-1,FB-1,250,Playroom
+MEL-18-ROB,Playroom Mueble Base,2,900,500,horizontal,,FB-1,FB-1,FB-1,251,Playroom
+MEL-18-ROB,Playroom Mueble Est,8,896,480,horizontal,FB-1,,,,252,Playroom
+MEL-18-ROB,Playroom Mueble Div,4,480,600,horizontal,,,,FB-1,253,Playroom
+MDF-18-BL,Playroom Mueble Pta,4,1196,446,horizontal,FB-2,FB-2,FB-2,FB-2,254,Playroom
+MEL-18-ROB,Playroom Estantería Lat,2,1500,250,horizontal,,,FB-1,,255,Playroom
+MEL-18-ROB,Playroom Estantería Tapa,1,2000,250,horizontal,FB-1,,FB-1,FB-1,256,Playroom
+MEL-18-ROB,Playroom Estantería Base,1,2000,250,horizontal,,FB-1,FB-1,FB-1,257,Playroom
+MEL-18-ROB,Playroom Estantería Est,6,1996,230,horizontal,FB-1,,,,258,Playroom
+MEL-15-GRS,Despensa Lat Izq,2,2100,400,horizontal,,,FB-3,FB-3,259,Despensa
+MEL-15-GRS,Despensa Lat Der,2,2100,400,horizontal,,,FB-3,FB-3,260,Despensa
+MEL-15-GRS,Despensa Tapa,1,800,400,horizontal,FB-3,,FB-3,FB-3,261,Despensa
+MEL-15-GRS,Despensa Base,1,800,400,horizontal,,FB-3,FB-3,FB-3,262,Despensa
+MEL-15-GRS,Despensa Estante,8,796,380,horizontal,FB-3,,,,263,Despensa
+MDF-18-BL,Despensa Puerta,2,2096,396,horizontal,FB-2,FB-2,FB-2,FB-2,264,Despensa
+MEL-18-ROB,Biblioteca Lat,4,2200,350,horizontal,,,FB-1,FB-1,265,Biblioteca
+MEL-18-ROB,Biblioteca Tapa,2,1200,350,horizontal,FB-1,,FB-1,FB-1,266,Biblioteca
+MEL-18-ROB,Biblioteca Base,2,1200,350,horizontal,,FB-1,FB-1,FB-1,267,Biblioteca
+MEL-18-ROB,Biblioteca Est,12,1196,330,horizontal,FB-1,,,,268,Biblioteca
+MEL-18-ROB,Biblioteca Div,4,330,700,horizontal,,,,FB-1,269,Biblioteca
+MEL-18-NOG,Sala Reuniones Mesa,1,2400,1200,horizontal,FB-4,FB-4,FB-4,FB-4,270,Sala Reuniones
+MEL-18-NOG,Sala Reuniones Credenza Lat,4,700,450,horizontal,,,FB-4,FB-4,271,Sala Reuniones
+MEL-18-NOG,Sala Reuniones Credenza Tapa,1,2000,450,horizontal,FB-4,,FB-4,FB-4,272,Sala Reuniones
+MEL-18-NOG,Sala Reuniones Credenza Base,1,2000,450,horizontal,,FB-4,FB-4,FB-4,273,Sala Reuniones
+MEL-18-NOG,Sala Reuniones Credenza Est,4,996,430,horizontal,FB-4,,,,274,Sala Reuniones
+MEL-18-NOG,Sala Reuniones Credenza Div,2,430,700,horizontal,,,,FB-4,275,Sala Reuniones
+MDF-18-BL,Sala Reuniones Credenza Pta,4,996,346,horizontal,FB-2,FB-2,FB-2,FB-2,276,Sala Reuniones
+MEL-15-GRS,Baño Visitas Vanitory Lat,2,650,400,horizontal,,,FB-3,,277,Baño Visitas
+MEL-15-GRS,Baño Visitas Vanitory Tapa,1,800,400,horizontal,FB-3,,FB-3,FB-3,278,Baño Visitas
+MEL-15-GRS,Baño Visitas Vanitory Base,1,800,400,horizontal,,FB-3,FB-3,FB-3,279,Baño Visitas
+MEL-15-GRS,Baño Visitas Vanitory Est,2,796,380,horizontal,FB-3,,,,280,Baño Visitas
+MDF-18-BL,Baño Visitas Vanitory Pta,2,646,396,horizontal,FB-2,FB-2,FB-2,FB-2,281,Baño Visitas
+MEL-18-ROB,Terraza Mueble Lat,2,1000,400,horizontal,,,FB-1,FB-1,282,Terraza
+MEL-18-ROB,Terraza Mueble Tapa,1,1200,400,horizontal,FB-1,,FB-1,FB-1,283,Terraza
+MEL-18-ROB,Terraza Mueble Base,1,1200,400,horizontal,,FB-1,FB-1,FB-1,284,Terraza
+MEL-18-ROB,Terraza Mueble Est,3,1196,380,horizontal,FB-1,,,,285,Terraza
+MDF-18-BL,Terraza Mueble Pta,2,996,496,horizontal,FB-2,FB-2,FB-2,FB-2,286,Terraza
+MEL-18-NOG,Hobby Escritorio Tapa,1,1400,650,horizontal,FB-4,FB-4,FB-4,FB-4,287,Hobby Room
+MEL-18-NOG,Hobby Escritorio Lat,2,650,720,horizontal,,,FB-4,FB-4,288,Hobby Room
+MEL-18-NOG,Hobby Estante Lat,2,1500,300,horizontal,,,FB-4,,289,Hobby Room
+MEL-18-NOG,Hobby Estante Tapa,1,1200,300,horizontal,FB-4,,FB-4,FB-4,290,Hobby Room
+MEL-18-NOG,Hobby Estante Base,1,1200,300,horizontal,,FB-4,FB-4,FB-4,291,Hobby Room
+MEL-18-NOG,Hobby Estante Est,5,1196,280,horizontal,FB-4,,,,292,Hobby Room
+MEL-18-NOG,Hobby Mueble Lat,2,800,400,horizontal,,,FB-4,FB-4,293,Hobby Room
+MEL-18-NOG,Hobby Mueble Tapa,1,1000,400,horizontal,FB-4,,FB-4,FB-4,294,Hobby Room
+MEL-18-NOG,Hobby Mueble Base,1,1000,400,horizontal,,FB-4,FB-4,FB-4,295,Hobby Room
+MEL-18-NOG,Hobby Mueble Est,3,996,380,horizontal,FB-4,,,,296,Hobby Room
+MDF-18-BL,Hobby Mueble Pta,2,796,396,horizontal,FB-2,FB-2,FB-2,FB-2,297,Hobby Room
+MEL-18-ROB,Estar Mueble Bar Lat,4,1000,450,horizontal,,,FB-1,FB-1,298,Estar
+MEL-18-ROB,Estar Mueble Bar Tapa,1,1500,450,horizontal,FB-1,,FB-1,FB-1,299,Estar
+MEL-18-ROB,Estar Mueble Bar Base,1,1500,450,horizontal,,FB-1,FB-1,FB-1,300,Estar
+MEL-18-ROB,Estar Mueble Bar Est,4,1496,430,horizontal,FB-1,,,,301,Estar
+MEL-18-ROB,Estar Mueble Bar Div,2,430,500,horizontal,,,,FB-1,302,Estar
+MDF-18-BL,Estar Mueble Bar Pta,3,496,496,horizontal,FB-2,FB-2,FB-2,FB-2,303,Estar
+MEL-18-ROB,Estar Vitrina Lat,2,1400,300,horizontal,,,FB-1,FB-1,304,Estar
+MEL-18-ROB,Estar Vitrina Tapa,1,900,300,horizontal,FB-1,,FB-1,FB-1,305,Estar
+MEL-18-ROB,Estar Vitrina Base,1,900,300,horizontal,,FB-1,FB-1,FB-1,306,Estar
+MEL-18-ROB,Estar Vitrina Est,4,896,280,horizontal,FB-1,,,,307,Estar
+MEL-15-GRS,Quincho Bajo Lat,4,850,550,horizontal,,,FB-3,,308,Quincho
+MEL-15-GRS,Quincho Bajo Tapa,2,700,550,horizontal,FB-3,,FB-3,FB-3,309,Quincho
+MEL-15-GRS,Quincho Bajo Base,2,700,550,horizontal,,FB-3,FB-3,FB-3,310,Quincho
+MEL-15-GRS,Quincho Bajo Est,4,696,530,horizontal,FB-3,,,,311,Quincho
+MDF-18-BL,Quincho Bajo Pta,4,846,696,horizontal,FB-2,FB-2,FB-2,FB-2,312,Quincho
+MEL-15-GRS,Quincho Alacena Lat,4,600,300,horizontal,,,FB-3,,313,Quincho
+MEL-15-GRS,Quincho Alacena Tapa,2,700,300,horizontal,FB-3,,FB-3,FB-3,314,Quincho
+MEL-15-GRS,Quincho Alacena Base,2,700,300,horizontal,,FB-3,FB-3,FB-3,315,Quincho
+MEL-15-GRS,Quincho Alacena Est,4,696,280,horizontal,FB-3,,,,316,Quincho
+MDF-18-BL,Quincho Alacena Pta,4,596,696,horizontal,FB-2,FB-2,FB-2,FB-2,317,Quincho
+MEL-18-ROB,Garage Mueble Lat,4,2000,500,horizontal,,,FB-1,FB-1,318,Garage
+MEL-18-ROB,Garage Mueble Tapa,2,1000,500,horizontal,FB-1,,FB-1,FB-1,319,Garage
+MEL-18-ROB,Garage Mueble Base,2,1000,500,horizontal,,FB-1,FB-1,FB-1,320,Garage
+MEL-18-ROB,Garage Mueble Est,8,996,480,horizontal,FB-1,,,,321,Garage
+MEL-18-ROB,Garage Mueble Div,2,480,700,horizontal,,,,FB-1,322,Garage
+MDF-18-BL,Garage Mueble Pta,4,1996,496,horizontal,FB-2,FB-2,FB-2,FB-2,323,Garage
+MEL-18-ROB,Cuarto Servicio Lat,4,1800,450,horizontal,,,FB-1,FB-1,324,Cuarto Servicio
+MEL-18-ROB,Cuarto Servicio Tapa,2,800,450,horizontal,FB-1,,FB-1,FB-1,325,Cuarto Servicio
+MEL-18-ROB,Cuarto Servicio Base,2,800,450,horizontal,,FB-1,FB-1,FB-1,326,Cuarto Servicio
+MEL-18-ROB,Cuarto Servicio Est,6,796,430,horizontal,FB-1,,,,327,Cuarto Servicio
+MDF-18-BL,Cuarto Servicio Pta,4,1796,396,horizontal,FB-2,FB-2,FB-2,FB-2,328,Cuarto Servicio

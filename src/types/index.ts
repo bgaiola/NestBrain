@@ -118,7 +118,9 @@ export interface CuttingPlan {
   materialCode: string;
   sheetWidth: number;
   sheetHeight: number;
-  stackCount: number; // how many sheets stacked
+  stackCount: number; // how many sheets stacked (total physical sheets for this layout)
+  sheetsPerLoad: number; // how many sheets fit in one machine load
+  machineLoads: number; // how many times the machine must run this layout
   pieces: PlacedPiece[];
   scraps: ScrapRect[];
   cuts: CutInstruction[];
@@ -145,6 +147,7 @@ export interface OptimizationResult {
   totalWaste: number;
   totalUsableScrapArea: number;
   totalWasteArea: number;
+  totalMachineLoads: number;
   computeTimeMs: number;
   timestamp: string;
   // ─── Aggregated costs (populated when costEnabled) ───

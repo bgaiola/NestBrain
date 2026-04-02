@@ -77,9 +77,12 @@ export function ReportsTab() {
               color={result.globalUtilization >= 80 ? 'text-emerald-600' : 'text-amber-600'}
             />
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
             <StatCard label={t.reportsTab.usableScraps} value={`${areaM2(result.totalUsableScrapArea, 1).toFixed(4)} m²`} color="text-emerald-600" />
             <StatCard label={t.reportsTab.totalWaste} value={`${areaM2(result.totalWasteArea, 1).toFixed(4)} m²`} color="text-red-500" />
+            {result.totalMachineLoads > 0 && (
+              <StatCard label={t.reportsTab.totalMachineLoads} value={result.totalMachineLoads} color="text-brand-600" />
+            )}
             <StatCard label={t.reportsTab.computeTime} value={`${result.computeTimeMs.toFixed(0)}ms`} />
           </div>
           {/* Donut-style utilization */}

@@ -168,6 +168,10 @@ const it: Translations = {
     costCutting: 'Costo di Taglio',
     costTotal: 'Costo Totale',
     costBreakdown: 'Ripartizione Costi',
+    // Stacking / Machine Loads
+    machineLoads: '{count} carichi macchina',
+    sheetsPerLoad: '{count} pannelli per carico',
+    stackInfo: 'Impilamento',
   },
 
   labelsTab: {
@@ -240,6 +244,7 @@ const it: Translations = {
     usableScraps: 'Sfridi Utilizzabili',
     totalWaste: 'Scarto Totale',
     computeTime: 'Tempo di Ottimizzazione',
+    totalMachineLoads: 'Carichi Macchina',
     utilizationDescription: 'Percentuale della superficie utile dei pannelli effettivamente occupata dai pezzi.',
     materialConsumption: '📦 Consumo di Materiale',
     colMaterial: 'Materiale',

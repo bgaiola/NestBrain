@@ -168,6 +168,10 @@ const en: Translations = {
     costCutting: 'Cutting Cost',
     costTotal: 'Total Cost',
     costBreakdown: 'Cost Breakdown',
+    // Stacking / Machine Loads
+    machineLoads: '{count} machine loads',
+    sheetsPerLoad: '{count} sheets per load',
+    stackInfo: 'Stacking',
   },
 
   labelsTab: {
@@ -240,6 +244,7 @@ const en: Translations = {
     usableScraps: 'Usable Scraps',
     totalWaste: 'Total Waste',
     computeTime: 'Optimization Time',
+    totalMachineLoads: 'Machine Loads',
     utilizationDescription: 'Percentage of the usable sheet area effectively occupied by pieces.',
     materialConsumption: '📦 Material Consumption',
     colMaterial: 'Material',

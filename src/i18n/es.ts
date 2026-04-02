@@ -177,6 +177,10 @@ const es = {
     costCutting: 'Costo de Corte',
     costTotal: 'Costo Total',
     costBreakdown: 'Desglose de Costos',
+    // Stacking / Machine Loads
+    machineLoads: '{count} cargas de máquina',
+    sheetsPerLoad: '{count} tableros por carga',
+    stackInfo: 'Apilamiento',
   },
 
   // ─── Labels Tab ──────────────────────
@@ -258,6 +262,7 @@ const es = {
     usableScraps: 'Sobras Aprovechables',
     totalWaste: 'Descarte Total',
     computeTime: 'Tiempo de Optimización',
+    totalMachineLoads: 'Cargas de Máquina',
     utilizationDescription: 'Porcentaje del área útil de los tableros efectivamente ocupado por piezas.',
     // Material Consumption
     materialConsumption: '📦 Consumo de Material',

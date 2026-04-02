@@ -168,6 +168,10 @@ const ptBR: Translations = {
     costCutting: 'Custo de Corte',
     costTotal: 'Custo Total',
     costBreakdown: 'Detalhamento de Custos',
+    // Stacking / Machine Loads
+    machineLoads: '{count} carregamentos de máquina',
+    sheetsPerLoad: '{count} chapas por carga',
+    stackInfo: 'Empilhamento',
   },
 
   labelsTab: {
@@ -240,6 +244,7 @@ const ptBR: Translations = {
     usableScraps: 'Sobras Aproveitáveis',
     totalWaste: 'Descarte Total',
     computeTime: 'Tempo de Otimização',
+    totalMachineLoads: 'Carregamentos de Máquina',
     utilizationDescription: 'Percentual da área útil das chapas efetivamente ocupado por peças.',
     materialConsumption: '📦 Consumo de Material',
     colMaterial: 'Material',

@@ -89,6 +89,11 @@ export function ResultsTab() {
               <div className="text-2xs text-surface-500">
                 {t.resultsTab.piecesCount.replace('{count}', String(p.pieces.length))} — {p.utilizationPercent.toFixed(1)}%
               </div>
+              {p.stackCount > 1 && (
+                <div className="text-2xs text-brand-500">
+                  ×{p.stackCount} {p.machineLoads > 0 ? `(${p.machineLoads} loads)` : ''}
+                </div>
+              )}
               {/* Mini preview */}
               <svg className="w-full h-12 mt-1 bg-surface-50 rounded" viewBox={`0 0 ${p.sheetWidth} ${p.sheetHeight}`}
                 preserveAspectRatio="xMidYMid meet">
@@ -111,6 +116,7 @@ export function ResultsTab() {
           <span className="text-xs text-surface-400">
             {plan.materialCode} — {plan.sheetWidth}×{plan.sheetHeight}mm
             {plan.stackCount > 1 && ` — ${t.resultsTab.stackedSheets.replace('{count}', String(plan.stackCount))}`}
+            {plan.machineLoads > 0 && ` — ${t.resultsTab.machineLoads.replace('{count}', String(plan.machineLoads))}`}
           </span>
           <div className="flex-1" />
 
@@ -183,11 +189,21 @@ export function ResultsTab() {
             <span className="text-surface-400"> / {t.resultsTab.discards} </span>
             <span className="font-medium text-surface-500">{plan.scraps.filter((s) => !s.usable).length}</span>
           </div>
+          {plan.machineLoads > 0 && (
+            <div>
+              <span className="text-surface-500">{t.resultsTab.stackInfo}: </span>
+              <span className="font-medium text-brand-600">{plan.stackCount}×</span>
+              <span className="text-surface-400"> ({t.resultsTab.machineLoads.replace('{count}', String(plan.machineLoads))})</span>
+            </div>
+          )}
           <div className="flex-1" />
           <div>
             <span className="text-surface-500">{t.resultsTab.global} </span>
             <span className="font-bold text-brand-600">{result.globalUtilization.toFixed(1)}%</span>
             <span className="text-surface-400 ml-2">{result.totalSheets} {t.common.sheets} — {result.computeTimeMs.toFixed(0)}ms</span>
+            {result.totalMachineLoads > 0 && (
+              <span className="text-surface-400 ml-2">— {result.totalMachineLoads} 🏭</span>
+            )}
           </div>
         </div>
       </div>
