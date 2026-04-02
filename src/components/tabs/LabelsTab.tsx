@@ -346,7 +346,7 @@ export function LabelsTab() {
       if (row >= rowsPerPage) { row = 0; col = 0; }
     });
 
-    pdf.save('cutmaster-labels.pdf');
+    pdf.save('nestbrain-labels.pdf');
   }, [allPieces, template, pdfColumns, pdfRowGap, pdfColGap, pdfMargin, projectName]);
 
   // ─── Export labels CSV ──────────────────────────────────────
@@ -360,7 +360,7 @@ export function LabelsTab() {
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'cutmaster-labels.csv';
+    a.download = 'nestbrain-labels.csv';
     a.click();
     URL.revokeObjectURL(a.href);
   }, [allPieces, template, fieldLabels, projectName]);

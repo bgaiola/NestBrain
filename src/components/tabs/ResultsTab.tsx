@@ -49,7 +49,7 @@ export function ResultsTab() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'cutmaster-result.json';
+    a.download = 'nestbrain-result.json';
     a.click();
     URL.revokeObjectURL(url);
   };

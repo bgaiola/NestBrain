@@ -1,10 +1,10 @@
-# ✂️ CutMaster Pro
+# 🧠 NestBrain
 
 **Cutting optimization software for panel and sheet materials.**
 
-CutMaster Pro helps furniture makers, carpenters, and manufacturers minimize waste when cutting rectangular pieces from standard sheet materials (melamine, MDF, plywood, etc.).
+NestBrain helps furniture makers, carpenters, and manufacturers minimize waste when cutting rectangular pieces from standard sheet materials (melamine, MDF, plywood, etc.).
 
-![CutMaster Pro](https://img.shields.io/badge/version-1.0.0-blue) ![License](https://img.shields.io/badge/license-MIT-green)
+![NestBrain](https://img.shields.io/badge/version-1.0.0-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
 ## ✨ Features
 
@@ -27,8 +27,8 @@ CutMaster Pro helps furniture makers, carpenters, and manufacturers minimize was
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/cutmaster-pro.git
-cd cutmaster-pro
+git clone https://github.com/bgaiola/NestBrain.git
+cd NestBrain
 
 # Install dependencies
 npm install

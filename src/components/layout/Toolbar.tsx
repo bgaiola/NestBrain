@@ -89,7 +89,7 @@ export function Toolbar() {
       {/* Logo & project name */}
       <div className="flex items-center gap-2 mr-2">
         <Scissors className="w-5 h-5 text-brand-600" />
-        <span className="font-bold text-brand-800 text-base tracking-tight">CutMaster Pro</span>
+        <span className="font-bold text-brand-800 text-base tracking-tight">NestBrain</span>
         <span className="text-surface-300 mx-1">|</span>
         <input
           className="text-sm font-medium text-surface-700 bg-transparent border-none outline-none 
