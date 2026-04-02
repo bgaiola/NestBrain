@@ -325,6 +325,13 @@ const en: Translations = {
     left: 'Left',
     right: 'Right',
   },
+
+  optimization: {
+    overlayTitle: 'Optimizing cutting plans',
+    processingMaterial: 'Processing material: {material}',
+    preparing: 'Preparing data...',
+    pleaseWait: 'Please wait, this may take a few seconds...',
+  },
 };
 
 export default en;

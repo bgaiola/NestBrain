@@ -325,6 +325,13 @@ const ptBR: Translations = {
     left: 'Esq',
     right: 'Dir',
   },
+
+  optimization: {
+    overlayTitle: 'Otimizando planos de corte',
+    processingMaterial: 'Processando material: {material}',
+    preparing: 'Preparando dados...',
+    pleaseWait: 'Por favor aguarde, isso pode levar alguns segundos...',
+  },
 };
 
 export default ptBR;

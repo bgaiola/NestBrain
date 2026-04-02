@@ -350,6 +350,14 @@ const es = {
     left: 'Izq',
     right: 'Der',
   },
+
+  // ─── Optimization Overlay ────────────
+  optimization: {
+    overlayTitle: 'Optimizando planos de corte',
+    processingMaterial: 'Procesando material: {material}',
+    preparing: 'Preparando datos...',
+    pleaseWait: 'Por favor espere, esto puede tomar unos segundos...',
+  },
 } as const;
 
 export type TranslationKeys = typeof es;

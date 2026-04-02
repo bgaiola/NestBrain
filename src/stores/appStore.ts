@@ -25,9 +25,10 @@ interface AppState {
   result: OptimizationResult | null;
   isOptimizing: boolean;
   optimizationProgress: number; // 0-100
+  optimizationDetail: string; // current material being processed
   setResult: (result: OptimizationResult | null) => void;
   setOptimizing: (val: boolean) => void;
-  setProgress: (val: number) => void;
+  setProgress: (val: number, detail?: string) => void;
 
   // Notifications
   notifications: AppNotification[];
@@ -65,9 +66,13 @@ export const useAppStore = create<AppState>()((set) => ({
   result: null,
   isOptimizing: false,
   optimizationProgress: 0,
+  optimizationDetail: '',
   setResult: (result) => set({ result, activeTab: result ? 'results' : 'pieces' }),
-  setOptimizing: (val) => set({ isOptimizing: val, optimizationProgress: 0 }),
-  setProgress: (val) => set({ optimizationProgress: val }),
+  setOptimizing: (val) => set({ isOptimizing: val, optimizationProgress: 0, optimizationDetail: '' }),
+  setProgress: (val, detail) => set((s) => ({
+    optimizationProgress: val,
+    optimizationDetail: detail !== undefined ? detail : s.optimizationDetail,
+  })),
 
   notifications: [],
   addNotification: (n) => {

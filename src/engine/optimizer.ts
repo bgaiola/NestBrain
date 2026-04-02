@@ -30,6 +30,19 @@ interface ProcessedPiece {
   perimeter: number;
 }
 
+// ─── Async yield helper ───────────────────────────────────
+// Yields control to the UI thread every YIELD_INTERVAL ms so the browser can repaint.
+const YIELD_INTERVAL = 60; // ms
+let lastYield = 0;
+
+async function yieldUI(): Promise<void> {
+  const now = performance.now();
+  if (now - lastYield >= YIELD_INTERVAL) {
+    lastYield = now;
+    await new Promise<void>(r => setTimeout(r, 0));
+  }
+}
+
 interface FreeRect { x: number; y: number; w: number; h: number; }
 
 // ─── Rotation helper ──────────────────────────────────────
@@ -91,10 +104,13 @@ export async function runOptimization(
   materials: Material[],
   edgeBands: EdgeBand[],
   config: OptimizationConfig,
-  onProgress?: (pct: number) => void,
+  onProgress?: (pct: number, detail?: string) => void,
 ): Promise<OptimizationResult> {
   const startTime = performance.now();
-  onProgress?.(5);
+  lastYield = startTime;
+  onProgress?.(2, '');
+  await yieldUI();
+
   const processed = preProcess(pieces, edgeBands);
 
   const byMaterial = new Map<string, ProcessedPiece[]>();
@@ -111,6 +127,10 @@ export async function runOptimization(
   for (const [matCode, matPieces] of byMaterial) {
     const mat = materials.find((m) => m.code === matCode);
     if (!mat) continue;
+
+    const basePct = 5 + Math.round((matIdx / totalMats) * 85);
+    onProgress?.(basePct, matCode);
+    await yieldUI();
 
     const expanded: ProcessedPiece[] = [];
     for (const p of matPieces) {
@@ -132,7 +152,8 @@ export async function runOptimization(
 
     if (config.advancedMode) {
       // ═══ ADVANCED MODE ═══════════════════════════════
-      const budget = Math.min(12000, Math.max(3000, expanded.length * 10));
+      // Reduced budget: max 2.5s per material, min 0.8s
+      const budget = Math.min(2500, Math.max(800, expanded.length * 5));
       const deadline = performance.now() + budget;
       const strategies = ADVANCED_SORT_STRATEGIES;
       const heurs = config.mode === 'freeform' ? ALL_H : ['BSSF' as Heuristic];
@@ -145,6 +166,7 @@ export async function runOptimization(
           tryAccept(config.mode === 'guillotine'
             ? advGuillotine(sorted, mat, uw, uh, config)
             : maxRectsPlace(sorted, mat, uw, uh, config, h));
+          await yieldUI();
         }
       }
 
@@ -158,23 +180,24 @@ export async function runOptimization(
             tryAccept(config.mode === 'guillotine'
               ? advGuillotine([...repacked].sort(sf), mat, uw, uh, config)
               : maxRectsPlace([...repacked].sort(sf), mat, uw, uh, config, h));
+            await yieldUI();
           }
         }
       }
 
-      // Phase 3: iterated greedy destroy-and-repair
+      // Phase 3: iterated greedy destroy-and-repair (async with yields)
       if (bestPlans !== null) {
-        tryAccept(iteratedGreedy(bestPlans as CuttingPlan[], mat, uw, uh, config, deadline));
+        tryAccept(await iteratedGreedy(bestPlans as CuttingPlan[], mat, uw, uh, config, deadline));
       }
 
-      // Phase 4: per-sheet re-optimization
+      // Phase 4: per-sheet re-optimization (async with yields)
       if (bestPlans !== null) {
-        bestPlans = reoptPerSheet(bestPlans as CuttingPlan[], mat, uw, uh, config, deadline);
+        bestPlans = await reoptPerSheet(bestPlans as CuttingPlan[], mat, uw, uh, config, deadline);
       }
 
-      // Phase 5: try to reduce sheets
+      // Phase 5: try to reduce sheets (async with yields)
       if (bestPlans !== null && (bestPlans as CuttingPlan[]).length > 1) {
-        bestPlans = tryReduceSheets(bestPlans as CuttingPlan[], mat, uw, uh, config, deadline);
+        bestPlans = await tryReduceSheets(bestPlans as CuttingPlan[], mat, uw, uh, config, deadline);
       }
 
       // Yield to UI thread between materials
@@ -584,13 +607,13 @@ function advGuillotine(
 }
 
 // ═══════════════════════════════════════════════════════════
-// ITERATED GREEDY
+// ITERATED GREEDY (async with UI yields)
 // ═══════════════════════════════════════════════════════════
 
-function iteratedGreedy(
+async function iteratedGreedy(
   initial: CuttingPlan[], mat: Material,
   uw: number, uh: number, cfg: OptimizationConfig, deadline: number,
-): CuttingPlan[] {
+): Promise<CuttingPlan[]> {
   let best = initial;
   let bestScore = scorePlans(best, uw, uh);
   const heurs = cfg.mode === 'freeform' ? ALL_H : ['BSSF' as Heuristic];
@@ -612,18 +635,21 @@ function iteratedGreedy(
       : maxRectsPlace(repair, mat, uw, uh, cfg, h);
     const s = scorePlans(plans, uw, uh);
     if (s > bestScore) { bestScore = s; best = plans; }
+
+    // Yield to UI thread periodically
+    await yieldUI();
   }
   return best;
 }
 
 // ═══════════════════════════════════════════════════════════
-// BIN REDUCTION
+// BIN REDUCTION (async with UI yields)
 // ═══════════════════════════════════════════════════════════
 
-function tryReduceSheets(
+async function tryReduceSheets(
   plans: CuttingPlan[], mat: Material,
   uw: number, uh: number, cfg: OptimizationConfig, deadline: number,
-): CuttingPlan[] {
+): Promise<CuttingPlan[]> {
   let best = [...plans];
   const all = best.flatMap(p => p.pieces.map(pp => fromPlaced(pp)));
   const heurs = cfg.mode === 'freeform' ? ALL_H : ['BSSF' as Heuristic];
@@ -640,19 +666,20 @@ function tryReduceSheets(
       else if (np.length === best.length) {
         if (scorePlans(np, uw, uh) > scorePlans(best, uw, uh)) best = np;
       }
+      await yieldUI();
     }
   }
   return best;
 }
 
 // ═══════════════════════════════════════════════════════════
-// PER-SHEET RE-OPTIMIZATION
+// PER-SHEET RE-OPTIMIZATION (async with UI yields)
 // ═══════════════════════════════════════════════════════════
 
-function reoptPerSheet(
+async function reoptPerSheet(
   plans: CuttingPlan[], mat: Material,
   uw: number, uh: number, cfg: OptimizationConfig, deadline: number,
-): CuttingPlan[] {
+): Promise<CuttingPlan[]> {
   const result: CuttingPlan[] = [];
   for (const plan of plans) {
     if (performance.now() > deadline) { result.push(plan); continue; }
@@ -668,6 +695,7 @@ function reoptPerSheet(
         if (np.length === 1 && np[0].pieces.length === pcs.length && np[0].utilizationPercent > bu) {
           bu = np[0].utilizationPercent; bp = np[0];
         }
+        await yieldUI();
       }
     }
     result.push(bp);

@@ -325,6 +325,13 @@ const fr: Translations = {
     left: 'Gauche',
     right: 'Droit',
   },
+
+  optimization: {
+    overlayTitle: 'Optimisation des plans de coupe',
+    processingMaterial: 'Traitement du matériau : {material}',
+    preparing: 'Préparation des données...',
+    pleaseWait: 'Veuillez patienter, cela peut prendre quelques secondes...',
+  },
 };
 
 export default fr;

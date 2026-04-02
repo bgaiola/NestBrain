@@ -9,6 +9,7 @@ import { LabelsTab } from '@/components/tabs/LabelsTab';
 import { ReportsTab } from '@/components/tabs/ReportsTab';
 import { CostsTab } from '@/components/tabs/CostsTab';
 import { Notifications } from '@/components/ui/Notifications';
+import { OptimizationOverlay } from '@/components/ui/OptimizationOverlay';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 
 export default function App() {
@@ -50,6 +51,9 @@ export default function App() {
 
       {/* Notifications */}
       <Notifications />
+
+      {/* Optimization progress overlay */}
+      <OptimizationOverlay />
     </div>
   );
 }

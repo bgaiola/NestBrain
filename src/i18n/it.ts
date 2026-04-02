@@ -325,6 +325,13 @@ const it: Translations = {
     left: 'Sin',
     right: 'Des',
   },
+
+  optimization: {
+    overlayTitle: 'Ottimizzazione dei piani di taglio',
+    processingMaterial: 'Elaborazione materiale: {material}',
+    preparing: 'Preparazione dati...',
+    pleaseWait: 'Attendere prego, potrebbe richiedere qualche secondo...',
+  },
 };
 
 export default it;
