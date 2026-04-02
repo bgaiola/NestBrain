@@ -45,6 +45,8 @@ const fr: Translations = {
     language: 'Langue',
     costToggle: 'Coûts',
     costTooltip: 'Activer le calcul des coûts',
+    advancedToggle: 'Avancé',
+    advancedTooltip: 'Optimisation avancée : plus lente mais meilleurs résultats',
   },
 
   tabs: {

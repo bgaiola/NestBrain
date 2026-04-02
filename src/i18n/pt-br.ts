@@ -45,6 +45,8 @@ const ptBR: Translations = {
     language: 'Idioma',
     costToggle: 'Custos',
     costTooltip: 'Ativar cálculo de custos',
+    advancedToggle: 'Avançado',
+    advancedTooltip: 'Otimização avançada: mais lenta mas melhores resultados',
   },
 
   tabs: {

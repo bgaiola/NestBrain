@@ -70,6 +70,7 @@ export interface OptimizationConfig {
   guillotineMaxLevels: number;
   maxStackThickness: number; // mm
   allowRotation: boolean;
+  advancedMode: boolean; // thorough optimization — slower but better results
 }
 
 // ─── Optimization Results ──────────────────────────────────

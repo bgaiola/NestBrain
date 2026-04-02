@@ -46,6 +46,8 @@ const es = {
     language: 'Idioma',
     costToggle: 'Costos',
     costTooltip: 'Activar cálculo de costos',
+    advancedToggle: 'Avanzado',
+    advancedTooltip: 'Optimización avanzada: más lenta pero mejores resultados',
   },
 
   // ─── Tabs ────────────────────────────

@@ -14,6 +14,7 @@ import {
   Loader2,
   Globe,
   DollarSign,
+  Sparkles,
 } from 'lucide-react';
 
 export function Toolbar() {
@@ -170,6 +171,20 @@ export function Toolbar() {
       >
         <RotateCcw className="w-3.5 h-3.5" />
         <span className="text-xs font-medium">{t.toolbar.rotation}</span>
+      </button>
+
+      {/* Advanced optimization toggle */}
+      <button
+        className={`btn-sm flex items-center gap-1 rounded-md px-2 py-1 transition-colors ${
+          config.advancedMode
+            ? 'bg-amber-100 text-amber-700 border border-amber-300'
+            : 'bg-surface-100 text-surface-500 border border-surface-300'
+        }`}
+        onClick={() => updateConfig({ advancedMode: !config.advancedMode })}
+        title={t.toolbar.advancedTooltip}
+      >
+        <Sparkles className="w-3.5 h-3.5" />
+        <span className="text-xs font-medium">{t.toolbar.advancedToggle}</span>
       </button>
 
       {/* Divider */}

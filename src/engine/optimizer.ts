@@ -68,6 +68,47 @@ const SORT_STRATEGIES: SortFn[] = [
   (a, b) => b.minDim - a.minDim || b.area - a.area,
 ];
 
+// Extended strategies for advanced mode
+const ADVANCED_SORT_STRATEGIES: SortFn[] = [
+  ...SORT_STRATEGIES,
+  // 7. Aspect ratio (most elongated first)
+  (a, b) => (b.maxDim / b.minDim) - (a.maxDim / a.minDim) || b.area - a.area,
+  // 8. Area ascending (smallest first — counterintuitive but can help packing)
+  (a, b) => a.area - b.area,
+  // 9. Width ascending then height descending
+  (a, b) => a.cutWidth - b.cutWidth || b.cutHeight - a.cutHeight,
+  // 10. Height ascending then width ascending
+  (a, b) => a.cutHeight - b.cutHeight || a.cutWidth - b.cutWidth,
+  // 11. Difference between dimensions (most square first)
+  (a, b) => (a.maxDim - a.minDim) - (b.maxDim - b.minDim) || b.area - a.area,
+  // 12. Random-ish shuffle based on combined metric
+  (a, b) => (b.cutWidth + b.cutHeight * 1.5) - (a.cutWidth + a.cutHeight * 1.5),
+];
+
+// ─── MaxRects placement heuristics ────────────────────────
+
+type PlacementHeuristic = 'BSSF' | 'BLSF' | 'BAF' | 'BLTC';
+
+function scoreRectPlacement(
+  rect: FreeRect,
+  pw: number,
+  ph: number,
+  heuristic: PlacementHeuristic,
+): number {
+  switch (heuristic) {
+    case 'BSSF': // Best Short Side Fit
+      return Math.min(rect.w - pw, rect.h - ph);
+    case 'BLSF': // Best Long Side Fit
+      return Math.max(rect.w - pw, rect.h - ph);
+    case 'BAF': // Best Area Fit
+      return (rect.w * rect.h) - (pw * ph);
+    case 'BLTC': // Bottom-Left Touchpoint / Contact (prefer bottom-left positions)
+      return rect.y * 10000 + rect.x;
+  }
+}
+
+const PLACEMENT_HEURISTICS: PlacementHeuristic[] = ['BSSF', 'BLSF', 'BAF', 'BLTC'];
+
 // ─── Main Entry Point ─────────────────────────────────────
 
 export async function runOptimization(
@@ -109,27 +150,79 @@ export async function runOptimization(
     const usableWidth = material.sheetWidth - material.trimLeft - material.trimRight;
     const usableHeight = material.sheetHeight - material.trimTop - material.trimBottom;
 
-    // Try ALL sort strategies and pick the best result
     let bestPlans: CuttingPlan[] | null = null;
     let bestScore = -Infinity;
 
-    const optimFn = config.mode === 'guillotine'
-      ? optimizeGuillotine
-      : optimizeFreeForm;
+    if (config.advancedMode) {
+      // ═══════════════════════════════════════════════════
+      // ADVANCED MODE: exhaustive multi-heuristic search
+      // ═══════════════════════════════════════════════════
+      const strategies = ADVANCED_SORT_STRATEGIES;
+      const heuristics = config.mode === 'freeform' ? PLACEMENT_HEURISTICS : ['BSSF' as PlacementHeuristic];
 
-    for (const sortFn of SORT_STRATEGIES) {
-      const sorted = [...expanded].sort(sortFn);
-      const plans = optimFn(sorted, material, usableWidth, usableHeight, config);
+      for (const sortFn of strategies) {
+        for (const heuristic of heuristics) {
+          const sorted = [...expanded].sort(sortFn);
 
-      // Score: higher utilization + fewer sheets
-      const totalUsed = plans.reduce((s, p) => s + p.usedArea, 0);
-      const totalUsable = plans.reduce((s, p) => s + p.usableArea, 0);
-      const util = totalUsable > 0 ? totalUsed / totalUsable : 0;
-      const score = util - plans.length * 0.001;
+          let plans: CuttingPlan[];
+          if (config.mode === 'guillotine') {
+            plans = advancedGuillotine(sorted, material, usableWidth, usableHeight, config);
+          } else {
+            plans = advancedFreeForm(sorted, material, usableWidth, usableHeight, config, heuristic);
+          }
 
-      if (score > bestScore) {
-        bestScore = score;
-        bestPlans = plans;
+          const score = scorePlans(plans);
+          if (score > bestScore) {
+            bestScore = score;
+            bestPlans = plans;
+          }
+        }
+      }
+
+      // Phase 2: Try to reduce sheet count by repacking
+      if (bestPlans && bestPlans.length > 1) {
+        const allPiecesFromBest = bestPlans.flatMap((p) => p.pieces);
+        const processedForRepack = allPiecesFromBest.map((pp) => pieceFromPlaced(pp));
+
+        for (const heuristic of heuristics) {
+          for (const sortFn of strategies) {
+            const sorted = [...processedForRepack].sort(sortFn);
+            let plans: CuttingPlan[];
+            if (config.mode === 'guillotine') {
+              plans = advancedGuillotine(sorted, material, usableWidth, usableHeight, config);
+            } else {
+              plans = advancedFreeForm(sorted, material, usableWidth, usableHeight, config, heuristic);
+            }
+            const score = scorePlans(plans);
+            if (score > bestScore) {
+              bestScore = score;
+              bestPlans = plans;
+            }
+          }
+        }
+      }
+
+      // Phase 3: Per-sheet local re-optimization
+      if (bestPlans) {
+        bestPlans = reoptimizePerSheet(bestPlans, material, usableWidth, usableHeight, config);
+      }
+
+    } else {
+      // ═══════════════════════════════════════════════════
+      // FAST MODE: original 6-strategy greedy
+      // ═══════════════════════════════════════════════════
+      const optimFn = config.mode === 'guillotine'
+        ? optimizeGuillotine
+        : optimizeFreeForm;
+
+      for (const sortFn of SORT_STRATEGIES) {
+        const sorted = [...expanded].sort(sortFn);
+        const plans = optimFn(sorted, material, usableWidth, usableHeight, config);
+        const score = scorePlans(plans);
+        if (score > bestScore) {
+          bestScore = score;
+          bestPlans = plans;
+        }
       }
     }
 
@@ -186,6 +279,47 @@ export async function runOptimization(
   return result;
 }
 
+// ─── Scoring function ─────────────────────────────────────
+
+function scorePlans(plans: CuttingPlan[]): number {
+  if (plans.length === 0) return -Infinity;
+  const totalUsed = plans.reduce((s, p) => s + p.usedArea, 0);
+  const totalUsable = plans.reduce((s, p) => s + p.usableArea, 0);
+  const util = totalUsable > 0 ? totalUsed / totalUsable : 0;
+  // Heavily penalize more sheets; reward utilization
+  return util * 1000 - plans.length * 50;
+}
+
+// ─── Helper: reconstruct ProcessedPiece from PlacedPiece ──
+
+function pieceFromPlaced(pp: PlacedPiece): ProcessedPiece {
+  // If it was rotated, the placed width/height are swapped from original cut dims
+  const cutW = pp.rotated ? pp.height : pp.width;
+  const cutH = pp.rotated ? pp.width : pp.height;
+  return {
+    id: pp.pieceId,
+    code: pp.code,
+    material: pp.material,
+    cutWidth: cutW,
+    cutHeight: cutH,
+    originalWidth: pp.originalWidth,
+    originalHeight: pp.originalHeight,
+    grainDirection: pp.grainDirection,
+    quantity: 1,
+    sequence: pp.sequence,
+    description: pp.description,
+    description2: pp.description2,
+    edgeBandTop: pp.edgeBandTop,
+    edgeBandBottom: pp.edgeBandBottom,
+    edgeBandLeft: pp.edgeBandLeft,
+    edgeBandRight: pp.edgeBandRight,
+    area: cutW * cutH,
+    maxDim: Math.max(cutW, cutH),
+    minDim: Math.min(cutW, cutH),
+    perimeter: 2 * (cutW + cutH),
+  };
+}
+
 // ─── Pre-processing ───────────────────────────────────────
 
 function preProcess(pieces: Piece[], edgeBands: EdgeBand[]): ProcessedPiece[] {
@@ -233,9 +367,11 @@ function preProcess(pieces: Piece[], edgeBands: EdgeBand[]): ProcessedPiece[] {
   });
 }
 
-// ─── Improved Guillotine Optimization ─────────────────────
-// Uses NFDH with best-fit-per-strip: anchor piece sets strip height,
-// then fill remaining width with best-area-fit pieces.
+// ═══════════════════════════════════════════════════════════
+// FAST MODE — Original algorithms
+// ═══════════════════════════════════════════════════════════
+
+// ─── Guillotine (NFDH strip-based) ───────────────────────
 
 function optimizeGuillotine(
   pieces: ProcessedPiece[],
@@ -260,12 +396,10 @@ function optimizeGuillotine(
       let currentX = material.trimLeft;
       let anchorFound = false;
 
-      // Find best anchor piece for this strip
       for (let i = 0; i < remaining.length; i++) {
         const p = remaining[i];
         const canRot = canRotatePiece(p, material, config);
 
-        // Normal
         if (p.cutWidth <= usableW && currentY + p.cutHeight <= material.trimTop + usableH) {
           stripHeight = p.cutHeight;
           placed.push(makePlacedPiece(p, currentX, currentY, false));
@@ -274,7 +408,6 @@ function optimizeGuillotine(
           anchorFound = true;
           break;
         }
-        // Rotated
         if (canRot && p.cutHeight <= usableW && currentY + p.cutWidth <= material.trimTop + usableH) {
           stripHeight = p.cutWidth;
           placed.push(makePlacedPiece(p, currentX, currentY, true));
@@ -287,19 +420,13 @@ function optimizeGuillotine(
 
       if (!anchorFound) break;
 
-      // Fill remaining strip width with best-fitting pieces
       const availW = material.trimLeft + usableW - currentX;
       if (availW > kerf) {
         fillStrip(remaining, placed, material, config, currentX, currentY, availW, stripHeight, kerf);
       }
 
       if (stripIdx > 0) {
-        cuts.push({
-          type: 'H',
-          position: currentY,
-          depth: stripIdx,
-          resultingPieces: [],
-        });
+        cuts.push({ type: 'H', position: currentY, depth: stripIdx, resultingPieces: [] });
       }
 
       currentY += stripHeight + kerf;
@@ -345,7 +472,6 @@ function fillStrip(
       const p = remaining[i];
       const canRot = canRotatePiece(p, material, config);
 
-      // Normal
       if (p.cutWidth <= spaceLeft && p.cutHeight <= stripHeight) {
         if (p.area > bestArea) {
           bestArea = p.area;
@@ -354,7 +480,6 @@ function fillStrip(
           bestW = p.cutWidth;
         }
       }
-      // Rotated
       if (canRot && p.cutHeight <= spaceLeft && p.cutWidth <= stripHeight) {
         if (p.area > bestArea) {
           bestArea = p.area;
@@ -376,7 +501,7 @@ function fillStrip(
   }
 }
 
-// ─── Improved Free Form (MaxRects BSSF) ───────────────────
+// ─── Free Form (MaxRects BSSF) ───────────────────────────
 
 function optimizeFreeForm(
   pieces: ProcessedPiece[],
@@ -384,6 +509,276 @@ function optimizeFreeForm(
   usableW: number,
   usableH: number,
   config: OptimizationConfig,
+): CuttingPlan[] {
+  return maxRectsPlace(pieces, material, usableW, usableH, config, 'BSSF');
+}
+
+// ═══════════════════════════════════════════════════════════
+// ADVANCED MODE — Enhanced algorithms
+// ═══════════════════════════════════════════════════════════
+
+// ─── Advanced Free Form (MaxRects with configurable heuristic) ──
+
+function advancedFreeForm(
+  pieces: ProcessedPiece[],
+  material: Material,
+  usableW: number,
+  usableH: number,
+  config: OptimizationConfig,
+  heuristic: PlacementHeuristic,
+): CuttingPlan[] {
+  return maxRectsPlace(pieces, material, usableW, usableH, config, heuristic);
+}
+
+// ─── Advanced Guillotine ──────────────────────────────────
+// Multi-pass: try every piece as strip anchor, try best-height-fit
+// for each strip, minimize wasted height.
+
+function advancedGuillotine(
+  pieces: ProcessedPiece[],
+  material: Material,
+  usableW: number,
+  usableH: number,
+  config: OptimizationConfig,
+): CuttingPlan[] {
+  const plans: CuttingPlan[] = [];
+  const remaining = [...pieces];
+  const kerf = config.bladeThickness;
+
+  while (remaining.length > 0) {
+    // Try different strategies for this single sheet
+    let bestPlaced: PlacedPiece[] | null = null;
+    let bestUsedArea = 0;
+    let bestRemaining: ProcessedPiece[] | null = null;
+
+    // Strategy A: For each unique height, try it as the anchor strip height
+    const uniqueHeights = new Set<number>();
+    for (const p of remaining) {
+      uniqueHeights.add(p.cutHeight);
+      if (canRotatePiece(p, material, config)) uniqueHeights.add(p.cutWidth);
+    }
+
+    for (const targetHeight of uniqueHeights) {
+      if (targetHeight > usableH) continue;
+      const rem = [...remaining];
+      const placed: PlacedPiece[] = [];
+      let currentY = material.trimTop;
+
+      // Pack strips prioritizing target height first, then best-fit
+      while (currentY + kerf < material.trimTop + usableH && rem.length > 0) {
+        const availH = material.trimTop + usableH - currentY;
+        if (availH < 1) break;
+
+        // Find best strip height: prefer pieces whose height matches availH closely
+        let bestAnchorIdx = -1;
+        let bestAnchorH = 0;
+        let bestAnchorRot = false;
+        let bestAnchorWaste = Infinity;
+
+        for (let i = 0; i < rem.length; i++) {
+          const p = rem[i];
+          const canRot = canRotatePiece(p, material, config);
+
+          if (p.cutHeight <= availH && p.cutWidth <= usableW) {
+            const waste = availH - p.cutHeight;
+            if (waste < bestAnchorWaste || (waste === bestAnchorWaste && p.area > (rem[bestAnchorIdx]?.area ?? 0))) {
+              bestAnchorWaste = waste;
+              bestAnchorIdx = i;
+              bestAnchorH = p.cutHeight;
+              bestAnchorRot = false;
+            }
+          }
+          if (canRot && p.cutWidth <= availH && p.cutHeight <= usableW) {
+            const waste = availH - p.cutWidth;
+            if (waste < bestAnchorWaste || (waste === bestAnchorWaste && p.area > (rem[bestAnchorIdx]?.area ?? 0))) {
+              bestAnchorWaste = waste;
+              bestAnchorIdx = i;
+              bestAnchorH = p.cutWidth;
+              bestAnchorRot = true;
+            }
+          }
+        }
+
+        if (bestAnchorIdx < 0) break;
+
+        const stripHeight = bestAnchorH;
+        const anchor = rem[bestAnchorIdx];
+        const anchorW = bestAnchorRot ? anchor.cutHeight : anchor.cutWidth;
+        let currentX = material.trimLeft + anchorW + kerf;
+        placed.push(makePlacedPiece(anchor, material.trimLeft, currentY, bestAnchorRot));
+        rem.splice(bestAnchorIdx, 1);
+
+        // Fill strip: best area fit
+        const stripAvailW = material.trimLeft + usableW;
+        let filling = true;
+        while (filling && currentX < stripAvailW) {
+          filling = false;
+          let bestFillIdx = -1;
+          let bestFillArea = 0;
+          let bestFillRot = false;
+          let bestFillW = 0;
+          const spaceLeft = stripAvailW - currentX;
+
+          for (let i = 0; i < rem.length; i++) {
+            const p = rem[i];
+            const canRot = canRotatePiece(p, material, config);
+
+            if (p.cutWidth <= spaceLeft && p.cutHeight <= stripHeight && p.area > bestFillArea) {
+              bestFillArea = p.area;
+              bestFillIdx = i;
+              bestFillRot = false;
+              bestFillW = p.cutWidth;
+            }
+            if (canRot && p.cutHeight <= spaceLeft && p.cutWidth <= stripHeight && p.area > bestFillArea) {
+              bestFillArea = p.area;
+              bestFillIdx = i;
+              bestFillRot = true;
+              bestFillW = p.cutHeight;
+            }
+          }
+
+          if (bestFillIdx >= 0) {
+            placed.push(makePlacedPiece(rem[bestFillIdx], currentX, currentY, bestFillRot));
+            rem.splice(bestFillIdx, 1);
+            currentX += bestFillW + kerf;
+            filling = true;
+          }
+        }
+
+        // Try to stack smaller pieces vertically in remaining strip height
+        // (two-level packing within strip)
+        const secondRowY = currentY + stripHeight + kerf;
+        // not for this strip, move to next
+        currentY += stripHeight + kerf;
+      }
+
+      const usedArea = placed.reduce((s, p) => s + p.width * p.height, 0);
+      if (usedArea > bestUsedArea) {
+        bestUsedArea = usedArea;
+        bestPlaced = placed;
+        bestRemaining = rem;
+      }
+    }
+
+    // Also try the original NFDH approach for this sheet
+    {
+      const rem = [...remaining];
+      const placed: PlacedPiece[] = [];
+      let currentY = material.trimTop;
+      let stripIdx = 0;
+
+      while (currentY < material.trimTop + usableH && rem.length > 0) {
+        let stripHeight = 0;
+        let currentX = material.trimLeft;
+        let anchorFound = false;
+
+        for (let i = 0; i < rem.length; i++) {
+          const p = rem[i];
+          const canRot = canRotatePiece(p, material, config);
+          if (p.cutWidth <= usableW && currentY + p.cutHeight <= material.trimTop + usableH) {
+            stripHeight = p.cutHeight;
+            placed.push(makePlacedPiece(p, currentX, currentY, false));
+            currentX += p.cutWidth + kerf;
+            rem.splice(i, 1);
+            anchorFound = true;
+            break;
+          }
+          if (canRot && p.cutHeight <= usableW && currentY + p.cutWidth <= material.trimTop + usableH) {
+            stripHeight = p.cutWidth;
+            placed.push(makePlacedPiece(p, currentX, currentY, true));
+            currentX += p.cutHeight + kerf;
+            rem.splice(i, 1);
+            anchorFound = true;
+            break;
+          }
+        }
+        if (!anchorFound) break;
+        const availW = material.trimLeft + usableW - currentX;
+        if (availW > kerf) {
+          fillStrip(rem, placed, material, config, currentX, currentY, availW, stripHeight, kerf);
+        }
+        currentY += stripHeight + kerf;
+        stripIdx++;
+      }
+
+      const usedArea = placed.reduce((s, p) => s + p.width * p.height, 0);
+      if (usedArea > bestUsedArea) {
+        bestUsedArea = usedArea;
+        bestPlaced = placed;
+        bestRemaining = rem;
+      }
+    }
+
+    if (!bestPlaced || bestPlaced.length === 0) {
+      if (remaining.length > 0) {
+        remaining.shift();
+        continue;
+      }
+      break;
+    }
+
+    plans.push(createPlan(bestPlaced, [], material, usableW, usableH));
+
+    // Update remaining
+    remaining.length = 0;
+    if (bestRemaining) remaining.push(...bestRemaining);
+  }
+
+  return plans;
+}
+
+// ─── Per-sheet re-optimization ────────────────────────────
+// Take each sheet's pieces and try all heuristics to repack them better
+
+function reoptimizePerSheet(
+  plans: CuttingPlan[],
+  material: Material,
+  usableW: number,
+  usableH: number,
+  config: OptimizationConfig,
+): CuttingPlan[] {
+  const result: CuttingPlan[] = [];
+
+  for (const plan of plans) {
+    const pieces = plan.pieces.map((pp) => pieceFromPlaced(pp));
+
+    let bestPlan = plan;
+    let bestUtil = plan.utilizationPercent;
+
+    const heuristics: PlacementHeuristic[] = config.mode === 'freeform' ? PLACEMENT_HEURISTICS : ['BSSF'];
+
+    for (const heuristic of heuristics) {
+      for (const sortFn of ADVANCED_SORT_STRATEGIES) {
+        const sorted = [...pieces].sort(sortFn);
+        const newPlans = config.mode === 'guillotine'
+          ? advancedGuillotine(sorted, material, usableW, usableH, config)
+          : maxRectsPlace(sorted, material, usableW, usableH, config, heuristic);
+
+        // Only accept if ALL pieces fit in one sheet
+        if (newPlans.length === 1 && newPlans[0].pieces.length === pieces.length) {
+          if (newPlans[0].utilizationPercent > bestUtil) {
+            bestUtil = newPlans[0].utilizationPercent;
+            bestPlan = newPlans[0];
+          }
+        }
+      }
+    }
+
+    result.push(bestPlan);
+  }
+
+  return result;
+}
+
+// ─── Shared MaxRects implementation ───────────────────────
+
+function maxRectsPlace(
+  pieces: ProcessedPiece[],
+  material: Material,
+  usableW: number,
+  usableH: number,
+  config: OptimizationConfig,
+  heuristic: PlacementHeuristic,
 ): CuttingPlan[] {
   const plans: CuttingPlan[] = [];
   const remaining = [...pieces];
@@ -406,7 +801,6 @@ function optimizeFreeForm(
       const ph = p.cutHeight;
       const allowRotate = canRotatePiece(p, material, config);
 
-      // Best Short Side Fit
       let bestRect = -1;
       let bestScore = Infinity;
       let bestRotated = false;
@@ -415,18 +809,18 @@ function optimizeFreeForm(
         const rect = freeRects[r];
 
         if (pw <= rect.w && ph <= rect.h) {
-          const shortSide = Math.min(rect.w - pw, rect.h - ph);
-          if (shortSide < bestScore) {
-            bestScore = shortSide;
+          const score = scoreRectPlacement(rect, pw, ph, heuristic);
+          if (score < bestScore) {
+            bestScore = score;
             bestRect = r;
             bestRotated = false;
           }
         }
 
         if (allowRotate && ph <= rect.w && pw <= rect.h) {
-          const shortSide = Math.min(rect.w - ph, rect.h - pw);
-          if (shortSide < bestScore) {
-            bestScore = shortSide;
+          const score = scoreRectPlacement(rect, ph, pw, heuristic);
+          if (score < bestScore) {
+            bestScore = score;
             bestRect = r;
             bestRotated = true;
           }
@@ -441,7 +835,6 @@ function optimizeFreeForm(
         placed.push(makePlacedPiece(p, rect.x, rect.y, bestRotated));
         toRemove.push(i);
 
-        // MaxRects splitting with kerf
         const usedRect: FreeRect = {
           x: rect.x,
           y: rect.y,
@@ -471,6 +864,8 @@ function optimizeFreeForm(
   return plans;
 }
 
+// ─── MaxRects split / prune ───────────────────────────────
+
 function splitFreeRects(freeRects: FreeRect[], used: FreeRect): void {
   const len = freeRects.length;
   for (let i = len - 1; i >= 0; i--) {
@@ -483,19 +878,15 @@ function splitFreeRects(freeRects: FreeRect[], used: FreeRect): void {
 
     freeRects.splice(i, 1);
 
-    // Left
     if (used.x > fr.x) {
       freeRects.push({ x: fr.x, y: fr.y, w: used.x - fr.x, h: fr.h });
     }
-    // Right
     if (used.x + used.w < fr.x + fr.w) {
       freeRects.push({ x: used.x + used.w, y: fr.y, w: (fr.x + fr.w) - (used.x + used.w), h: fr.h });
     }
-    // Top
     if (used.y > fr.y) {
       freeRects.push({ x: fr.x, y: fr.y, w: fr.w, h: used.y - fr.y });
     }
-    // Bottom
     if (used.y + used.h < fr.y + fr.h) {
       freeRects.push({ x: fr.x, y: used.y + used.h, w: fr.w, h: (fr.y + fr.h) - (used.y + used.h) });
     }

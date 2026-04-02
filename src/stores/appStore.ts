@@ -57,6 +57,7 @@ export const useAppStore = create<AppState>()((set) => ({
     guillotineMaxLevels: 4,
     maxStackThickness: 0,
     allowRotation: false,
+    advancedMode: false,
   },
   updateConfig: (updates) =>
     set((s) => ({ config: { ...s.config, ...updates } })),
