@@ -92,10 +92,10 @@ export function PiecesTab() {
     pushHistory();
   }, [pushHistory]);
 
-  const toggleSelect = (id: string, shift: boolean) => {
+  const toggleSelect = (id: string, _shift: boolean) => {
     selectPiece(id);
     setSelectedIds((prev) => {
-      const next = new Set(shift ? prev : []);
+      const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
       return next;
